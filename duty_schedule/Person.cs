@@ -8,6 +8,7 @@ namespace Duty_Schedule
 {
     class Person
     {
+        // Public members because I'm lazy
         public string mName;
         public List<string> mGroups;
         public int mWeekendCount;

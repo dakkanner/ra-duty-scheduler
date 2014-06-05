@@ -14,7 +14,7 @@ namespace Duty_Schedule
             public string group;
         };
 
-
+        // Public members because I'm lazy. 
         public List<DateTime> mDateList;
         public List<List<PersonAndGroup>> mPeopleList;
 

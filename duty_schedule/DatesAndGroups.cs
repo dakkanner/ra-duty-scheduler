@@ -8,6 +8,7 @@ namespace Duty_Schedule
 {
     class DatesAndGroups
     {
+        // Public members because I'm lazy. 
         public List<DateTime> mDates;
         public List<string> mGroups;
 

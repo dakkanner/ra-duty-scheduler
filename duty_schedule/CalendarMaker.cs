@@ -374,20 +374,15 @@ namespace Duty_Schedule
         {
             var excelApp = new Microsoft.Office.Interop.Excel.Application();
 
-            // Make the object visible.
-            excelApp.Visible = true;
-
             // Create a new, empty workbook and add it to the collection returned  
             // by property Workbooks. The new workbook becomes the active workbook. 
             // Add has an optional parameter for specifying a praticular template.  
             // Because no argument is sent in this example, Add creates a new workbook. 
             excelApp.Workbooks.Add();
 
-            // This example uses a single workSheet. The explicit type casting is 
-            // removed in a later procedure.
+            // This project uses a single workSheet
             Microsoft.Office.Interop.Excel._Worksheet workSheet 
                 = (Microsoft.Office.Interop.Excel.Worksheet)excelApp.ActiveSheet;
-
 
             System.Globalization.DateTimeFormatInfo mfi = new System.Globalization.DateTimeFormatInfo();
 
@@ -398,8 +393,8 @@ namespace Duty_Schedule
             int cRow = 0;
             char cCol = 'A';
 
+            // Center the output
             workSheet.Cells[1, "A"].Style.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
-
 
             while (i < mCalendar.mDateList.Count)
             {
@@ -435,10 +430,11 @@ namespace Duty_Schedule
                         i--;
                 }
 
+                //Reset at the beginning of each week
                 cCol = 'A';
                 string dayStr = "";
 
-                // Pad space to offset in calendar
+                // Pad space to offset in calendar if week doesn't start on Sunday
                 for (int j = 0; j < (int)mCalendar.mDateList[i].DayOfWeek; j++)
                 {
                     cCol++;
@@ -446,12 +442,11 @@ namespace Duty_Schedule
 
                 breakFromLoop = false;
 
+                //Add all the days and people until the next week/month rolls around
                 while (i < mCalendar.mDateList.Count
-                    && breakFromLoop == false
-                    //&& ((int)mCalendar.mDateList[i].DayOfWeek > 0) 
-                    && (mCalendar.mDateList[i].Month == currentMonth))
+                    && mCalendar.mDateList[i].Month == currentMonth
+                    && breakFromLoop == false)
                 {
-                    //dayStr += mCalendar.mDateList[i].Date.ToShortDateString(); //+ "\n";
                     dayStr += mCalendar.mDateList[i].Day.ToString();
 
                     foreach (DatesAndAssignments.PersonAndGroup p in mCalendar.mPeopleList[i])
@@ -461,11 +456,9 @@ namespace Duty_Schedule
                     workSheet.Cells[cRow, cCol.ToString()] = dayStr;
                     cCol++;
 
-                    //weekStr += ",";
-
+                    //Handle end-of-week and holidays conditions
                     if (i < mCalendar.mDateList.Count
                         && ((int)mCalendar.mDateList[i].DayOfWeek >= 6
-                        //|| mCalendar.mDateList[i] != mCalendar.mDateList[i - 1].AddDays(1)
                         || i < mCalendar.mDateList.Count - 1
                         && mCalendar.mDateList[i].AddDays(1) != mCalendar.mDateList[i + 1]))
                     {
@@ -475,27 +468,14 @@ namespace Duty_Schedule
                     i++;
                     dayStr = "";
                 }
-//                    file.WriteLine(weekStr);
+
                 cRow++;
                 cCol = 'A';
                 i++;
 
             }
 
-
-
-//            // Establish column headings in cells A1 and B1.
-//            workSheet.Cells[1, "A"] = "ID Number";
-//            workSheet.Cells[1, "B"] = "Current Balance";
-//
-//            var row = 1;
-//            for (int i = 0; i < 20; i++)
-//            {
-//                row++;
-//                workSheet.Cells[row, "A"] = i;
-//                workSheet.Cells[row, "B"] = i * 2;
-//            }
-
+            //Resize all the cells
             for (int z = 1; z <= 7; z++)
             {
                 workSheet.Columns[z].ColumnWidth = 35;
@@ -505,6 +485,19 @@ namespace Duty_Schedule
             {
                 workSheet.Rows[z].AutoFit();
             }
+
+            // Make the object visible.
+            excelApp.Visible = true;
+
+            // Show the "Save As" dialog and get the name/location from the user
+            var sName = excelApp.GetSaveAsFilename("Schedule " + mStartDay.ToString("MM-dd-yyyy") + " to " + mEndDay.ToString("MM-dd-yyyy") );
+
+            //If the user entered a name/location, save the file
+            if (sName != false)
+            {
+                workSheet.SaveAs(sName);
+            }
+
         }   // End MakeExcelFile()
 
 
