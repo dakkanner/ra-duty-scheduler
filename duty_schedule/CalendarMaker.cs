@@ -73,14 +73,15 @@ namespace Duty_Schedule
                 mPeople.Add(new Person(("Person " + mPeople.Count.ToString()), "group 3", tempDaysOff));
             }
 
-
+            FileInputs fi = new FileInputs();
+            fi.GetGroups();
 
             Initalize();
             FirstScheduleRun();
             FillCalendar();
             //MakeCSVFile();
             //MakeGoogleCalendar();
-            MakeExcelFile();
+            //MakeExcelFile();
         }
 
 
