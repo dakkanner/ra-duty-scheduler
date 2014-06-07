@@ -1,10 +1,19 @@
 Herp Derps   
 // It should disregard comments like this one 
+	Amanda - 12/4/2012, 8/4/12
+	Wesley Maxey
 Groups and whatnot
-    Dakota Kanner - 12/11/2012, 11-10-2012, 9-9-12, 8/8/12 
-	Wesley Maxey	- 12/2/2012, 11-30-2012, 9-2-12, 8/1/12
+    Dakota Kanner-12/11/2012,11-10-2012,9-9-12,8/8/12 
+	Wesley Maxey	- , 8/1/12, 12/2/2012, 11-30-2012, 9-2-12,,
 	Jessica			- 12/4/2012, 8/4/12, 11-4-2012, 9-4-12 
+	Amanda - 11-4-2012, 9-4-12
+	
 	//It should ignore this too
     // And with spaces instead of a tab
 	
+
 Derp Herps and Stuff
+
+
+
+
