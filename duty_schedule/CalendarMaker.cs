@@ -29,59 +29,66 @@ namespace Duty_Schedule
 
         public CalendarMaker()
         {
-            mStartDay = new DateTime(2012, 9, 22);
-            mEndDay = new DateTime(2012, 12, 7);
-
+            mStartDay = new DateTime();
+            mEndDay = new DateTime();
+            
             mBreaks = new List<DateTime>();
             mHolidays = new List<DateTime>();
             mWeekends = new List<List<DateTime>>();
             mWeekdays = new List<DateTime>();
             mCalendar = new DatesAndAssignments();
 
-            mHolidays.Add(new DateTime(2012, 11, 12));
-
-            mBreaks.Add(new DateTime(2012, 11, 22));
-            mBreaks.Add(new DateTime(2012, 11, 23));
-            mBreaks.Add(new DateTime(2012, 11, 24));
-            mBreaks.Add(new DateTime(2012, 11, 25));
-
             mPeople = new List<Person>();
-            List<DateTime> tempDaysOff = new List<DateTime>();
-            tempDaysOff.Add(new DateTime(2012, 11, 1));
-            tempDaysOff.Add(new DateTime(2012, 11, 2));
-            tempDaysOff.Add(new DateTime(2012, 11, 3));
-
             mGroups = new List<string>();
-            mGroups.Add("group 1");
-            mGroups.Add("group 2");
-            mGroups.Add("group 3");
-
-            List<string> dualGroup = new List<string>();
-            dualGroup.Add("group 1");
-            dualGroup.Add("group 2");
-
-            for (int i = 0; i < 6; i++)
-            {
-                mPeople.Add(new Person(("Person " + mPeople.Count.ToString()), dualGroup, tempDaysOff));
-            }
-            for (int i = 0; i < 7; i++)
-            {
-                mPeople.Add(new Person(("Person " + mPeople.Count.ToString()), dualGroup, tempDaysOff));
-            }
-            for (int i = 0; i < 5; i++)
-            {
-                mPeople.Add(new Person(("Person " + mPeople.Count.ToString()), "group 3", tempDaysOff));
-            }
+            
+            //mHolidays.Add(new DateTime(2012, 11, 12));
+            //
+            //mBreaks.Add(new DateTime(2012, 11, 24));
+            //mBreaks.Add(new DateTime(2012, 11, 25));
+            //mBreaks.Add(new DateTime(2012, 11, 22));
+            //mBreaks.Add(new DateTime(2012, 11, 23));
+            //
+            //List<DateTime> tempDaysOff = new List<DateTime>();
+            //tempDaysOff.Add(new DateTime(2012, 11, 2));
+            //tempDaysOff.Add(new DateTime(2012, 11, 1));
+            //tempDaysOff.Add(new DateTime(2012, 11, 3));
+            //
+            //mGroups.Add("group 1");
+            //mGroups.Add("group 2");
+            //mGroups.Add("group 3");
+            //
+            //List<string> dualGroup = new List<string>();
+            //dualGroup.Add("group 1");
+            //dualGroup.Add("group 2");
+            //
+            //for (int i = 0; i < 6; i++)
+            //{
+            //    mPeople.Add(new Person(("Person " + mPeople.Count.ToString()), dualGroup, tempDaysOff));
+            //}
+            //for (int i = 0; i < 7; i++)
+            //{
+            //    mPeople.Add(new Person(("Person " + mPeople.Count.ToString()), dualGroup, tempDaysOff));
+            //}
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    mPeople.Add(new Person(("Person " + mPeople.Count.ToString()), "group 3", tempDaysOff));
+            //}
 
             FileInputs fi = new FileInputs();
-            fi.GetGroups();
+            mPeople = fi.GetGroups();
+            var dates = fi.GetDates();
+
+            mStartDay = dates.startDate;
+            mEndDay = dates.endDate;
+            mHolidays = dates.holidayList;
+            mBreaks = dates.breakList;
 
             Initalize();
             FirstScheduleRun();
             FillCalendar();
             //MakeCSVFile();
             //MakeGoogleCalendar();
-            //MakeExcelFile();
+            MakeExcelFile();
         }
 
 
@@ -92,6 +99,17 @@ namespace Duty_Schedule
             int dayCount = 0;
             int weekendCount = 0;
             int breakCount = 0;
+
+            // This section finds all the groups
+            foreach (Person per in mPeople)
+            {
+                foreach (string grp in per.mGroups)
+                if ( !mGroups.Contains(grp) )
+                {
+                    mGroups.Add(grp);
+                }
+
+            }
 
             // This section loads each day into mWeekends or mWeekdays
             while (currentDay <= mEndDay)
@@ -491,12 +509,12 @@ namespace Duty_Schedule
             excelApp.Visible = true;
 
             // Show the "Save As" dialog and get the name/location from the user
-            var sName = excelApp.GetSaveAsFilename("Schedule " + mStartDay.ToString("MM-dd-yyyy") + " to " + mEndDay.ToString("MM-dd-yyyy") );
+            var sName = excelApp.GetSaveAsFilename("Schedule " + mStartDay.ToString("MM-dd-yyyy") + " to " + mEndDay.ToString("MM-dd-yyyy"));
 
             //If the user entered a name/location, save the file
-            if (sName != false)
+            if (sName is string && sName.Length > 1)
             {
-                workSheet.SaveAs(sName);
+                workSheet.SaveAs(sName + "xlsx");
             }
 
         }   // End MakeExcelFile()

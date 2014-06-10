@@ -116,6 +116,7 @@
     <Compile Include="CalendarMaker.cs" />
     <Compile Include="DatesAndAssignments.cs" />
     <Compile Include="DatesAndGroups.cs" />
+    <Compile Include="DatesStruct.cs" />
     <Compile Include="FileInputs.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

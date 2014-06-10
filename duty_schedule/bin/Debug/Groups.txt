@@ -1,5 +1,5 @@
 Herp Derps   
-// It should disregard comments like this one 
+# It should disregard comments like this one 
 	Amanda - 12/4/2012, 8/4/12
 	Wesley Maxey
 Groups and whatnot
@@ -8,8 +8,8 @@ Groups and whatnot
 	Jessica			- 12/4/2012, 8/4/12, 11-4-2012, 9-4-12 
 	Amanda - 11-4-2012, 9-4-12
 	
-	//It should ignore this too
-    // And with spaces instead of a tab
+	#It should ignore this too
+    # And with spaces instead of a tab
 	
 
 Derp Herps and Stuff
