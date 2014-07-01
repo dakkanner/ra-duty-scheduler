@@ -1,0 +1,45 @@
+string groupsStr = "#" + Environment.NewLine
+                + "# PeopleAndGroups.txt" + Environment.NewLine
+                + "# This is the file that contains all the groups and their members along with which days off they want." + Environment.NewLine
+                + "# Note that any line that begins with '#' is taken as a comment, but it won't understand in-line comments." + Environment.NewLine
+                + "#" + Environment.NewLine
+                + "# Groups explained:" + Environment.NewLine
+                + "# 	Each line that doesn't begin with whitespace is a group name. " + Environment.NewLine
+                + "# 	One person from each group will be scheduled for every duty day on the schedule." + Environment.NewLine
+                + "# 	Anyone with the same name in multiple groups will be assigned to both groups." + Environment.NewLine
+                + "# 	" + Environment.NewLine
+                + "# 		Groups in this example: Senior RA, Inside Rounds, and Outside Rounds" + Environment.NewLine
+                + "# 	" + Environment.NewLine
+                + "# People explained: " + Environment.NewLine
+                + "# 	People should be listed after the group name that they belong to." + Environment.NewLine
+                + "# 	If any individual wants to request a day off, add '-' after their name followed by the date." + Environment.NewLine
+                + "# 	If you have multiple people with the same name, make sure you include a last initial/name to differentiate (see Matt A. and Matt B.)" + Environment.NewLine
+                + "# " + Environment.NewLine
+                + "# Other notes: " + Environment.NewLine
+                + "# 	Dates can be in different formats for your convenience" + Environment.NewLine
+                + "#	If you list one person in multiple groups, they will be scheduled for both groups (see Ashley vs. Matt A. and Matt B.)" + Environment.NewLine
+                + "# 		If you list requested days off for someone in multiple groups, the program will append those days to their list of days off (see Ashley)" + Environment.NewLine
+                + "#	Any requested days off will be honored unless every person in that group has the same day listed" + Environment.NewLine
+                + "# 	If you need multiple shifts per night for the same position, just make two groups with the same people" + Environment.NewLine
+                + "#" + Environment.NewLine
+                + Environment.NewLine
+                + "Senior RA" + Environment.NewLine
+                + "	Michael - 12/4/2012, 8/4/12" + Environment.NewLine
+                + "	Jessica" + Environment.NewLine
+                + "	Chris" + Environment.NewLine
+                + "	Ashley - 12/11/2012" + Environment.NewLine
+                + "Inside Rounds" + Environment.NewLine
+                + "    Ashley - 11-10-2012, 9-9-12, 8/8/12 " + Environment.NewLine
+                + "	Matt A.	" + Environment.NewLine
+                + "	David" + Environment.NewLine
+                + "	Sarah" + Environment.NewLine
+                + "	Brittany - 12/4/2012, 8/4/12, 11-4-2012, 9-4-12 " + Environment.NewLine
+                + "	Joshua" + Environment.NewLine
+                + "	Samantha" + Environment.NewLine
+                + "Outside Rounds" + Environment.NewLine
+                + "	Matt B. " + Environment.NewLine
+                + "	Amanda" + Environment.NewLine
+                + "	Andrew - 11-4-2012, 9-4-12" + Environment.NewLine
+                + "	Stephanie" + Environment.NewLine
+                + "	James- 8/1/12, 12/2/2012, 11-30-2012, 9-2-12" + Environment.NewLine
+                + "	Jennifer";

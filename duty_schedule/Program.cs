@@ -19,11 +19,12 @@ namespace Duty_Schedule
             //d.ExportToExcel();
 
 
-            CalendarMaker cal = new CalendarMaker();
+            //CalendarMaker cal = new CalendarMaker();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new Form1());
+            Application.Run(new Page1());
+            //Application.Run(new PageExampleFiles());
         }
     }
 }

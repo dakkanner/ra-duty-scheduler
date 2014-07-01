@@ -46,11 +46,20 @@ namespace Duty_Schedule
         }   //End Person(string name, string group, List<DateTime> daysOff)
 
 
+        public void AddGroup(string group)
+        {
+            mGroups.Add(group);
+        }   //End AddGroup(string group)
+        public void AddDayOffRequested(DateTime DayOff)
+        {
+            mDaysOffRequested.Add(DayOff);
+        }   //End AddDayOffRequested(DateTime DayOff)
+
         public void AddDutyDay(DateTime newDutyDay, string group)
         {
             if (mDutyDays.mDates.Contains(newDutyDay))
-                throw new Exception("Error: " + this.mName + "Is already scheduled for (day) " + newDutyDay.ToShortDateString() );
-            
+                throw new Exception("Error: " + this.mName + "Is already scheduled for (day) " + newDutyDay.ToShortDateString());
+
             try
             {
                 mDutyDays.AddDate(newDutyDay, group);
