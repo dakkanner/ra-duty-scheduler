@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Duty_Schedule
 {
-    class DatesStruct
+    public class DatesStruct
     {
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }

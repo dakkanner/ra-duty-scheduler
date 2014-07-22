@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Duty_Schedule
 {
-    class DatesAndAssignments
+    public class DatesAndAssignments
     {
         public struct PersonAndGroup
         {

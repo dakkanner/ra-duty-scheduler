@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Duty_Schedule
 {
-    class FileInputs
+    public class FileInputs
     {
         private string mDirectory;
 
@@ -27,11 +28,11 @@ namespace Duty_Schedule
         {
             List<Person> pplLst = new List<Person>();
 
-            string fullFileLoc = mDirectory + "\\" + groupsFileName;
+            //string fullFileLoc = mDirectory + "\\" + groupsFileName;
 
-            if (File.Exists(fullFileLoc))
+            if (File.Exists(groupsFileName))
             {
-                StreamReader strRead = File.OpenText(fullFileLoc);
+                StreamReader strRead = File.OpenText(groupsFileName);
 
                 string lnStr = "";
                 string currGroup = "";
@@ -138,6 +139,13 @@ namespace Duty_Schedule
                 }
             }
 
+            if(pplLst.Count <= 0)
+            {
+                MessageBox.Show("No people in file " + groupsFileName, "Calendar Input",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+
             return pplLst;
         }   //End GetGroups(string groupsFileName = "Groups.txt")
 
@@ -149,11 +157,11 @@ namespace Duty_Schedule
             List<DateTime> holidayList = new List<DateTime>();
             List<DateTime> breakList = new List<DateTime>();
 
-            string fullFileLoc = mDirectory + "\\" + dateFileName;
+            //string fullFileLoc = mDirectory + "\\" + dateFileName;
 
-            if (File.Exists(fullFileLoc))
+            if (File.Exists(dateFileName))
             {
-                StreamReader strRead = File.OpenText(fullFileLoc);
+                StreamReader strRead = File.OpenText(dateFileName);
 
                 string lnStr = "";
 
@@ -234,6 +242,17 @@ namespace Duty_Schedule
                         }
                     }
                 }
+            }
+
+            if (startDate == new DateTime())
+            {
+                MessageBox.Show("No start date found in file " + dateFileName, "Calendar Input",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            if (endDate == new DateTime())
+            {
+                MessageBox.Show("No end date found in file " + dateFileName, "Calendar Input",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             DatesStruct ds = new DatesStruct();

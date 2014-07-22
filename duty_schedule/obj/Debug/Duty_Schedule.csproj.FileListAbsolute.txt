@@ -172,3 +172,5 @@ C:\Users\i-dkanner\Downloads\ra-duty-scheduler-e96ca97f8f34\ra-duty-scheduler-e9
 C:\Users\i-dkanner\Downloads\ra-duty-scheduler-e96ca97f8f34\ra-duty-scheduler-e96ca97f8f34\Duty_Schedule\obj\Debug\Duty_Schedule.PageExampleFiles.resources
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.Page1.resources
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.PageExampleFiles.resources
+J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.Page3FileOutput.resources
+J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.Page2FileSelect.resources

@@ -1,6 +1,7 @@
-﻿namespace Duty_Schedule
+﻿using System;
+namespace Duty_Schedule
 {
-    partial class Page1
+    partial class Page2FileSelect
     {
         /// <summary>
         /// Required designer variable.
@@ -31,9 +32,13 @@
             this.buttonP1Next = new System.Windows.Forms.Button();
             this.labelHeader = new System.Windows.Forms.Label();
             this.labelSubHeader = new System.Windows.Forms.Label();
-            this.radioButtonWizard = new System.Windows.Forms.RadioButton();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.radioButtonFiles = new System.Windows.Forms.RadioButton();
+            this.dateTextBox = new System.Windows.Forms.TextBox();
+            this.DateFileSelBtn = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.groupFileSelBtn = new System.Windows.Forms.Button();
+            this.groupTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonP1Next
@@ -45,7 +50,7 @@
             this.buttonP1Next.TabIndex = 0;
             this.buttonP1Next.Text = "Next";
             this.buttonP1Next.UseVisualStyleBackColor = true;
-            this.buttonP1Next.Click += new System.EventHandler(this.button1_Click);
+            this.buttonP1Next.Click += new System.EventHandler(this.buttonP1Next_Click);
             // 
             // labelHeader
             // 
@@ -57,28 +62,16 @@
             this.labelHeader.TabIndex = 1;
             this.labelHeader.Text = "Alright. Let\'s get started making a calendar.";
             this.labelHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.labelHeader.Click += new System.EventHandler(this.label1_Click);
             // 
             // labelSubHeader
             // 
             this.labelSubHeader.AutoSize = true;
             this.labelSubHeader.Font = new System.Drawing.Font("Verdana", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSubHeader.Location = new System.Drawing.Point(254, 142);
+            this.labelSubHeader.Location = new System.Drawing.Point(326, 144);
             this.labelSubHeader.Name = "labelSubHeader";
-            this.labelSubHeader.Size = new System.Drawing.Size(298, 25);
+            this.labelSubHeader.Size = new System.Drawing.Size(151, 25);
             this.labelSubHeader.TabIndex = 2;
-            this.labelSubHeader.Text = "How do you want to begin?";
-            // 
-            // radioButtonWizard
-            // 
-            this.radioButtonWizard.AutoSize = true;
-            this.radioButtonWizard.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButtonWizard.Location = new System.Drawing.Point(300, 219);
-            this.radioButtonWizard.Name = "radioButtonWizard";
-            this.radioButtonWizard.Size = new System.Drawing.Size(205, 22);
-            this.radioButtonWizard.TabIndex = 3;
-            this.radioButtonWizard.Text = "Let\'s fill in the blanks";
-            this.radioButtonWizard.UseVisualStyleBackColor = true;
+            this.labelSubHeader.Text = "Let\'s begin...";
             // 
             // linkLabel2
             // 
@@ -92,31 +85,80 @@
             this.linkLabel2.Text = "What do the text files look like?";
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
-            // radioButtonFiles
+            // dateTextBox
             // 
-            this.radioButtonFiles.AutoSize = true;
-            this.radioButtonFiles.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButtonFiles.Location = new System.Drawing.Point(259, 263);
-            this.radioButtonFiles.Name = "radioButtonFiles";
-            this.radioButtonFiles.Size = new System.Drawing.Size(285, 22);
-            this.radioButtonFiles.TabIndex = 4;
-            this.radioButtonFiles.Text = "I\'ve already got some text files";
-            this.radioButtonFiles.UseVisualStyleBackColor = true;
+            this.dateTextBox.Location = new System.Drawing.Point(260, 219);
+            this.dateTextBox.Name = "dateTextBox";
+            this.dateTextBox.Size = new System.Drawing.Size(262, 20);
+            this.dateTextBox.TabIndex = 7;
+            this.dateTextBox.Text = "J:\\Users\\Dak\\Documents";
             // 
-            // Page1
+            // DateFileSelBtn
+            // 
+            this.DateFileSelBtn.Location = new System.Drawing.Point(523, 218);
+            this.DateFileSelBtn.Name = "DateFileSelBtn";
+            this.DateFileSelBtn.Size = new System.Drawing.Size(29, 22);
+            this.DateFileSelBtn.TabIndex = 8;
+            this.DateFileSelBtn.Text = "...";
+            this.DateFileSelBtn.UseVisualStyleBackColor = true;
+            this.DateFileSelBtn.Click += new System.EventHandler(this.DateFileSelBtn_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(260, 200);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(87, 15);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Select date file";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(260, 263);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(130, 15);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Select group/name file";
+            // 
+            // groupFileSelBtn
+            // 
+            this.groupFileSelBtn.Location = new System.Drawing.Point(523, 281);
+            this.groupFileSelBtn.Name = "groupFileSelBtn";
+            this.groupFileSelBtn.Size = new System.Drawing.Size(29, 22);
+            this.groupFileSelBtn.TabIndex = 11;
+            this.groupFileSelBtn.Text = "...";
+            this.groupFileSelBtn.UseVisualStyleBackColor = true;
+            this.groupFileSelBtn.Click += new System.EventHandler(this.groupFileSelBtn_Click);
+            // 
+            // groupTextBox
+            // 
+            this.groupTextBox.Location = new System.Drawing.Point(260, 282);
+            this.groupTextBox.Name = "groupTextBox";
+            this.groupTextBox.Size = new System.Drawing.Size(262, 20);
+            this.groupTextBox.TabIndex = 10;
+            this.groupTextBox.Text = "J:\\Users\\Dak\\Documents";
+            // 
+            // Page2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(784, 462);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.groupFileSelBtn);
+            this.Controls.Add(this.groupTextBox);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.DateFileSelBtn);
+            this.Controls.Add(this.dateTextBox);
             this.Controls.Add(this.linkLabel2);
-            this.Controls.Add(this.radioButtonFiles);
-            this.Controls.Add(this.radioButtonWizard);
             this.Controls.Add(this.labelSubHeader);
             this.Controls.Add(this.labelHeader);
             this.Controls.Add(this.buttonP1Next);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "Page1";
+            this.Name = "Page2";
             this.Text = "Calendar Maker";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
@@ -129,9 +171,14 @@
         private System.Windows.Forms.Button buttonP1Next;
         private System.Windows.Forms.Label labelHeader;
         private System.Windows.Forms.Label labelSubHeader;
-        private System.Windows.Forms.RadioButton radioButtonWizard;
         private System.Windows.Forms.LinkLabel linkLabel2;
-        private System.Windows.Forms.RadioButton radioButtonFiles;
+        private System.Windows.Forms.TextBox dateTextBox;
+        private System.Windows.Forms.Button DateFileSelBtn;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button groupFileSelBtn;
+        private System.Windows.Forms.TextBox groupTextBox;
+        
     }
 }
 

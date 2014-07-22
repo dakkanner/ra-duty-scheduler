@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Duty_Schedule
 {
-    class DatesAndGroups
+    public class DatesAndGroups
     {
         // Public members because I'm lazy. 
         public List<DateTime> mDates;

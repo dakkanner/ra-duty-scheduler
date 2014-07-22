@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Duty_Schedule
 {
-    class Person
+    public class Person
     {
         // Public members because I'm lazy
         public string mName;

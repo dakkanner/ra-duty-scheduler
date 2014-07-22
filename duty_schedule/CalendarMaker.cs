@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace Duty_Schedule
 {
-    class CalendarMaker
+    public class CalendarMaker
     {
         private DateTime mStartDay;
         private DateTime mEndDay;
@@ -31,7 +31,7 @@ namespace Duty_Schedule
         {
             mStartDay = new DateTime();
             mEndDay = new DateTime();
-            
+
             mBreaks = new List<DateTime>();
             mHolidays = new List<DateTime>();
             mWeekends = new List<List<DateTime>>();
@@ -40,43 +40,26 @@ namespace Duty_Schedule
 
             mPeople = new List<Person>();
             mGroups = new List<string>();
-            
-            //mHolidays.Add(new DateTime(2012, 11, 12));
-            //
-            //mBreaks.Add(new DateTime(2012, 11, 24));
-            //mBreaks.Add(new DateTime(2012, 11, 25));
-            //mBreaks.Add(new DateTime(2012, 11, 22));
-            //mBreaks.Add(new DateTime(2012, 11, 23));
-            //
-            //List<DateTime> tempDaysOff = new List<DateTime>();
-            //tempDaysOff.Add(new DateTime(2012, 11, 2));
-            //tempDaysOff.Add(new DateTime(2012, 11, 1));
-            //tempDaysOff.Add(new DateTime(2012, 11, 3));
-            //
-            //mGroups.Add("group 1");
-            //mGroups.Add("group 2");
-            //mGroups.Add("group 3");
-            //
-            //List<string> dualGroup = new List<string>();
-            //dualGroup.Add("group 1");
-            //dualGroup.Add("group 2");
-            //
-            //for (int i = 0; i < 6; i++)
-            //{
-            //    mPeople.Add(new Person(("Person " + mPeople.Count.ToString()), dualGroup, tempDaysOff));
-            //}
-            //for (int i = 0; i < 7; i++)
-            //{
-            //    mPeople.Add(new Person(("Person " + mPeople.Count.ToString()), dualGroup, tempDaysOff));
-            //}
-            //for (int i = 0; i < 5; i++)
-            //{
-            //    mPeople.Add(new Person(("Person " + mPeople.Count.ToString()), "group 3", tempDaysOff));
-            //}
+        }
+
+
+        public CalendarMaker(string dateFilePath, string groupFilePath)
+        {
+            mStartDay = new DateTime();
+            mEndDay = new DateTime();
+
+            mBreaks = new List<DateTime>();
+            mHolidays = new List<DateTime>();
+            mWeekends = new List<List<DateTime>>();
+            mWeekdays = new List<DateTime>();
+            mCalendar = new DatesAndAssignments();
+
+            mPeople = new List<Person>();
+            mGroups = new List<string>();
 
             FileInputs fi = new FileInputs();
-            mPeople = fi.GetGroups();
-            var dates = fi.GetDates();
+            mPeople = fi.GetGroups(groupFilePath);
+            var dates = fi.GetDates(dateFilePath);
 
             mStartDay = dates.startDate;
             mEndDay = dates.endDate;
@@ -88,9 +71,23 @@ namespace Duty_Schedule
             FillCalendar();
             //MakeCSVFile();
             //MakeGoogleCalendar();
-            MakeExcelFile();
+            //MakeExcelFile();
         }
 
+        public DatesAndAssignments GetCalendar()
+        {
+            return mCalendar;
+        }
+
+        public List<Person> GetPeople()
+        {
+            return mPeople;
+        }
+
+        public List<string> GetGroups()
+        {
+            return mGroups;
+        }
 
         public void Initalize()
         {
@@ -380,7 +377,6 @@ namespace Duty_Schedule
                         i++;
                     }
                     file.WriteLine(weekStr);
-
 
                     i++;
                 }
