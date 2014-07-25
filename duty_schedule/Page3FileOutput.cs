@@ -54,6 +54,10 @@ namespace Duty_Schedule
         {
             mCalendar.MakeCSVFile();
         }
+        private void iCalOutputBtn_Click(object sender, EventArgs e)
+        {
+            mCalendar.MakeIcalFiles();
+        }
 
     }
 }

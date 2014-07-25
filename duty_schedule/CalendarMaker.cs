@@ -19,14 +19,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
-using Google.Apis.Auth;
-using Google.Apis.Calendar.v3.Data;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Calendar.v3;
-using Google.Apis.Services;
 using System.Threading;
 using System.IO;
 using System.Windows.Forms;
+using DDay.iCal;
+using DDay.iCal.Serialization.iCalendar;
 
 namespace Duty_Schedule
 {
@@ -401,6 +398,27 @@ namespace Duty_Schedule
 
                         i++;
                     }
+
+
+
+                    // Print duty summery for each group
+                    file.WriteLine();
+                    file.WriteLine();
+                    file.WriteLine();
+                    file.WriteLine("Group, Name, Days count");
+                    foreach (string grp in mGroups)
+                    {
+                        file.WriteLine(grp);
+
+                        foreach (Person per in mPeople)
+                        {
+                            if (per.mGroups.Contains(grp))
+                            {
+                                file.WriteLine( ", " + per.mName + ", " + per.mDutyDays.mDates.Count.ToString());
+                            }
+                        }
+                    }
+
                 }
             }
 
@@ -590,50 +608,56 @@ namespace Duty_Schedule
 
 
 
-        //Output to a Google Calendar
-        public void MakeGoogleCalendar()
+        //Output to a zip of iCal files
+        public void MakeIcalFiles()
         {
-            string calendarName = "jaj0tvgail7mu0bukmn3mcec3s@group.calendar.google.com";
 
-            UserCredential credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                new ClientSecrets
-                {
-                    ClientId = "dak",
-                    ClientSecret = "pw",
-                },
-                new[] { CalendarService.Scope.Calendar },
-                "dak",
-                CancellationToken.None).Result;
 
-            // Create the service.
-            var g = new CalendarService(new BaseClientService.Initializer()
+            foreach (Person per in mPeople)
             {
-                HttpClientInitializer = credential,
-                ApplicationName = "Calendar API Sample",
-            });
+                // Create an iCalendar
+                iCalendar iCal = new iCalendar();
+
+                // Create the event
+                Event evt = iCal.Create<Event>();
+                evt.Summary = "Duty - " + per.mDutyDays.mGroups[0];
+                evt.Description = "";
+                evt.Location = per.mDutyDays.mGroups[0];
+
+                int yr = per.mDutyDays.mDates[0].Year;
+                int mth = per.mDutyDays.mDates[0].Month;
+                int dy = per.mDutyDays.mDates[0].Day;
+                int hr = 17;
+                int min = 0;
+                int sec = 0;
+                evt.Start = new iCalDateTime(yr, mth, dy, hr, min, sec);
+                evt.Duration = TimeSpan.FromHours(1);
 
 
-            try
-            {
-                //Google.Apis.Calendar.v3.CalendarService g = new Google.Apis.Calendar.v3.CalendarService();
+                var uri = "";
+                var feed = iCalendar.LoadFromUri(new Uri(uri));
+                IList<Occurrence> events = feed.GetOccurrences(DateTime.Today.AddYears(-5), DateTime.Today.AddYears(5));
 
-                Event ev = new Event();
+                evt.Organizer = new Organizer();
+                evt.Organizer.CommonName = "";
+                System.Uri senderUri = new Uri("");
+                evt.Organizer.SentBy = senderUri;
+                evt.Organizer.Value = senderUri;
 
-                EventDateTime start = new EventDateTime();
-                start.Date = mCalendar.mDateList[0].Date.ToString();
 
-                ev.AnyoneCanAddSelf = true;
-                ev.EndTimeUnspecified = true;
-                ev.GuestsCanSeeOtherGuests = true;
-                ev.Start = start;
-                ev.Description = "Test Description...";
 
-                g.Events.Insert(ev, calendarName);
+                //// Create another event
+                //Event evt2 = iCal.Create<Event>();
+                //evt2.Summary = "Duty - " + per.mDutyDays.mGroups[0];
+                //evt2.Description = "";
+                //evt2.Location = per.mDutyDays.mGroups[0];
+                //evt2.Start = new iCalDateTime(yr, mth, dy+1, hr, min, sec);
+                //evt2.Duration = TimeSpan.FromHours(1);
+
+                iCalendarSerializer serializer = new iCalendarSerializer(iCal);
+                serializer.Serialize(@"iCalFiles/CalEvents_" + per.mName + ".ics");
             }
-            catch (Exception ex)
-            {
-                string error = ex.Message;
-            }
+
 
             //using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"CalendarOutput.csv", true))
             //{

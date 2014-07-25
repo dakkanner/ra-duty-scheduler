@@ -50,6 +50,7 @@ namespace Duty_Schedule
             this.labelSubHeader = new System.Windows.Forms.Label();
             this.excelOutputBtn = new System.Windows.Forms.Button();
             this.csvOutputBtn = new System.Windows.Forms.Button();
+            this.iCalOutputBtn = new System.Windows.Forms.Button();
             this.foundLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -79,7 +80,7 @@ namespace Duty_Schedule
             // 
             // excelOutputBtn
             // 
-            this.excelOutputBtn.Location = new System.Drawing.Point(344, 338);
+            this.excelOutputBtn.Location = new System.Drawing.Point(344, 326);
             this.excelOutputBtn.Name = "excelOutputBtn";
             this.excelOutputBtn.Size = new System.Drawing.Size(100, 22);
             this.excelOutputBtn.TabIndex = 8;
@@ -89,13 +90,23 @@ namespace Duty_Schedule
             // 
             // csvOutputBtn
             // 
-            this.csvOutputBtn.Location = new System.Drawing.Point(344, 366);
+            this.csvOutputBtn.Location = new System.Drawing.Point(344, 356);
             this.csvOutputBtn.Name = "csvOutputBtn";
             this.csvOutputBtn.Size = new System.Drawing.Size(100, 22);
             this.csvOutputBtn.TabIndex = 11;
             this.csvOutputBtn.Text = "Output to a CSV";
             this.csvOutputBtn.UseVisualStyleBackColor = true;
             this.csvOutputBtn.Click += new System.EventHandler(this.csvOutputBtn_Click);
+            // 
+            // iCalOutputBtn
+            // 
+            this.iCalOutputBtn.Location = new System.Drawing.Point(344, 386);
+            this.iCalOutputBtn.Name = "iCalOutputBtn";
+            this.iCalOutputBtn.Size = new System.Drawing.Size(100, 22);
+            this.iCalOutputBtn.TabIndex = 11;
+            this.iCalOutputBtn.Text = "Output to iCal files";
+            this.iCalOutputBtn.UseVisualStyleBackColor = true;
+            this.iCalOutputBtn.Click += new System.EventHandler(this.iCalOutputBtn_Click);
             // 
             // foundLabel
             // 
@@ -152,6 +163,7 @@ namespace Duty_Schedule
             this.Controls.Add(this.foundLabel);
             this.Controls.Add(this.csvOutputBtn);
             this.Controls.Add(this.excelOutputBtn);
+            //this.Controls.Add(this.iCalOutputBtn);
             this.Controls.Add(this.labelSubHeader);
             this.Controls.Add(this.labelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -172,6 +184,7 @@ namespace Duty_Schedule
         private System.Windows.Forms.Label labelSubHeader;
         private System.Windows.Forms.Button excelOutputBtn;
         private System.Windows.Forms.Button csvOutputBtn;
+        private System.Windows.Forms.Button iCalOutputBtn;
         private System.Windows.Forms.Label foundLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;

@@ -56,7 +56,7 @@ namespace Duty_Schedule
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(487, 104);
+            this.label2.Size = new System.Drawing.Size(487, 117);
             this.label2.TabIndex = 0;
             this.label2.Text = resources.GetString("label2.Text");
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
