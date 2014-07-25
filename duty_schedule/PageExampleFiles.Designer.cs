@@ -1,4 +1,19 @@
-﻿using System;
+﻿//Copyright (C) 2014  Dakota Kanner
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.IO;
 namespace Duty_Schedule
 {
@@ -35,12 +50,16 @@ namespace Duty_Schedule
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.datesCopyBtn = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBox1
             // 
             this.textBox1.AcceptsReturn = true;
             this.textBox1.AcceptsTab = true;
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(12, 30);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
@@ -53,11 +72,13 @@ namespace Duty_Schedule
             // 
             this.textBox2.AcceptsReturn = true;
             this.textBox2.AcceptsTab = true;
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.Location = new System.Drawing.Point(12, 350);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(760, 290);
+            this.textBox2.Size = new System.Drawing.Size(760, 300);
             this.textBox2.TabIndex = 1;
             this.textBox2.Text = resources.GetString("textBox2.Text");
             // 
@@ -81,16 +102,40 @@ namespace Duty_Schedule
             this.label2.TabIndex = 3;
             this.label2.Text = "Example Groups and People Text File";
             // 
+            // datesCopyBtn
+            // 
+            this.datesCopyBtn.Location = new System.Drawing.Point(623, 6);
+            this.datesCopyBtn.Name = "datesCopyBtn";
+            this.datesCopyBtn.Size = new System.Drawing.Size(149, 23);
+            this.datesCopyBtn.TabIndex = 4;
+            this.datesCopyBtn.Text = "Copy dates file to clipboard";
+            this.datesCopyBtn.UseVisualStyleBackColor = true;
+            this.datesCopyBtn.Click += new System.EventHandler(this.datesCopyBtn_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(623, 327);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(149, 23);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Copy groups file to clipboard";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // PageExampleFiles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(784, 662);
+            this.ClientSize = new System.Drawing.Size(784, 661);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.datesCopyBtn);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PageExampleFiles";
             this.Text = "PageExampleFiles";
             this.ResumeLayout(false);
@@ -104,5 +149,7 @@ namespace Duty_Schedule
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button datesCopyBtn;
+        private System.Windows.Forms.Button button1;
     }
 }

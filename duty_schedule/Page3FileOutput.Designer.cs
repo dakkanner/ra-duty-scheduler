@@ -1,4 +1,19 @@
-﻿using System;
+﻿//Copyright (C) 2014  Dakota Kanner
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 namespace Duty_Schedule
 {
     partial class Page3FileOutput
@@ -30,6 +45,7 @@ namespace Duty_Schedule
         private void InitializeComponent(int groupCount, int peopleCount, int daycount)
         //private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Page2FileSelect));
             this.labelHeader = new System.Windows.Forms.Label();
             this.labelSubHeader = new System.Windows.Forms.Label();
             this.excelOutputBtn = new System.Windows.Forms.Button();
@@ -139,7 +155,10 @@ namespace Duty_Schedule
             this.Controls.Add(this.labelSubHeader);
             this.Controls.Add(this.labelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Page3FileOutput";
+            this.MaximizeBox = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Calendar Maker";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);

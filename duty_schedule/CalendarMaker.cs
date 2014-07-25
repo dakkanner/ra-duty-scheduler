@@ -1,4 +1,19 @@
-﻿using System;
+﻿//Copyright (C) 2014  Dakota Kanner
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +25,8 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using System.Threading;
+using System.IO;
+using System.Windows.Forms;
 
 namespace Duty_Schedule
 {
@@ -69,9 +86,6 @@ namespace Duty_Schedule
             Initalize();
             FirstScheduleRun();
             FillCalendar();
-            //MakeCSVFile();
-            //MakeGoogleCalendar();
-            //MakeExcelFile();
         }
 
         public DatesAndAssignments GetCalendar()
@@ -163,7 +177,7 @@ namespace Duty_Schedule
                 else
                 {
                     if (!mBreaks.Contains(currentDay))
-                        throw new Exception("Found invalid date - Should be break, but not listed: " + currentDay.ToShortDateString());
+                        throw new Exception("Found invalid date - Should be break, but " + currentDay.ToShortDateString() + "is not listed as a break.");
                     breakCount++;
                     currentDay = currentDay.AddDays(1);
                 }
@@ -203,8 +217,6 @@ namespace Duty_Schedule
                     List<Person> lowestDutyDaysList = WhoHasFewestDays();
                     List<Person> groupList = WhoIsInGroup(group);
 
-                    //List<Person> commonList = groupList.Intersect(lowestDutyDaysList);
-
                     bool datePlaced = false;
 
                     for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
@@ -223,7 +235,7 @@ namespace Duty_Schedule
                             datePlaced = true;
                         }
                     }
-                    if(!datePlaced)     //Nobody available without the date requested off
+                    if(!datePlaced)     //Nobody available without the date requested off. LOL get rekt.
                     {
                         for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
                         {
@@ -246,8 +258,6 @@ namespace Duty_Schedule
                 {
                     List<Person> lowestDutyDaysList = WhoHasFewestDays();
                     List<Person> groupList = WhoIsInGroup(group);
-
-                    //List<Person> commonList = groupList.Intersect(lowestDutyDaysList);
 
                     bool datePlaced = false;
 
@@ -318,67 +328,79 @@ namespace Duty_Schedule
         //Output to a CSV file
         public void MakeCSVFile()
         {
-            int numMonths = mEndDay.Month - mStartDay.Month;
+            // Show the "Save As" dialog and get the name/location from the user
+            var fileName = "Schedule " + mStartDay.ToString("MM-dd-yyyy") + " to " + mEndDay.ToString("MM-dd-yyyy");
 
-            // Delete any old file if it's there
-            System.IO.File.Delete("CalendarOutput.csv");
+            string sName = Path.GetFileName(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/" + fileName);
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"CalendarOutput.csv", true))
+            saveFileDialog1.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 1;
+            saveFileDialog1.RestoreDirectory = true;
+            saveFileDialog1.FileName = fileName;
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                System.Globalization.DateTimeFormatInfo mfi = new System.Globalization.DateTimeFormatInfo();
+                // Delete any old file if it's there
+                System.IO.File.Delete(saveFileDialog1.FileName);
 
-                int currentMonth = 0;
-                bool breakFromLoop = false;
-                int i = 0;
-                while (i < mCalendar.mDateList.Count)
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(saveFileDialog1.FileName, true))
                 {
-                    if (currentMonth != mCalendar.mDateList[i].Month)
-                    {
-                        // New month header
-                        file.WriteLine("\n");
-                        file.WriteLine( mfi.GetMonthName(mCalendar.mDateList[i].Month).ToString() );
-                        file.WriteLine("Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday");
-                        currentMonth = mCalendar.mDateList[i].Month;
+                    System.Globalization.DateTimeFormatInfo mfi = new System.Globalization.DateTimeFormatInfo();
 
-                        if (i > 0)
-                            i--;
-                    }
-                    string weekStr = "";
-
-                    // Pad space to offset in calendar
-                    for(int j = 0; j < (int)mCalendar.mDateList[i].DayOfWeek; j++)
+                    int currentMonth = 0;
+                    bool breakFromLoop = false;
+                    int i = 0;
+                    while (i < mCalendar.mDateList.Count)
                     {
-                        int asdkfja = (int)mCalendar.mDateList[i].DayOfWeek;
-                        weekStr += ",";
-                    }
-                    breakFromLoop = false;
-                    while (i < mCalendar.mDateList.Count
-                        && breakFromLoop == false
-                        //&& ((int)mCalendar.mDateList[i].DayOfWeek > 0) 
-                        && (mCalendar.mDateList[i].Month == currentMonth) )
-                    {
-                        int asdkfja = (int)mCalendar.mDateList[i].DayOfWeek;
-                        weekStr += mCalendar.mDateList[i].Date.ToShortDateString() + " ";
-
-                        foreach(DatesAndAssignments.PersonAndGroup p in mCalendar.mPeopleList[i])
+                        if (currentMonth != mCalendar.mDateList[i].Month)
                         {
-                            weekStr += " " + p.person.mName;
+                            // New month header
+                            file.WriteLine("\n");
+                            file.WriteLine(mfi.GetMonthName(mCalendar.mDateList[i].Month).ToString());
+                            file.WriteLine("Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday");
+                            currentMonth = mCalendar.mDateList[i].Month;
+
+                            if (i > 0)
+                                i--;
                         }
+                        string weekStr = "";
 
-                        weekStr += ",";
-
-                        if (i < mCalendar.mDateList.Count
-                            && ( (int)mCalendar.mDateList[i].DayOfWeek >= 6
-                            || mCalendar.mDateList[i] != mCalendar.mDateList[i-1].AddDays(1)) )
+                        // Pad space to offset in calendar
+                        for (int j = 0; j < (int)mCalendar.mDateList[i].DayOfWeek; j++)
                         {
-                            breakFromLoop = true;
-                            i--;
+                            int asdkfja = (int)mCalendar.mDateList[i].DayOfWeek;
+                            weekStr += ",";
                         }
+                        breakFromLoop = false;
+                        while (i < mCalendar.mDateList.Count
+                            && breakFromLoop == false
+                            //&& ((int)mCalendar.mDateList[i].DayOfWeek > 0) 
+                            && (mCalendar.mDateList[i].Month == currentMonth))
+                        {
+                            int asdkfja = (int)mCalendar.mDateList[i].DayOfWeek;
+                            weekStr += mCalendar.mDateList[i].Date.ToShortDateString() + " ";
+
+                            foreach (DatesAndAssignments.PersonAndGroup p in mCalendar.mPeopleList[i])
+                            {
+                                weekStr += " " + p.person.mName;
+                            }
+
+                            weekStr += ",";
+
+                            if (i < mCalendar.mDateList.Count
+                                && ((int)mCalendar.mDateList[i].DayOfWeek >= 6
+                                || mCalendar.mDateList[i] != mCalendar.mDateList[i - 1].AddDays(1)))
+                            {
+                                breakFromLoop = true;
+                                i--;
+                            }
+                            i++;
+                        }
+                        file.WriteLine(weekStr);
+
                         i++;
                     }
-                    file.WriteLine(weekStr);
-
-                    i++;
                 }
             }
 
@@ -387,130 +409,179 @@ namespace Duty_Schedule
 
         public void MakeExcelFile()
         {
-            var excelApp = new Microsoft.Office.Interop.Excel.Application();
-
-            // Create a new, empty workbook and add it to the collection returned  
-            // by property Workbooks. The new workbook becomes the active workbook. 
-            // Add has an optional parameter for specifying a praticular template.  
-            // Because no argument is sent in this example, Add creates a new workbook. 
-            excelApp.Workbooks.Add();
-
-            // This project uses a single workSheet
-            Microsoft.Office.Interop.Excel._Worksheet workSheet 
-                = (Microsoft.Office.Interop.Excel.Worksheet)excelApp.ActiveSheet;
-
-            System.Globalization.DateTimeFormatInfo mfi = new System.Globalization.DateTimeFormatInfo();
-
-            int currentMonth = 0;
-            bool breakFromLoop = false;
-            int i = 0;
-
-            int cRow = 0;
-            char cCol = 'A';
-
-            // Center the output
-            workSheet.Cells[1, "A"].Style.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
-
-            while (i < mCalendar.mDateList.Count)
+            // Check if Excel is installed
+            Type officeType = Type.GetTypeFromProgID("Excel.Application");
+            if (officeType != null)
             {
-                if (currentMonth != mCalendar.mDateList[i].Month)
+                Cursor.Current = Cursors.WaitCursor;
+
+                var excelApp = new Microsoft.Office.Interop.Excel.Application();
+
+                // Create a new, empty workbook and add it to the collection returned  
+                // by property Workbooks. The new workbook becomes the active workbook. 
+                // Add has an optional parameter for specifying a praticular template.  
+                // Because no argument is sent in this example, Add creates a new workbook. 
+                excelApp.Workbooks.Add();
+
+                // This project uses a single workSheet
+                Microsoft.Office.Interop.Excel._Worksheet workSheet
+                    = (Microsoft.Office.Interop.Excel.Worksheet)excelApp.ActiveSheet;
+
+                System.Globalization.DateTimeFormatInfo mfi = new System.Globalization.DateTimeFormatInfo();
+
+                int currentMonth = 0;
+                bool breakFromLoop = false;
+                int i = 0;
+
+                int cRow = 0;
+                char cCol = 'A';
+
+                // Center the output
+                workSheet.Cells[1, "A"].Style.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
+
+                while (i < mCalendar.mDateList.Count)
                 {
-                    // New month header
+                    if (currentMonth != mCalendar.mDateList[i].Month)
+                    {
+                        // New month header
+                        cRow++;
+                        cCol = 'A';
+
+                        workSheet.Cells[cRow, "A"] = mfi.GetMonthName(mCalendar.mDateList[i].Month).ToString();
+
+                        workSheet.Range[workSheet.Cells[cRow, "A"], workSheet.Cells[cRow, "G"]].Merge();
+                        workSheet.Cells[cRow, "A"].Font.Bold = true;
+
+                        cRow++;
+                        workSheet.Cells[cRow, cCol.ToString()] = "Sunday";
+                        cCol++;
+                        workSheet.Cells[cRow, cCol.ToString()] = "Monday";
+                        cCol++;
+                        workSheet.Cells[cRow, cCol.ToString()] = "Tuesday";
+                        cCol++;
+                        workSheet.Cells[cRow, cCol.ToString()] = "Wednesday";
+                        cCol++;
+                        workSheet.Cells[cRow, cCol.ToString()] = "Thursday";
+                        cCol++;
+                        workSheet.Cells[cRow, cCol.ToString()] = "Friday";
+                        cCol++;
+                        workSheet.Cells[cRow, cCol.ToString()] = "Saturday";
+                        currentMonth = mCalendar.mDateList[i].Month;
+
+                        cRow++;
+                        cCol = 'A';
+
+                        if (i > 0)
+                            i--;
+
+                        // Show key for first day of month
+                        // Will be overwritten if needed for calendar
+                        string exString = "Key:";
+                        foreach (string grp in mGroups)
+                        {
+                            exString += "\n" + grp;
+                        }
+
+                        workSheet.Cells[cRow, cCol.ToString()] = exString;
+                    }
+
+                    //Reset at the beginning of each week
+                    cCol = 'A';
+                    string dayStr = "";
+
+                    // Pad space to offset in calendar if week doesn't start on Sunday
+                    for (int j = 0; j < (int)mCalendar.mDateList[i].DayOfWeek; j++)
+                    {
+                        cCol++;
+                    }
+
+                    breakFromLoop = false;
+
+                    //Add all the days and people until the next week/month rolls around
+                    while (i < mCalendar.mDateList.Count
+                        && mCalendar.mDateList[i].Month == currentMonth
+                        && breakFromLoop == false)
+                    {
+                        dayStr += mCalendar.mDateList[i].Day.ToString();
+
+                        foreach (DatesAndAssignments.PersonAndGroup p in mCalendar.mPeopleList[i])
+                        {
+                            dayStr += "\n" + p.person.mName;
+                        }
+                        workSheet.Cells[cRow, cCol.ToString()] = dayStr;
+                        cCol++;
+
+                        //Handle end-of-week and holidays conditions
+                        if (i < mCalendar.mDateList.Count
+                            && ((int)mCalendar.mDateList[i].DayOfWeek >= 6
+                            || i < mCalendar.mDateList.Count - 1
+                            && mCalendar.mDateList[i].AddDays(1) != mCalendar.mDateList[i + 1]))
+                        {
+                            breakFromLoop = true;
+                            i--;
+                        }
+                        i++;
+                        dayStr = "";
+                    }
+
                     cRow++;
                     cCol = 'A';
-
-                    workSheet.Cells[cRow, "A"] = mfi.GetMonthName(mCalendar.mDateList[i].Month).ToString();
-
-                    workSheet.Range[workSheet.Cells[cRow, "A"], workSheet.Cells[cRow, "G"]].Merge();
-                    workSheet.Cells[cRow, "A"].Font.Bold = true;
-
-                    cRow++;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Sunday";
-                    cCol++;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Monday";
-                    cCol++;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Tuesday";
-                    cCol++;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Wednesday";
-                    cCol++;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Thursday";
-                    cCol++;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Friday";
-                    cCol++;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Saturday";
-                    currentMonth = mCalendar.mDateList[i].Month;
-
-                    cRow++;
-                    if (i > 0)
-                        i--;
-                }
-
-                //Reset at the beginning of each week
-                cCol = 'A';
-                string dayStr = "";
-
-                // Pad space to offset in calendar if week doesn't start on Sunday
-                for (int j = 0; j < (int)mCalendar.mDateList[i].DayOfWeek; j++)
-                {
-                    cCol++;
-                }
-
-                breakFromLoop = false;
-
-                //Add all the days and people until the next week/month rolls around
-                while (i < mCalendar.mDateList.Count
-                    && mCalendar.mDateList[i].Month == currentMonth
-                    && breakFromLoop == false)
-                {
-                    dayStr += mCalendar.mDateList[i].Day.ToString();
-
-                    foreach (DatesAndAssignments.PersonAndGroup p in mCalendar.mPeopleList[i])
-                    {
-                        dayStr += "\n" + p.person.mName;
-                    }
-                    workSheet.Cells[cRow, cCol.ToString()] = dayStr;
-                    cCol++;
-
-                    //Handle end-of-week and holidays conditions
-                    if (i < mCalendar.mDateList.Count
-                        && ((int)mCalendar.mDateList[i].DayOfWeek >= 6
-                        || i < mCalendar.mDateList.Count - 1
-                        && mCalendar.mDateList[i].AddDays(1) != mCalendar.mDateList[i + 1]))
-                    {
-                        breakFromLoop = true;
-                        i--;
-                    }
                     i++;
-                    dayStr = "";
+
                 }
 
-                cRow++;
-                cCol = 'A';
-                i++;
+                // Print duty summery for each group
+                cRow += 3;
+                workSheet.Cells[cRow, cCol.ToString()] = "Group";
+                cCol++;
+                workSheet.Cells[cRow, cCol.ToString()] = "Name";
+                cCol++;
+                workSheet.Cells[cRow, cCol.ToString()] = "Days count";
+                cCol++;
+                foreach (string grp in mGroups)
+                {
+                    cRow++;
+                    cCol = 'A';
+                    workSheet.Cells[cRow, cCol.ToString()] = grp;
+                    cRow++;
 
-            }
+                    foreach(Person per in mPeople)
+                    {
+                        if(per.mGroups.Contains(grp))
+                        {
+                            cCol++;
+                            workSheet.Cells[cRow, cCol.ToString()] = per.mName;
+                            cCol++;
+                            workSheet.Cells[cRow, cCol.ToString()] = per.mDutyDays.mDates.Count.ToString();
+                            cCol = 'A';
+                            cRow++;
+                        }
+                    }
+                }
 
-            //Resize all the cells
-            for (int z = 1; z <= 7; z++)
-            {
-                workSheet.Columns[z].ColumnWidth = 35;
-                workSheet.Columns[z].AutoFit();
-            }
-            for (int z = 1; z <= cRow; z++)
-            {
-                workSheet.Rows[z].AutoFit();
-            }
+                // Resize all the cells
+                for (int z = 1; z <= 7; z++)
+                {
+                    workSheet.Columns[z].ColumnWidth = 35;
+                    workSheet.Columns[z].AutoFit();
+                }
+                for (int z = 1; z <= cRow; z++)
+                {
+                    workSheet.Rows[z].AutoFit();
+                }
 
-            // Make the object visible.
-            excelApp.Visible = true;
+                Cursor.Current = Cursors.Default;
+                // Make the object visible
+                excelApp.Visible = true;
 
-            // Show the "Save As" dialog and get the name/location from the user
-            var sName = excelApp.GetSaveAsFilename("Schedule " + mStartDay.ToString("MM-dd-yyyy") + " to " + mEndDay.ToString("MM-dd-yyyy"));
+                // Show the "Save As" dialog and get the name/location from the user
+                var sName = excelApp.GetSaveAsFilename("Schedule " + mStartDay.ToString("MM-dd-yyyy") + " to " + mEndDay.ToString("MM-dd-yyyy"));
 
-            //If the user entered a name/location, save the file
-            if (sName is string && sName.Length > 1)
-            {
-                workSheet.SaveAs(sName + "xlsx");
+                //If the user entered a name/location, save the file
+                if (sName is string && sName.Length > 1)
+                {
+                    workSheet.SaveAs(sName + "xlsx");
+                }
             }
 
         }   // End MakeExcelFile()

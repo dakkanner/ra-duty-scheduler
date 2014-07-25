@@ -174,3 +174,4 @@ J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Sched
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.PageExampleFiles.resources
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.Page3FileOutput.resources
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.Page2FileSelect.resources
+J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.PageAbout.resources

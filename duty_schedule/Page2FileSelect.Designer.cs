@@ -1,4 +1,20 @@
-﻿using System;
+﻿//Copyright (C) 2014  Dakota Kanner
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
+using System.IO;
 namespace Duty_Schedule
 {
     partial class Page2FileSelect
@@ -29,6 +45,7 @@ namespace Duty_Schedule
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Page2FileSelect));
             this.buttonP1Next = new System.Windows.Forms.Button();
             this.labelHeader = new System.Windows.Forms.Label();
             this.labelSubHeader = new System.Windows.Forms.Label();
@@ -39,6 +56,7 @@ namespace Duty_Schedule
             this.label2 = new System.Windows.Forms.Label();
             this.groupFileSelBtn = new System.Windows.Forms.Button();
             this.groupTextBox = new System.Windows.Forms.TextBox();
+            this.aboutLinkLabel = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // buttonP1Next
@@ -58,9 +76,9 @@ namespace Duty_Schedule
             this.labelHeader.Font = new System.Drawing.Font("Verdana", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelHeader.Location = new System.Drawing.Point(60, 72);
             this.labelHeader.Name = "labelHeader";
-            this.labelHeader.Size = new System.Drawing.Size(651, 35);
+            this.labelHeader.Size = new System.Drawing.Size(695, 35);
             this.labelHeader.TabIndex = 1;
-            this.labelHeader.Text = "Alright. Let\'s get started making a calendar.";
+            this.labelHeader.Text = "Alright. Time to get started making a calendar.";
             this.labelHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelSubHeader
@@ -91,7 +109,6 @@ namespace Duty_Schedule
             this.dateTextBox.Name = "dateTextBox";
             this.dateTextBox.Size = new System.Drawing.Size(262, 20);
             this.dateTextBox.TabIndex = 7;
-            this.dateTextBox.Text = "J:\\Users\\Dak\\Documents";
             // 
             // DateFileSelBtn
             // 
@@ -139,14 +156,26 @@ namespace Duty_Schedule
             this.groupTextBox.Name = "groupTextBox";
             this.groupTextBox.Size = new System.Drawing.Size(262, 20);
             this.groupTextBox.TabIndex = 10;
-            this.groupTextBox.Text = "J:\\Users\\Dak\\Documents";
             // 
-            // Page2
+            // aboutLinkLabel
+            // 
+            this.aboutLinkLabel.AutoSize = true;
+            this.aboutLinkLabel.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.aboutLinkLabel.Location = new System.Drawing.Point(12, 439);
+            this.aboutLinkLabel.Name = "aboutLinkLabel";
+            this.aboutLinkLabel.Size = new System.Drawing.Size(147, 14);
+            this.aboutLinkLabel.TabIndex = 13;
+            this.aboutLinkLabel.TabStop = true;
+            this.aboutLinkLabel.Text = "About Calendar Maker";
+            this.aboutLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aboutLinkLabel_LinkClicked);
+            // 
+            // Page2FileSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(784, 462);
+            this.Controls.Add(this.aboutLinkLabel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.groupFileSelBtn);
             this.Controls.Add(this.groupTextBox);
@@ -158,7 +187,10 @@ namespace Duty_Schedule
             this.Controls.Add(this.labelHeader);
             this.Controls.Add(this.buttonP1Next);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "Page2";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "Page2FileSelect";
+            this.MaximizeBox = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Calendar Maker";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
@@ -178,6 +210,7 @@ namespace Duty_Schedule
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button groupFileSelBtn;
         private System.Windows.Forms.TextBox groupTextBox;
+        private System.Windows.Forms.LinkLabel aboutLinkLabel;
         
     }
 }

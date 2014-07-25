@@ -1,4 +1,19 @@
-﻿namespace Duty_Schedule
+﻿//Copyright (C) 2014  Dakota Kanner
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+namespace Duty_Schedule
 {
     partial class Page1
     {
@@ -28,6 +43,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Page1));
             this.buttonP1Next = new System.Windows.Forms.Button();
             this.labelHeader = new System.Windows.Forms.Label();
             this.labelSubHeader = new System.Windows.Forms.Label();
@@ -116,7 +132,11 @@
             this.Controls.Add(this.labelHeader);
             this.Controls.Add(this.buttonP1Next);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Page1";
+            this.MaximizeBox = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Calendar Maker";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
