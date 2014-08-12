@@ -100,11 +100,11 @@ namespace Duty_Schedule
             // 
             // iCalOutputBtn
             // 
-            this.iCalOutputBtn.Location = new System.Drawing.Point(344, 386);
+            this.iCalOutputBtn.Location = new System.Drawing.Point(270, 386);
             this.iCalOutputBtn.Name = "iCalOutputBtn";
-            this.iCalOutputBtn.Size = new System.Drawing.Size(100, 22);
+            this.iCalOutputBtn.Size = new System.Drawing.Size(250, 22);
             this.iCalOutputBtn.TabIndex = 11;
-            this.iCalOutputBtn.Text = "Output to iCal files";
+            this.iCalOutputBtn.Text = "Create Outlook events and send invites";
             this.iCalOutputBtn.UseVisualStyleBackColor = true;
             this.iCalOutputBtn.Click += new System.EventHandler(this.iCalOutputBtn_Click);
             // 
@@ -163,7 +163,7 @@ namespace Duty_Schedule
             this.Controls.Add(this.foundLabel);
             this.Controls.Add(this.csvOutputBtn);
             this.Controls.Add(this.excelOutputBtn);
-            //this.Controls.Add(this.iCalOutputBtn);
+       this.Controls.Add(this.iCalOutputBtn);
             this.Controls.Add(this.labelSubHeader);
             this.Controls.Add(this.labelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

@@ -68,6 +68,9 @@
     <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.OutlookViewCtl, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -127,6 +130,12 @@
     <Compile Include="Page1.Designer.cs">
       <DependentUpon>Page1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Page4GetEventInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Page4GetEventInfo.Designer.cs">
+      <DependentUpon>Page4GetEventInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="PageAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Page1.resx">
       <DependentUpon>Page1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Page4GetEventInfo.resx">
+      <DependentUpon>Page4GetEventInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PageAbout.resx">
       <DependentUpon>PageAbout.cs</DependentUpon>

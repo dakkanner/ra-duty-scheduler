@@ -25,6 +25,7 @@ namespace Duty_Schedule
     {
         // Public members because I'm lazy
         public string mName;
+        public string mEmailAddress;
         public List<string> mGroups;
         public int mWeekendCount;
         public int mWeekdayCount;
@@ -34,6 +35,7 @@ namespace Duty_Schedule
         public Person()
         {
             mName = "";
+            mEmailAddress = "";
             mGroups = new List<string>();
             mWeekendCount = 0;
             mWeekdayCount = 0;
@@ -43,6 +45,7 @@ namespace Duty_Schedule
         public Person(string name, string group, List<DateTime> daysOff)
         {
             mName = name;
+            mEmailAddress = "";
             mGroups = new List<string>();
             mGroups.Add(group);
             mWeekendCount = 0;
@@ -53,6 +56,7 @@ namespace Duty_Schedule
         public Person(string name, List<string> groups, List<DateTime> daysOff)
         {
             mName = name;
+            mEmailAddress = "";
             mGroups = new List<string>(groups) ;
             mWeekendCount = 0;
             mWeekdayCount = 0;
@@ -184,6 +188,5 @@ namespace Duty_Schedule
 
             return dateFound;
         }   //End IsWeekendRequestedOff(List<DateTime> dutyWeekend)
-
     }
 }

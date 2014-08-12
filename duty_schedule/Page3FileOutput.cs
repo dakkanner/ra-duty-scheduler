@@ -56,7 +56,29 @@ namespace Duty_Schedule
         }
         private void iCalOutputBtn_Click(object sender, EventArgs e)
         {
-            mCalendar.MakeIcalFiles();
+            Page4GetEventInfo p4 = new Page4GetEventInfo(mCalendar);
+            var results = p4.ShowDialog();
+
+            if (results == DialogResult.OK)
+            {
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    mCalendar.MakeOutlookEvents(p4.startHour, p4.startMinute, p4.ccEmailList);
+                    Cursor.Current = Cursors.Default;
+                    MessageBox.Show("All invitations sent.");
+                }
+                catch (Exception exc)
+                {
+                    Cursor.Current = Cursors.Default;
+
+                    MessageBox.Show(exc.Message,
+                        "Error in Calendar Invitations",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation,
+                        MessageBoxDefaultButton.Button1);
+                }
+            }
         }
 
     }

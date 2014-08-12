@@ -29,3 +29,4 @@ J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Sch
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\antlr.runtime.dll
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\DDay.Collections.dll
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\DDay.iCal.dll
+J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.Page4GetEventInfo.resources
