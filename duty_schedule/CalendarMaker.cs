@@ -697,11 +697,12 @@ namespace Duty_Schedule
                     }
 
                     // Current user's email address as the organizer
-                    var myEmailAddress = outlookApp.Session.CurrentUser.AddressEntry.Address;
-                    Microsoft.Office.Interop.Outlook.Recipient recipOptional2 =
+                    string myEmailAddress = outlookApp.Session.CurrentUser.AddressEntry.Address;
+                    Microsoft.Office.Interop.Outlook.Recipient recipOrganizer =
                         appt.Recipients.Add(myEmailAddress);
-                    recipOptional2.Type =
-                        (int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olOrganizer;
+                    recipOrganizer.Type =
+                        (int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olRequired;
+                        //(int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olOrganizer;
 
 
                     appt.Recipients.ResolveAll();

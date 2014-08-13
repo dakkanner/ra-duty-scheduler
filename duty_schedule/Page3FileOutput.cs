@@ -47,7 +47,18 @@ namespace Duty_Schedule
 
         private void excelOutputBtn_Click(object sender, EventArgs e)
         {
-            mCalendar.MakeExcelFile();
+            try
+            {
+                mCalendar.MakeExcelFile();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message,
+                    "Error in Excel Output",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation,
+                    MessageBoxDefaultButton.Button1);
+            }
         }
 
         private void csvOutputBtn_Click(object sender, EventArgs e)
@@ -66,14 +77,14 @@ namespace Duty_Schedule
                     Cursor.Current = Cursors.WaitCursor;
                     mCalendar.MakeOutlookEvents(p4.startHour, p4.startMinute, p4.ccEmailList);
                     Cursor.Current = Cursors.Default;
-                    MessageBox.Show("All invitations sent.");
+                    MessageBox.Show("All invitations created.");
                 }
                 catch (Exception exc)
                 {
                     Cursor.Current = Cursors.Default;
 
                     MessageBox.Show(exc.Message,
-                        "Error in Calendar Invitations",
+                        "Error in Calendar Invitation creation",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation,
                         MessageBoxDefaultButton.Button1);
