@@ -22,8 +22,6 @@ using System.Threading;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
-using DDay.iCal;
-using DDay.iCal.Serialization.iCalendar;
 using Microsoft.Office.Interop.Outlook;
 
 namespace Duty_Schedule
@@ -106,20 +104,9 @@ namespace Duty_Schedule
 
             foreach (Person per in mPeople)
             {
-                if (string.IsNullOrEmpty(per.mEmailAddress) == true)
+                if (IsEmailValid(per.mEmailAddress) == false)
                 {
                     emlLst.Add(per);
-                }
-                else
-                {
-                    // Make sure the email address has an '@' follows by a '.'
-                    int atIndex = per.mEmailAddress.IndexOf('@');
-                    int dotIndex = per.mEmailAddress.IndexOf('.', atIndex);
-
-                    if (atIndex == -1 || dotIndex == -1 || atIndex > dotIndex)
-                    {
-                        emlLst.Add(per);
-                    }
                 }
             }
 
@@ -131,24 +118,38 @@ namespace Duty_Schedule
 
             foreach (Person per in mPeople)
             {
-                if (string.IsNullOrEmpty(per.mEmailAddress) == true)
+                if (IsEmailValid(per.mEmailAddress) == false)
                 {
                     emlLst.Add(per.mName);
-                }
-                else
-                {
-                    // Make sure the email address has an '@' follows by a '.'
-                    int atIndex = per.mEmailAddress.IndexOf('@');
-                    int dotIndex = -1;
-                    if (atIndex >= 0)
-                        dotIndex = per.mEmailAddress.IndexOf('.', atIndex);
-
-                    if (atIndex == -1 || dotIndex == -1 || atIndex > dotIndex)
-                        emlLst.Add(per.mName);
                 }
             }
 
             return emlLst;
+        }
+
+        public bool IsEmailValid(string emailAddress)
+        {
+            bool isValid = true;
+
+            if (string.IsNullOrEmpty(emailAddress) == true || emailAddress.Length < 5)
+            {
+                isValid = false;
+            }
+            else
+            {
+                // Make sure the email address has an '@' follows by a '.'
+                int atIndex = emailAddress.IndexOf('@');
+                int dotIndex = -1;
+                if (atIndex > 0)
+                    dotIndex = emailAddress.IndexOf('.', atIndex);
+                else
+                    isValid = false;
+
+                if (atIndex == -1 || dotIndex == -1 || atIndex > dotIndex)
+                    isValid = false;
+            }
+
+            return isValid;
         }
 
         public void Initalize()
@@ -355,6 +356,20 @@ namespace Duty_Schedule
             }
         }   // End FillCalendar()
 
+        //Clears the scheduled info
+        public void ClearCalendar()
+        {
+            foreach (Person per in mPeople)
+            {
+                per.mDutyDays.mDates.Clear();
+                per.mDutyDays.mGroups.Clear();
+                per.mWeekdayCount = 0;
+                per.mWeekendCount = 0;
+            }
+            mCalendar.mDateList.Clear();
+            mCalendar.mPeopleList.Clear();
+        }
+
         //Output to a CSV file
         public void MakeCSVFile()
         {
@@ -420,19 +435,19 @@ namespace Duty_Schedule
 
                             if (i < mCalendar.mDateList.Count
                                 && ((int)mCalendar.mDateList[i].DayOfWeek >= 6
-                                || mCalendar.mDateList[i] != mCalendar.mDateList[i - 1].AddDays(1)))
+                                    || (i > 0
+                                        && mCalendar.mDateList[i] != mCalendar.mDateList[i - 1].AddDays(1))))
                             {
                                 breakFromLoop = true;
                                 i--;
                             }
+
                             i++;
                         }
                         file.WriteLine(weekStr);
 
                         i++;
                     }
-
-
 
                     // Print duty summery for each group
                     file.WriteLine();
@@ -646,13 +661,9 @@ namespace Duty_Schedule
         }   // End MakeExcelFile()
 
 
-
-
-
-        //Output to a zip of iCal files
-        public void MakeOutlookEvents(int startHour, int startMin, List<string> ccEmailList)
+        //Output to calendar events
+        public void MakeOutlookEvents(int startHour, int startMin, List<string> ccEmailList, string senderEmail = "")
         {
-
             Microsoft.Office.Interop.Outlook.Application outlookApp = new Microsoft.Office.Interop.Outlook.Application();
 
             for (int i = 0; i < mCalendar.mDateList.Count; i++)
@@ -690,19 +701,33 @@ namespace Duty_Schedule
                     //Add all CC people
                     foreach (string ccEmail in ccEmailList)
                     {
-                        Microsoft.Office.Interop.Outlook.Recipient recipOptional =
-                            appt.Recipients.Add(ccEmail);
-                        recipOptional.Type =
-                            (int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olOptional;
+                        if (!string.IsNullOrEmpty(ccEmail))
+                        {
+                            Microsoft.Office.Interop.Outlook.Recipient recipOptional =
+                                appt.Recipients.Add(ccEmail);
+                            recipOptional.Type =
+                                (int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olOptional;
+                        }
                     }
 
                     // Current user's email address as the organizer
-                    string myEmailAddress = outlookApp.Session.CurrentUser.AddressEntry.Address;
+                    string myEmailAddress = "";
+                    if (!string.IsNullOrEmpty(senderEmail))
+                    {
+                        myEmailAddress = senderEmail;
+                    }
+                    else
+                    {
+                        myEmailAddress = outlookApp.Session.CurrentUser.AddressEntry.Address;
+                        // Handle global directory name if email is invalid
+                        if (IsEmailValid(myEmailAddress) == false)
+                            myEmailAddress = outlookApp.Session.CurrentUser.Name;
+                    }
                     Microsoft.Office.Interop.Outlook.Recipient recipOrganizer =
                         appt.Recipients.Add(myEmailAddress);
                     recipOrganizer.Type =
-                        (int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olRequired;
-                        //(int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olOrganizer;
+                        (int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olOrganizer;
+                        //(int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olRequired;
 
 
                     appt.Recipients.ResolveAll();

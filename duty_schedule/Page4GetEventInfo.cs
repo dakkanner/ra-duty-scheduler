@@ -13,21 +13,30 @@ namespace Duty_Schedule
     public partial class Page4GetEventInfo : Form
     {
         public CalendarMaker mCalendar { get; set; }
-        public List<string> ccEmailList { get; set; }
-        public int startHour { get; set; }
-        public int startMinute { get; set; }
+        public List<string> mCcEmailList { get; set; }
+        public string mSenderEmail { get; set; }
+        public int mStartHour { get; set; }
+        public int mStartMinute { get; set; }
 
-        public Page4GetEventInfo(CalendarMaker cmIn)
+        public Page4GetEventInfo(CalendarMaker cmIn, List<string> ccEmailListIn = null, string senderEmailIn = "")
         {
-            mCalendar = cmIn;
+            this.mCalendar = cmIn;
+            if (ccEmailListIn != null)
+                mCcEmailList = ccEmailListIn;
+            if (!string.IsNullOrEmpty(senderEmailIn))
+                mSenderEmail = senderEmailIn;
 
             InitializeComponent();
+
+            foreach (string str in ccEmailListIn)
+                this.textBoxCcList.Text += str + " ";
+            this.textBoxSenderEmail.Text = mSenderEmail;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
 
-            List<Person> people = mCalendar.GetPeople();
+            List<Person> people = this.mCalendar.GetPeople();
             foreach (DataGridViewRow row in this.dataGridView1.Rows)
             {
                 int index = -1;
@@ -45,9 +54,9 @@ namespace Duty_Schedule
             }
 
 
-            DialogResult rslt = DialogResult.No;   
+            DialogResult rslt = DialogResult.No;
 
-            List<string> invalidEmails = mCalendar.GetInvalidEmailListStrings();
+            List<string> invalidEmails = this.mCalendar.GetInvalidEmailListStrings();
 
             if (invalidEmails.Count > 0)
             {
@@ -63,13 +72,14 @@ namespace Duty_Schedule
 
             if (rslt == DialogResult.No)
             {
-                startHour = dateTimePicker1.Value.Hour;
-                startMinute = dateTimePicker1.Value.Minute;
+                mStartHour = dateTimePicker1.Value.Hour;
+                mStartMinute = dateTimePicker1.Value.Minute;
 
                 char[] charSeparators = new char[] {' ', ','};
                 string[] ccEmailStrings = textBoxCcList.Text.Split(charSeparators);
                 foreach (string ccEml in ccEmailStrings)
-                    ccEmailList.Add(ccEml);
+                    mCcEmailList.Add(ccEml);
+                mSenderEmail = textBoxSenderEmail.Text;
 
                 this.DialogResult = System.Windows.Forms.DialogResult.OK;
                 this.Close();

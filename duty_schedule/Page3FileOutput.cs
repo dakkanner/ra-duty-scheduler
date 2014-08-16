@@ -28,10 +28,13 @@ namespace Duty_Schedule
     public partial class Page3FileOutput : Form
     {
         public CalendarMaker mCalendar { get; set; }
+        public List<string> mCcEmail { get; set; }
+        public string mSenderEmail { get; set; }
 
         public Page3FileOutput(CalendarMaker cmIn)
         {
             mCalendar = cmIn;
+            mCcEmail = new List<string>();
             InitializeComponent(cmIn.GetGroups().Count, cmIn.GetPeople().Count, cmIn.GetCalendar().mDateList.Count);
             //InitializeComponent();
         }
@@ -63,21 +66,35 @@ namespace Duty_Schedule
 
         private void csvOutputBtn_Click(object sender, EventArgs e)
         {
-            mCalendar.MakeCSVFile();
+            try
+            {
+                mCalendar.MakeCSVFile();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message,
+                    "Error in CSV Output",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation,
+                    MessageBoxDefaultButton.Button1);
+            }
         }
         private void iCalOutputBtn_Click(object sender, EventArgs e)
         {
-            Page4GetEventInfo p4 = new Page4GetEventInfo(mCalendar);
+            Page4GetEventInfo p4 = new Page4GetEventInfo(mCalendar, mCcEmail, mSenderEmail);
             var results = p4.ShowDialog();
 
             if (results == DialogResult.OK)
             {
+                mCcEmail = p4.mCcEmailList;
+                mSenderEmail = p4.mSenderEmail;
+
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    mCalendar.MakeOutlookEvents(p4.startHour, p4.startMinute, p4.ccEmailList);
+                    mCalendar.MakeOutlookEvents(p4.mStartHour, p4.mStartMinute, p4.mCcEmailList);
                     Cursor.Current = Cursors.Default;
-                    MessageBox.Show("All invitations created.");
+                    MessageBox.Show("It looks like all invitations were created.");
                 }
                 catch (Exception exc)
                 {
@@ -89,6 +106,30 @@ namespace Duty_Schedule
                         MessageBoxIcon.Exclamation,
                         MessageBoxDefaultButton.Button1);
                 }
+            }
+        }
+
+        private void rerunBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mCalendar.ClearCalendar();
+                mCalendar.FirstScheduleRun();
+                mCalendar.FillCalendar();
+
+                MessageBox.Show("The schedule has been remade.",
+                    "Done rescheduling",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message,
+                    "Error while rescheduling",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation,
+                    MessageBoxDefaultButton.Button1);
             }
         }
 

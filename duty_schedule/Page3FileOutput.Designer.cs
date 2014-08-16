@@ -51,6 +51,7 @@ namespace Duty_Schedule
             this.excelOutputBtn = new System.Windows.Forms.Button();
             this.csvOutputBtn = new System.Windows.Forms.Button();
             this.iCalOutputBtn = new System.Windows.Forms.Button();
+            this.rerunBtn = new System.Windows.Forms.Button();
             this.foundLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -80,7 +81,7 @@ namespace Duty_Schedule
             // 
             // excelOutputBtn
             // 
-            this.excelOutputBtn.Location = new System.Drawing.Point(344, 326);
+            this.excelOutputBtn.Location = new System.Drawing.Point(344, 310);
             this.excelOutputBtn.Name = "excelOutputBtn";
             this.excelOutputBtn.Size = new System.Drawing.Size(100, 22);
             this.excelOutputBtn.TabIndex = 8;
@@ -90,7 +91,7 @@ namespace Duty_Schedule
             // 
             // csvOutputBtn
             // 
-            this.csvOutputBtn.Location = new System.Drawing.Point(344, 356);
+            this.csvOutputBtn.Location = new System.Drawing.Point(344, 340);
             this.csvOutputBtn.Name = "csvOutputBtn";
             this.csvOutputBtn.Size = new System.Drawing.Size(100, 22);
             this.csvOutputBtn.TabIndex = 11;
@@ -100,13 +101,23 @@ namespace Duty_Schedule
             // 
             // iCalOutputBtn
             // 
-            this.iCalOutputBtn.Location = new System.Drawing.Point(270, 386);
+            this.iCalOutputBtn.Location = new System.Drawing.Point(270, 370);
             this.iCalOutputBtn.Name = "iCalOutputBtn";
             this.iCalOutputBtn.Size = new System.Drawing.Size(250, 22);
             this.iCalOutputBtn.TabIndex = 11;
             this.iCalOutputBtn.Text = "Create Outlook events and send invites";
             this.iCalOutputBtn.UseVisualStyleBackColor = true;
             this.iCalOutputBtn.Click += new System.EventHandler(this.iCalOutputBtn_Click);
+            // 
+            // rerunBtn
+            // 
+            this.rerunBtn.Location = new System.Drawing.Point(295, 415);
+            this.rerunBtn.Name = "rerunBtn";
+            this.rerunBtn.Size = new System.Drawing.Size(200, 22);
+            this.rerunBtn.TabIndex = 8;
+            this.rerunBtn.Text = "I don't like that schedule. Redo it.";
+            this.rerunBtn.UseVisualStyleBackColor = true;
+            this.rerunBtn.Click += new System.EventHandler(this.rerunBtn_Click);
             // 
             // foundLabel
             // 
@@ -163,7 +174,8 @@ namespace Duty_Schedule
             this.Controls.Add(this.foundLabel);
             this.Controls.Add(this.csvOutputBtn);
             this.Controls.Add(this.excelOutputBtn);
-       this.Controls.Add(this.iCalOutputBtn);
+            this.Controls.Add(this.iCalOutputBtn);
+            this.Controls.Add(this.rerunBtn);
             this.Controls.Add(this.labelSubHeader);
             this.Controls.Add(this.labelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -185,6 +197,7 @@ namespace Duty_Schedule
         private System.Windows.Forms.Button excelOutputBtn;
         private System.Windows.Forms.Button csvOutputBtn;
         private System.Windows.Forms.Button iCalOutputBtn;
+        private System.Windows.Forms.Button rerunBtn;
         private System.Windows.Forms.Label foundLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;

@@ -30,3 +30,8 @@ J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\antlr.ru
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\DDay.Collections.dll
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\DDay.iCal.dll
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.Page4GetEventInfo.resources
+J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\Duty_Schedule.exe.manifest
+J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\Duty_Schedule.application
+J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.TrustInfo.xml
+J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.exe.manifest
+J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.application

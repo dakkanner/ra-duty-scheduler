@@ -37,7 +37,9 @@ namespace Duty_Schedule
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.textBoxCcList = new System.Windows.Forms.TextBox();
+            this.textBoxSenderEmail = new System.Windows.Forms.TextBox();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -77,7 +79,7 @@ namespace Duty_Schedule
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(397, 507);
+            this.buttonCancel.Location = new System.Drawing.Point(397, 550);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 1;
@@ -87,11 +89,11 @@ namespace Duty_Schedule
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(316, 507);
+            this.buttonOK.Location = new System.Drawing.Point(316, 550);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 2;
-            this.buttonOK.Text = "OK";
+            this.buttonOK.Text = "Send";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
@@ -148,6 +150,26 @@ namespace Duty_Schedule
             this.textBoxCcList.Size = new System.Drawing.Size(460, 20);
             this.textBoxCcList.TabIndex = 7;
             // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(17, 490);
+            this.label3.Name = "label3";
+            //this.label3.Size = new System.Drawing.Size(346, 18);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "What's your Outlook email address? (enter if sending invites failed)";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBoxSenderEmail
+            // 
+            this.textBoxSenderEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxSenderEmail.Location = new System.Drawing.Point(12, 510);
+            this.textBoxSenderEmail.Name = "textBoxCcList";
+            this.textBoxSenderEmail.Size = new System.Drawing.Size(460, 20);
+            this.textBoxSenderEmail.TabIndex = 7;
+            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.HeaderText = "Name";
@@ -170,13 +192,15 @@ namespace Duty_Schedule
             // 
             // Page4GetEventInfo
             // 
-            this.ccEmailList = new System.Collections.Generic.List<string>();
+            this.mCcEmailList = new System.Collections.Generic.List<string>();
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(484, 542);
+            this.ClientSize = new System.Drawing.Size(484, 585);
             this.Controls.Add(this.textBoxCcList);
+            this.Controls.Add(this.textBoxSenderEmail);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dateTimePicker1);
@@ -205,7 +229,9 @@ namespace Duty_Schedule
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxCcList;
+        private System.Windows.Forms.TextBox textBoxSenderEmail;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
