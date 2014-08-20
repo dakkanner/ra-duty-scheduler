@@ -44,6 +44,10 @@ namespace Duty_Schedule
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.labelWarning = new System.Windows.Forms.Label();
+            this.labelWarning2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,28 +56,15 @@ namespace Duty_Schedule
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.AllowUserToResizeColumns = true;
-
-            this.dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6});
             this.dataGridView1.Location = new System.Drawing.Point(12, 98);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(460, 316);
             this.dataGridView1.TabIndex = 0;
-
-            this.dataGridView1.Columns.Add("Name", "Name");
-            this.dataGridView1.Columns.Add("Email", "Email");
-            this.dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-            var peopleList = mCalendar.GetPeople();
-            foreach (Person per in peopleList)
-            {
-                object[] perinfo = { per.mName, per.mEmailAddress };
-                this.dataGridView1.Rows.Add(perinfo);
-            }
-
-            // Resize name col and set read-only
-            this.dataGridView1.Columns["Name"].Width = 100;
-            this.dataGridView1.Columns["Name"].ReadOnly = true;
             // 
             // buttonCancel
             // 
@@ -142,6 +133,18 @@ namespace Duty_Schedule
             this.label2.Text = "Want to CC anyone? (separate emails with spaces)";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(17, 490);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(444, 18);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "What\'s your Outlook email address? (enter if sending invites failed)";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // textBoxCcList
             // 
             this.textBoxCcList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -150,23 +153,11 @@ namespace Duty_Schedule
             this.textBoxCcList.Size = new System.Drawing.Size(460, 20);
             this.textBoxCcList.TabIndex = 7;
             // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(17, 490);
-            this.label3.Name = "label3";
-            //this.label3.Size = new System.Drawing.Size(346, 18);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "What's your Outlook email address? (enter if sending invites failed)";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // textBoxSenderEmail
             // 
             this.textBoxSenderEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxSenderEmail.Location = new System.Drawing.Point(12, 510);
-            this.textBoxSenderEmail.Name = "textBoxCcList";
+            this.textBoxSenderEmail.Name = "textBoxSenderEmail";
             this.textBoxSenderEmail.Size = new System.Drawing.Size(460, 20);
             this.textBoxSenderEmail.TabIndex = 7;
             // 
@@ -190,14 +181,43 @@ namespace Duty_Schedule
             this.dataGridViewTextBoxColumn4.HeaderText = "Email";
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.HeaderText = "Name";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.HeaderText = "Email";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            // 
+            // labelWarning
+            // 
+            this.labelWarning.AutoSize = true;
+            this.labelWarning.Location = new System.Drawing.Point(34, 545);
+            this.labelWarning.Name = "labelWarning";
+            this.labelWarning.Size = new System.Drawing.Size(219, 13);
+            this.labelWarning.TabIndex = 8;
+            this.labelWarning.Text = "*Warning: This feature may not work properly";
+            // 
+            // labelWarning2
+            // 
+            this.labelWarning2.AutoSize = true;
+            this.labelWarning2.Location = new System.Drawing.Point(60, 560);
+            this.labelWarning2.Name = "labelWarning2";
+            this.labelWarning2.Size = new System.Drawing.Size(163, 13);
+            this.labelWarning2.TabIndex = 9;
+            this.labelWarning2.Text = "depending on your email provider";
+            // 
             // Page4GetEventInfo
             // 
-            this.mCcEmailList = new System.Collections.Generic.List<string>();
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(484, 585);
+            this.Controls.Add(this.labelWarning2);
+            this.Controls.Add(this.labelWarning);
             this.Controls.Add(this.textBoxCcList);
             this.Controls.Add(this.textBoxSenderEmail);
             this.Controls.Add(this.label3);
@@ -217,7 +237,6 @@ namespace Duty_Schedule
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
@@ -236,5 +255,9 @@ namespace Duty_Schedule
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private Label labelWarning;
+        private Label labelWarning2;
     }
 }

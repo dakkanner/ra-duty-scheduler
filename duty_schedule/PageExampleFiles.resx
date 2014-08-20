@@ -123,25 +123,24 @@
 # Note that any line that begins with '#' is taken as a comment, but it won't understand in-line comments.
 #
 # Dates explained:
-# 	'Start' date begins the line with 'Start', then has a '-' before a single date.
+# 	"Start" date begins the line with "Start", then has a '-' before a single date.
 # 		The start date is the first day that you want someone scheduled.
-# 	'End' date begins the line with 'End', then has a '-' before a single date.
+# 	"End" date begins the line with "End", then has a '-' before a single date.
 # 		The end date is the last day that you want someone scheduled.
-# 	'Break' dates begins the line with 'Break', then has a '-' before a list of dates separated by commas.
+# 	"Break" dates begins the line with "Break", then has a '-' before a list of dates separated by commas.
 # 		Breaks are where you won't have anyone scheduled.
-# 	'Holiday' dates begins the line with 'Holiday', then has a '-' before a list of dates separated by commas.
+# 	"Holiday" dates begins the line with "Holiday", then has a '-' before a list of dates separated by commas.
 # 		Holidays are for extending the period of time that anyone on weekend duty will get scheduled. Primarily used for 3-day weekends
 #
 # Other notes: 
 # 	Dates can be in different formats for your convenience
 # 	Holidays and breaks can be in multiple lines and any order 
-#
 
-Start - 9/22/12
-End - 12/7/2012
-Breaks - 11/24/2012, 11/25/2012
-Breaks - 11/22/2012, 11/23/2012
-Holiday - 11/12/2012</value>
+Start - 9/22/14
+End - 12/7/2014
+Breaks - 11/24/2014, 11/25/2014
+Breaks - 11/22/2014, 11/23/2014
+Holiday - 11/12/2014</value>
   </data>
   <data name="textBox2.Text" xml:space="preserve">
     <value># PeopleAndGroups.txt
@@ -152,7 +151,6 @@ Holiday - 11/12/2012</value>
 # 	Each line that doesn't begin with whitespace is a group name. 
 # 	One person from each group will be scheduled for every duty day on the schedule.
 # 	Anyone with the same name in multiple groups will be assigned to both groups.
-# 	
 # 		Groups in this example: Senior RA, Inside Rounds, and Outside Rounds
 # 	
 # People explained: 
@@ -166,27 +164,26 @@ Holiday - 11/12/2012</value>
 # 		If you list requested days off for someone in multiple groups, the program will append those days to their list of days off (see Ashley)
 #	Any requested days off will be honored unless every person in that group has the same day listed
 # 	If you need multiple shifts per night for the same position, just make two groups with the same people
-#
 
 Senior RA
-	Michael - 12/4/2012, 8/4/12
+	Michael - 12/4/2014, 8/4/14
 	Jessica
 	Chris
 Inside Rounds
-	Ashley - 11-10-2012, 9-9-12, 8/8/12 
+	Ashley - 11-10-2014, 9-9-14, 8/8/2014 
 	Matt A.	
 	David
 	Sarah
-	Brittany - 12/4/2012, 8/4/12, 11-4-2012, 9-4-12 
+	Brittany - 12/4/2014, 8/4/14, 11-4-2014, 9-4-14 
 	Joshua
 	Samantha
 Outside Rounds
-	Ashley - 12/11/2012
+	Ashley - 12/11/2014
 	Matt B. 
 	Amanda
-	Andrew - 11-4-2012, 9-4-12
+	Andrew - 11-4-2014, 9-4-14
 	Stephanie
-	James- 8/1/12, 12/2/2012, 11-30-2012, 9-2-12
+	James- 8/1/14, 12/2/2014, 11-30-2014, 9-2-14
 	Jennifer</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />

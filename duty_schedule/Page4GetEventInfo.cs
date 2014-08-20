@@ -20,13 +20,20 @@ namespace Duty_Schedule
 
         public Page4GetEventInfo(CalendarMaker cmIn, List<string> ccEmailListIn = null, string senderEmailIn = "")
         {
+            InitializeComponent();
+
             this.mCalendar = cmIn;
             if (ccEmailListIn != null)
                 mCcEmailList = ccEmailListIn;
             if (!string.IsNullOrEmpty(senderEmailIn))
                 mSenderEmail = senderEmailIn;
 
-            InitializeComponent();
+            var peopleList = mCalendar.GetPeople();
+            foreach (Person per in peopleList)
+            {
+                object[] perinfo = { per.mName, per.mEmailAddress };
+                this.dataGridView1.Rows.Add(perinfo);
+            }
 
             foreach (string str in ccEmailListIn)
                 this.textBoxCcList.Text += str + " ";
@@ -49,7 +56,14 @@ namespace Duty_Schedule
 
                 if (index != -1)
                 {
-                    people[index].mEmailAddress = row.Cells[1].Value.ToString();
+                    try
+                    {
+                        people[index].mEmailAddress = row.Cells[1].Value.ToString();
+                    }
+                    catch 
+                    {
+                        people[index].mEmailAddress = "";
+                    }
                 }
             }
 
