@@ -27,8 +27,6 @@ J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Sch
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.pdb
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.PageAbout.resources
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\antlr.runtime.dll
-J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\DDay.Collections.dll
-J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\DDay.iCal.dll
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.Page4GetEventInfo.resources
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\Duty_Schedule.exe.manifest
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Release\Duty_Schedule.application

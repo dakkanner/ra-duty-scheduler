@@ -142,8 +142,6 @@ J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Debug\Duty_Sched
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Debug\Duty_Schedule.exe
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Debug\Duty_Schedule.pdb
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Debug\antlr.runtime.dll
-J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Debug\DDay.Collections.dll
-J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Debug\DDay.iCal.dll
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Debug\log4net.dll
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Debug\Microsoft.Threading.Tasks.dll
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\bin\Debug\Microsoft.Threading.Tasks.Extensions.dll
