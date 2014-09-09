@@ -282,6 +282,8 @@ namespace Duty_Schedule
                 }
             }
 
+            Random rand = new Random();
+
             // Schedule all the weekdays
             foreach (DateTime wkday in mWeekdays)
             {
@@ -294,14 +296,29 @@ namespace Duty_Schedule
 
                     for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
                     {
-                        // Give it whoever has the least number of duty days (if possible)
+                        // Give it whomever has the least number of duty days (if possible)
 
+                        int randI = rand.Next(i, lowestDutyDaysList.Count);
                         bool wkd = lowestDutyDaysList[i].IsDateRequestedOff(wkday);
-                        bool grp = groupList.Contains(mPeople[i]);
+                        bool grp = groupList.Contains(mPeople[randI]);
 
-                        if (!lowestDutyDaysList[i].IsDateRequestedOff(wkday)
+                        // Try to place a random person first
+                      //  if (!lowestDutyDaysList[randI].IsDateRequestedOff(wkday)
+                      //      && groupList.Contains(lowestDutyDaysList[randI])
+                      //      && !lowestDutyDaysList[randI].mDutyDays.mDates.Contains(wkday)
+                      //      //&& !lowestDutyDaysList[randI].mDutyDays.mDates.Contains(wkday.AddDays(-1))
+                      //      && !datePlaced)
+                      //  {
+                      //      lowestDutyDaysList[randI].AddDutyDay(wkday, group);
+                      //      datePlaced = true;
+                      //  }
+                        // Then try to place the first possible person on the list
+                      //  else 
+                            if (!lowestDutyDaysList[i].IsDateRequestedOff(wkday)
                             && groupList.Contains(lowestDutyDaysList[i])
                             && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)
+                            && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(-1))
+                            && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(1))
                             && !datePlaced)
                         {
                             lowestDutyDaysList[i].AddDutyDay(wkday, group);
@@ -582,8 +599,8 @@ namespace Duty_Schedule
                             //Handle end-of-week and holidays conditions
                             if (i < mCalendar.mDateList.Count
                                 && ((int)mCalendar.mDateList[i].DayOfWeek >= 6
-                                || i < mCalendar.mDateList.Count - 1
-                                && mCalendar.mDateList[i].AddDays(1) != mCalendar.mDateList[i + 1]))
+                                || (i < mCalendar.mDateList.Count - 1
+                                && mCalendar.mDateList[i].AddDays(1) != mCalendar.mDateList[i + 1])))
                             {
                                 breakFromLoop = true;
                                 i--;
@@ -641,15 +658,6 @@ namespace Duty_Schedule
                     Cursor.Current = Cursors.Default;
                     // Make the object visible
                     excelApp.Visible = true;
-
-                    // Show the "Save As" dialog and get the name/location from the user
-                    var sName = excelApp.GetSaveAsFilename("Schedule " + mStartDay.ToString("MM-dd-yyyy") + " to " + mEndDay.ToString("MM-dd-yyyy"));
-
-                    //If the user entered a name/location, save the file
-                    if (sName is string && sName.Length > 1)
-                    {
-                        workSheet.SaveAs(sName + "xlsx");
-                    }
                 }
             }
             catch (System.Exception e)
