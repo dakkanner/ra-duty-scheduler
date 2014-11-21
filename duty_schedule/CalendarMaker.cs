@@ -34,10 +34,10 @@ namespace Duty_Schedule
         private List<DateTime> mHolidays;
         private List<List<DateTime>> mWeekends;
         private List<DateTime> mWeekdays;
-        private List<Person> mPeople;
-        private List<string> mGroups;
 
-        private DatesAndAssignments mCalendar;
+        public List<Person> mPeople;
+        public List<string> mGroups;
+        public DatesAndAssignments mCalendar;
 
         public CalendarMaker()
         {
@@ -86,16 +86,6 @@ namespace Duty_Schedule
         public DatesAndAssignments GetCalendar()
         {
             return mCalendar;
-        }
-
-        public List<Person> GetPeople()
-        {
-            return mPeople;
-        }
-
-        public List<string> GetGroups()
-        {
-            return mGroups;
         }
 
         public List<Person> GetInvalidEmailList()
@@ -189,8 +179,11 @@ namespace Duty_Schedule
                 {
                     mWeekends.Add(new List<DateTime>());
 
-                    while (currentDay.DayOfWeek != DayOfWeek.Monday
-                            || tempHolidays.Contains(currentDay))
+                    while (   (currentDay.DayOfWeek != DayOfWeek.Monday
+                            && currentDay.DayOfWeek != DayOfWeek.Tuesday
+                            && currentDay.DayOfWeek != DayOfWeek.Wednesday
+                            && currentDay.DayOfWeek != DayOfWeek.Thursday)
+                        || tempHolidays.Contains(currentDay))
                     {
                         mWeekends[weekendCount].Add(currentDay);
 
@@ -266,7 +259,30 @@ namespace Duty_Schedule
                             datePlaced = true;
                         }
                     }
-                    if(!datePlaced)     //Nobody available without the date requested off. LOL get rekt.
+                    //Nobody available without the date requested off; expand search to more than min number of days
+                    if (!datePlaced)     
+                    {
+                        lowestDutyDaysList = SortByFewestDays();
+
+                        for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
+                        {
+                            // Give it whoever has the next least number of duty days (if possible)
+
+                            bool wkd = lowestDutyDaysList[i].IsWeekendRequestedOff(wknd);
+                            bool grp = groupList.Contains(mPeople[i]);
+
+                            if (!lowestDutyDaysList[i].IsWeekendRequestedOff(wknd)
+                                && groupList.Contains(lowestDutyDaysList[i])
+                                && !lowestDutyDaysList[i].mDutyDays.ContainsDates(wknd)
+                                && !datePlaced)
+                            {
+                                lowestDutyDaysList[i].AddDutyWeekend(wknd, group);
+                                datePlaced = true;
+                            }
+                        }
+                    }
+                    //Nobody available without the date requested off. Force operation.
+                    if(!datePlaced)
                     {
                         for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
                         {
@@ -293,48 +309,92 @@ namespace Duty_Schedule
                     List<Person> groupList = WhoIsInGroup(group);
 
                     bool datePlaced = false;
+                    Person tempPersonSelected = null;
 
                     for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
                     {
                         // Give it whomever has the least number of duty days (if possible)
 
-                        int randI = rand.Next(i, lowestDutyDaysList.Count);
                         bool wkd = lowestDutyDaysList[i].IsDateRequestedOff(wkday);
-                        bool grp = groupList.Contains(mPeople[randI]);
+                        bool grp = groupList.Contains(mPeople[i]);
 
-                        // Try to place a random person first
-                      //  if (!lowestDutyDaysList[randI].IsDateRequestedOff(wkday)
-                      //      && groupList.Contains(lowestDutyDaysList[randI])
-                      //      && !lowestDutyDaysList[randI].mDutyDays.mDates.Contains(wkday)
-                      //      //&& !lowestDutyDaysList[randI].mDutyDays.mDates.Contains(wkday.AddDays(-1))
-                      //      && !datePlaced)
-                      //  {
-                      //      lowestDutyDaysList[randI].AddDutyDay(wkday, group);
-                      //      datePlaced = true;
-                      //  }
-                        // Then try to place the first possible person on the list
-                      //  else 
-                            if (!lowestDutyDaysList[i].IsDateRequestedOff(wkday)
-                            && groupList.Contains(lowestDutyDaysList[i])
-                            && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)
-                            && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(-1))
-                            && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(1))
-                            && !datePlaced)
+                        if (!lowestDutyDaysList[i].IsDateRequestedOff(wkday)            // Check whether this day is requested off
+                            && groupList.Contains(lowestDutyDaysList[i])                // Make sure they belong in the group
+                            && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)  // And that they're not already scheduled
+                            && !datePlaced)                                             // Also that nobody was already placed
                         {
-                            lowestDutyDaysList[i].AddDutyDay(wkday, group);
-                            datePlaced = true;
-                        }
-                    }
-                    if (!datePlaced)     //Nobody available without the date requested off
-                    {
-                        for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
-                        {
-                            if (groupList.Contains(lowestDutyDaysList[i]) 
-                                && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)
-                                && !datePlaced)
+                            // Try to not make people work back-to-back
+                            if (   !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(-1))
+                                && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(1)))
                             {
                                 lowestDutyDaysList[i].AddDutyDay(wkday, group);
                                 datePlaced = true;
+                            }
+                            else    // ...But keep track just in case
+                            {
+                                tempPersonSelected = lowestDutyDaysList[i];
+                            }
+                        }
+                    }
+                    //Nobody available without the date requested off with min days count; expand search
+                    if (!datePlaced) 
+                    {
+                        lowestDutyDaysList = SortByFewestDays();
+
+                        for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
+                        {
+                            // Give it whomever has the least number of duty days (if possible)
+
+                            bool wkd = lowestDutyDaysList[i].IsDateRequestedOff(wkday);
+                            bool grp = groupList.Contains(mPeople[i]);
+
+                            if (!lowestDutyDaysList[i].IsDateRequestedOff(wkday)            // Check whether this day is requested off
+                                && groupList.Contains(lowestDutyDaysList[i])                // Make sure they belong in the group
+                                && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)  // And that they're not already scheduled
+                                && !datePlaced)                                             // Also that nobody was already placed
+                            {
+                                // Try to not make people work back-to-back
+                                if (!lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(-1))
+                                    && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(1)))
+                                {
+                                    lowestDutyDaysList[i].AddDutyDay(wkday, group);
+                                    datePlaced = true;
+                                }
+                                else    // ...But keep track just in case
+                                {
+                                    tempPersonSelected = lowestDutyDaysList[i];
+                                }
+                            }
+                        }
+                    }
+                    //Nobody available without the date requested off
+                    if (!datePlaced)     
+                    {
+                        // If someone is avalable, but would work back-to-back, add them.
+                        if (tempPersonSelected != null)
+                        {
+                            if (groupList.Contains(tempPersonSelected)
+                                    && !tempPersonSelected.mDutyDays.mDates.Contains(wkday)
+                                    && !datePlaced)
+                            {
+                                tempPersonSelected.AddDutyDay(wkday, group);
+                                datePlaced = true;
+                            }
+                            tempPersonSelected = null;
+                        }
+                        // If not, force someone 
+                            //TODO: Pop up message asking user what to do.
+                        else
+                        {
+                            for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
+                            {
+                                if (groupList.Contains(lowestDutyDaysList[i])
+                                    && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)
+                                    && !datePlaced)
+                                {
+                                    lowestDutyDaysList[i].AddDutyDay(wkday, group);
+                                    datePlaced = true;
+                                }
                             }
                         }
                     }
@@ -753,18 +813,69 @@ namespace Duty_Schedule
         }   // End MakeOutlookEvents()
 
 
-
-        // Returns the index of the person with the fewest days scheduled.
+        // Returns the list of people sorted by fewest number of days + randomness within 
         public List<Person> WhoHasFewestDays()
         {
-            //int index = -1;
-            //int currentVal = 99999999;
+            List<Person> sortedList = new List<Person>(mPeople);
+            sortedList = sortedList.OrderBy(o => o.mDutyDays.mDates.Count).ToList();
 
+            //Find the cutoff point for the lowest number of duty days
+            int maxIndex = 0;
+            for (int i = 1; i < sortedList.Count; i++)
+            {
+                if (sortedList[maxIndex].mDutyDays.mDates.Count() == sortedList[i].mDutyDays.mDates.Count())
+                    maxIndex = i;
+                else
+                    break;
+            }
+            //Remove anyone more than the min number of duty days
+            if(maxIndex < sortedList.Count - 1)
+                sortedList.RemoveRange(maxIndex + 1, sortedList.Count - maxIndex - 1);
+
+            //Randomly swap any pairs that have equal scheduled days
+            Random rnd = new Random(DateTime.Now.Second + DateTime.Now.Millisecond);
+            for (int i = 0; i < sortedList.Count - 1; i++)
+            {
+                rnd.Next();
+
+                if (sortedList[i].mDutyDays.mDates.Count == sortedList[i + 1].mDutyDays.mDates.Count
+                    && (rnd.Next() % 2) == 0)
+                {
+                    Person tempPerson = sortedList[i];
+                    sortedList[i] = sortedList[i + 1];
+                    sortedList[i + 1] = tempPerson;
+                }
+            }
+            for (int i = 0; i < sortedList.Count - 1; i++)
+            {
+                rnd.Next();
+
+                if (sortedList[i].mDutyDays.mDates.Count == sortedList[i + 1].mDutyDays.mDates.Count
+                    && (rnd.Next() % 2) == 0)
+                {
+                    Person tempPerson = sortedList[i];
+                    sortedList[i] = sortedList[i + 1];
+                    sortedList[i + 1] = tempPerson;
+                }
+            }
+
+            if(rnd.Next() % 2 == 0)
+            {
+                sortedList.Reverse();
+            }
+
+            return sortedList;
+        }   // End WhoHasFewestDays()
+
+
+        // Returns the list of people sorted by fewest number of days + randomness within 
+        public List<Person> SortByFewestDays()
+        {
             List<Person> sortedList = new List<Person>(mPeople);
             sortedList = sortedList.OrderBy(o => o.mDutyDays.mDates.Count).ToList();
 
             //Randomly swap any pairs that have equal scheduled days
-            Random rnd = new Random();
+            Random rnd = new Random(DateTime.Now.Second + DateTime.Now.Millisecond);
             for (int i = 0; i < sortedList.Count - 1; i++ )
             {
                 rnd.Next();

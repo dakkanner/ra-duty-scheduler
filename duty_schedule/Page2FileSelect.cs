@@ -30,7 +30,7 @@ namespace Duty_Schedule
     {
         public string mDateFilePath { get; set; }
         public string mGroupFilePath { get; set; }
-        public CalendarMaker mCalendar { get; set; }
+        public CalendarMaker mCalendarMaker { get; set; }
 
         public Page2FileSelect()
         {
@@ -39,7 +39,7 @@ namespace Duty_Schedule
 
         public DatesAndAssignments GetCalendar()
         {
-            return this.mCalendar.GetCalendar();
+            return this.mCalendarMaker.mCalendar;
         }
 
         public string GetDateFilePath()
@@ -95,7 +95,7 @@ namespace Duty_Schedule
 
         private void buttonP1Next_Click(object sender, EventArgs e)
         {
-            mCalendar = new CalendarMaker(this.dateTextBox.Text, this.groupTextBox.Text);
+            mCalendarMaker = new CalendarMaker(this.dateTextBox.Text, this.groupTextBox.Text);
             mGroupFilePath = this.groupTextBox.Text;
             mDateFilePath = this.dateTextBox.Text;
             this.DialogResult = DialogResult.OK;

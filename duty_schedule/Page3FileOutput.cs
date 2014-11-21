@@ -27,21 +27,21 @@ namespace Duty_Schedule
 {
     public partial class Page3FileOutput : Form
     {
-        public CalendarMaker mCalendar { get; set; }
+        public CalendarMaker mCalendarMaker { get; set; }
         public List<string> mCcEmail { get; set; }
         public string mSenderEmail { get; set; }
 
         public Page3FileOutput(CalendarMaker cmIn)
         {
-            mCalendar = cmIn;
+            mCalendarMaker = cmIn;
             mCcEmail = new List<string>();
-            InitializeComponent(cmIn.GetGroups().Count, cmIn.GetPeople().Count, cmIn.GetCalendar().mDateList.Count);
+            InitializeComponent(cmIn.mGroups.Count, cmIn.mPeople.Count, cmIn.mCalendar.mDateList.Count);
             //InitializeComponent();
         }
 
         public DatesAndAssignments GetCalendar()
         {
-            return this.mCalendar.GetCalendar();
+            return this.mCalendarMaker.mCalendar;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -52,7 +52,7 @@ namespace Duty_Schedule
         {
             try
             {
-                mCalendar.MakeExcelFile();
+                mCalendarMaker.MakeExcelFile();
             }
             catch (Exception exc)
             {
@@ -68,7 +68,7 @@ namespace Duty_Schedule
         {
             try
             {
-                mCalendar.MakeCSVFile();
+                mCalendarMaker.MakeCSVFile();
             }
             catch (Exception exc)
             {
@@ -81,7 +81,7 @@ namespace Duty_Schedule
         }
         private void iCalOutputBtn_Click(object sender, EventArgs e)
         {
-            Page4GetEventInfo p4 = new Page4GetEventInfo(mCalendar, mCcEmail, mSenderEmail);
+            Page4GetEventInfo p4 = new Page4GetEventInfo(mCalendarMaker, mCcEmail, mSenderEmail);
             var results = p4.ShowDialog();
 
             if (results == DialogResult.OK)
@@ -92,7 +92,7 @@ namespace Duty_Schedule
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    mCalendar.MakeOutlookEvents(p4.mStartHour, p4.mStartMinute, p4.mCcEmailList);
+                    mCalendarMaker.MakeOutlookEvents(p4.mStartHour, p4.mStartMinute, p4.mCcEmailList);
                     Cursor.Current = Cursors.Default;
                     MessageBox.Show("It looks like all invitations were created.");
                 }
@@ -113,9 +113,9 @@ namespace Duty_Schedule
         {
             try
             {
-                mCalendar.ClearCalendar();
-                mCalendar.FirstScheduleRun();
-                mCalendar.FillCalendar();
+                mCalendarMaker.ClearCalendar();
+                mCalendarMaker.FirstScheduleRun();
+                mCalendarMaker.FillCalendar();
 
                 MessageBox.Show("The schedule has been remade.",
                     "Done rescheduling",

@@ -32,3 +32,4 @@ J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Sch
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.application
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.exe
 J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.pdb
+J:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Release\Duty_Schedule.csprojResolveAssemblyReference.cache

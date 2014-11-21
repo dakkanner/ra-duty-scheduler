@@ -28,7 +28,7 @@ namespace Duty_Schedule
             if (!string.IsNullOrEmpty(senderEmailIn))
                 mSenderEmail = senderEmailIn;
 
-            var peopleList = mCalendar.GetPeople();
+            var peopleList = mCalendar.mPeople;
             foreach (Person per in peopleList)
             {
                 object[] perinfo = { per.mName, per.mEmailAddress };
@@ -43,7 +43,7 @@ namespace Duty_Schedule
         private void buttonOK_Click(object sender, EventArgs e)
         {
 
-            List<Person> people = this.mCalendar.GetPeople();
+            List<Person> people = this.mCalendar.mPeople;
             foreach (DataGridViewRow row in this.dataGridView1.Rows)
             {
                 int index = -1;

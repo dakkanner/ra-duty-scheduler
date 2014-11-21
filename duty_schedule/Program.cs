@@ -46,7 +46,7 @@ namespace Duty_Schedule
                 if (pageResult == DialogResult.OK)
                 {
                     cal = pg2.GetCalendar();
-                    calMaker = pg2.mCalendar;
+                    calMaker = pg2.mCalendarMaker;
                     filePath = pg2.GetDateFilePath();
                     int loc = filePath.LastIndexOf("\\");
                     int loc2 = filePath.LastIndexOf("/");
