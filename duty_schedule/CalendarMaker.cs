@@ -592,12 +592,15 @@ namespace Duty_Schedule
                             cRow++;
                             cCol = 'A';
 
-                            workSheet.Cells[cRow, "A"] = mfi.GetMonthName(mCalendar.mDateList[i].Month).ToString();
+                            workSheet.Cells[cRow, "A"].NumberFormat = "@";
+                            workSheet.Cells[cRow, "A"] = mfi.GetMonthName(mCalendar.mDateList[i].Month).ToString() + " " + mCalendar.mDateList[i].Year.ToString();
+                            workSheet.Cells[cRow, "A"].Font.Size = 14;
 
                             workSheet.Range[workSheet.Cells[cRow, "A"], workSheet.Cells[cRow, "G"]].Merge();
                             workSheet.Cells[cRow, "A"].Font.Bold = true;
 
                             cRow++;
+                            workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
                             workSheet.Cells[cRow, cCol.ToString()] = "Sunday";
                             cCol++;
                             workSheet.Cells[cRow, cCol.ToString()] = "Monday";
@@ -613,6 +616,8 @@ namespace Duty_Schedule
                             workSheet.Cells[cRow, cCol.ToString()] = "Saturday";
                             currentMonth = mCalendar.mDateList[i].Month;
 
+                            BorderAround(workSheet.Range["A" + cRow, "G" + cRow], 0);
+
                             cRow++;
                             cCol = 'A';
 
@@ -621,16 +626,21 @@ namespace Duty_Schedule
 
                             // Show key for first day of month
                             // Will be overwritten if needed for calendar
-                            string exString = "Key:";
+                            string keyString = "Key:";
                             foreach (string grp in mGroups)
                             {
-                                exString += "\n" + grp;
+                                keyString += "\n" + grp;
                             }
 
-                            workSheet.Cells[cRow, cCol.ToString()] = exString;
+                            workSheet.Cells[cRow, cCol.ToString()] = keyString;
+                            workSheet.Cells[cRow, cCol.ToString()].Font.Bold = true;
+                            BorderAround(workSheet.Range["A" + cRow, "G" + cRow], 0);
+                            cCol = 'B';
                         }
 
                         //Reset at the beginning of each week
+                        if (cCol != 'A' && (int)mCalendar.mDateList[i].DayOfWeek == 0)
+                            cRow++;
                         cCol = 'A';
                         string dayStr = "";
 
@@ -654,6 +664,7 @@ namespace Duty_Schedule
                                 dayStr += "\n" + p.person.mName;
                             }
                             workSheet.Cells[cRow, cCol.ToString()] = dayStr;
+                            BorderAround(workSheet.Range["A" + cRow, "G" + cRow], 0);
                             cCol++;
 
                             //Handle end-of-week and holidays conditions
@@ -675,13 +686,20 @@ namespace Duty_Schedule
 
                     }
 
+
+
+                    /*
+                     * Temporarily using the first summary instead of the second until I can fairly force more even load balancing
+                     */
+
                     // Print duty summery for each group
                     cRow += 3;
+                    workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
                     workSheet.Cells[cRow, cCol.ToString()] = "Group";
                     cCol++;
                     workSheet.Cells[cRow, cCol.ToString()] = "Name";
                     cCol++;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Days count";
+                    workSheet.Cells[cRow, cCol.ToString()] = "Total days";
                     cCol++;
                     foreach (string grp in mGroups)
                     {
@@ -703,6 +721,66 @@ namespace Duty_Schedule
                             }
                         }
                     }
+
+                    //// Print duty summery for each group
+                    //cRow += 3;
+                    //workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Group";
+                    //cCol++;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Name";
+                    //cCol++;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Days count";
+                    //cCol++;
+                    //foreach (string grp in mGroups)
+                    //{
+                    //    cRow++;
+                    //    cCol = 'A';
+                    //    workSheet.Cells[cRow, cCol.ToString()] = grp;
+                    //    cRow++;
+                    //
+                    //    for(int j = 0; j < mPeople.Count(); j++)
+                    //    {
+                    //        if (mPeople[j].mGroups.Contains(grp))
+                    //        {
+                    //            cCol++;
+                    //            workSheet.Cells[cRow, cCol.ToString()] = mPeople[j].mName;
+                    //            cCol++;
+                    //            int dutyCount = 0;
+                    //            foreach(string groupCt in mPeople[j].mDutyDays.mGroups)
+                    //            {
+                    //                if (groupCt == grp)
+                    //                    dutyCount++;
+                    //            }
+                    //            workSheet.Cells[cRow, cCol.ToString()] = dutyCount; //mPeople[j].mDutyDays.mDates.Count.ToString();
+                    //            cCol = 'A';
+                    //            cRow++;
+                    //        }
+                    //    }
+                    //}
+                    //
+                    // Print the combined duty days count
+                    //cRow += 2;
+                    //workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Summary";
+                    //cCol++;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Name";
+                    //cCol++;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Total Days";
+                    //cRow++;
+                    //cCol = 'A';
+                    //
+                    //foreach (Person per in mPeople)
+                    //{
+                    //    if (per.mGroups.Count() > 1)
+                    //    {
+                    //        cCol++;
+                    //        workSheet.Cells[cRow, cCol.ToString()] = per.mName;
+                    //        cCol++;
+                    //        workSheet.Cells[cRow, cCol.ToString()] = per.mDutyDays.mDates.Count.ToString();
+                    //        cCol = 'A';
+                    //        cRow++;
+                    //    }
+                    //}
 
                     // Resize all the cells
                     for (int z = 1; z <= 7; z++)
@@ -727,6 +805,25 @@ namespace Duty_Schedule
             }
 
         }   // End MakeExcelFile()
+
+        private void BorderAround(Microsoft.Office.Interop.Excel.Range range, int color)
+        {
+            Microsoft.Office.Interop.Excel.Borders borders = range.Borders;
+
+            // Create a line outside and between each edge
+            borders[Microsoft.Office.Interop.Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+            borders[Microsoft.Office.Interop.Excel.XlBordersIndex.xlEdgeTop].LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+            borders[Microsoft.Office.Interop.Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+            borders[Microsoft.Office.Interop.Excel.XlBordersIndex.xlEdgeRight].LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+            borders[Microsoft.Office.Interop.Excel.XlBordersIndex.xlInsideVertical].LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+            borders[Microsoft.Office.Interop.Excel.XlBordersIndex.xlInsideHorizontal].LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+
+            borders.Color = color;
+
+            // No diagonal borders
+            borders[Microsoft.Office.Interop.Excel.XlBordersIndex.xlDiagonalUp].LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlLineStyleNone;
+            borders[Microsoft.Office.Interop.Excel.XlBordersIndex.xlDiagonalDown].LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlLineStyleNone;
+        }
 
 
         //Output to calendar events
@@ -813,7 +910,7 @@ namespace Duty_Schedule
         }   // End MakeOutlookEvents()
 
 
-        // Returns the list of people sorted by fewest number of days + randomness within 
+        // Returns the list of people with the fewest number of days + randomness within (partial list)
         public List<Person> WhoHasFewestDays()
         {
             List<Person> sortedList = new List<Person>(mPeople);
@@ -832,50 +929,30 @@ namespace Duty_Schedule
             if(maxIndex < sortedList.Count - 1)
                 sortedList.RemoveRange(maxIndex + 1, sortedList.Count - maxIndex - 1);
 
-            //Randomly swap any pairs that have equal scheduled days
-            Random rnd = new Random(DateTime.Now.Second + DateTime.Now.Millisecond);
-            for (int i = 0; i < sortedList.Count - 1; i++)
-            {
-                rnd.Next();
+            List<Person> shuffledList = ShuffleList<Person>(sortedList);
+            shuffledList = ShuffleList<Person>(sortedList);
+            shuffledList = ShuffleList<Person>(sortedList);
+            shuffledList = ShuffleList<Person>(sortedList);
 
-                if (sortedList[i].mDutyDays.mDates.Count == sortedList[i + 1].mDutyDays.mDates.Count
-                    && (rnd.Next() % 2) == 0)
-                {
-                    Person tempPerson = sortedList[i];
-                    sortedList[i] = sortedList[i + 1];
-                    sortedList[i + 1] = tempPerson;
-                }
-            }
-            for (int i = 0; i < sortedList.Count - 1; i++)
-            {
-                rnd.Next();
-
-                if (sortedList[i].mDutyDays.mDates.Count == sortedList[i + 1].mDutyDays.mDates.Count
-                    && (rnd.Next() % 2) == 0)
-                {
-                    Person tempPerson = sortedList[i];
-                    sortedList[i] = sortedList[i + 1];
-                    sortedList[i + 1] = tempPerson;
-                }
-            }
-
-            if(rnd.Next() % 2 == 0)
+            //Reverse the list half of the time
+            Random rnd = new Random();
+            if(rnd.Next() % 2 == 1)
             {
                 sortedList.Reverse();
             }
 
-            return sortedList;
+            return shuffledList;
         }   // End WhoHasFewestDays()
 
 
-        // Returns the list of people sorted by fewest number of days + randomness within 
+        // Returns the list of people sorted by fewest number of days + randomness within (full list)
         public List<Person> SortByFewestDays()
         {
             List<Person> sortedList = new List<Person>(mPeople);
             sortedList = sortedList.OrderBy(o => o.mDutyDays.mDates.Count).ToList();
 
             //Randomly swap any pairs that have equal scheduled days
-            Random rnd = new Random(DateTime.Now.Second + DateTime.Now.Millisecond);
+            Random rnd = new Random();
             for (int i = 0; i < sortedList.Count - 1; i++ )
             {
                 rnd.Next();
@@ -900,9 +977,39 @@ namespace Duty_Schedule
                     sortedList[i + 1] = tempPerson;
                 }
             }
+            for (int i = 0; i < sortedList.Count - 1; i++)
+            {
+                rnd.Next();
+
+                if (sortedList[i].mDutyDays.mDates.Count == sortedList[i + 1].mDutyDays.mDates.Count
+                    && (rnd.Next() % 2) == 0)
+                {
+                    Person tempPerson = sortedList[i];
+                    sortedList[i] = sortedList[i + 1];
+                    sortedList[i + 1] = tempPerson;
+                }
+            }
 
             return sortedList;
         }   // End WhoHasFewestDays()
+
+        // Shuffles a list
+        private List<T> ShuffleList<T>(List<T> inputList)
+        {
+            List<T> inList = new List<T>(inputList);
+            List<T> randomList = new List<T>();
+
+            Random rand = new Random();
+            int randomIndex = 0;
+            while (inList.Count > 0)
+            {
+                randomIndex = rand.Next(0, inList.Count);    // Choose a random object in the list
+                randomList.Add(inList[randomIndex]);         // Add it to the new, random list
+                inList.RemoveAt(randomIndex);                // Remove to avoid duplicates
+            }
+
+            return randomList;  // Return the new random list
+        }   //End ShuffleList(...)
 
         // Returns the index of the person with the most days scheduled. 
         // If there's a tie, returns the first in the list.
