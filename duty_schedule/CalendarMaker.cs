@@ -70,8 +70,8 @@ namespace Duty_Schedule
             mGroups = new List<string>();
 
             FileInputs fi = new FileInputs();
-            mPeople = fi.GetGroups(groupFilePath);
             var dates = fi.GetDates(dateFilePath);
+            mPeople = fi.GetGroups(groupFilePath, dates);
 
             mStartDay = dates.startDate;
             mEndDay = dates.endDate;
@@ -232,8 +232,8 @@ namespace Duty_Schedule
             double weekDaysPerPerson = System.Convert.ToDouble(mWeekdays.Count) * mGroups.Count / mPeople.Count;
             double weekDaysDiff = (System.Convert.ToDouble(mWeekdays.Count) * mGroups.Count) % mPeople.Count;
 
-
             // Schedule all the weekends first
+            // TODO: Put into its own function
             foreach (List<DateTime> wknd in mWeekends)
             {
                 foreach (string group in mGroups)
@@ -290,6 +290,11 @@ namespace Duty_Schedule
                                 && !lowestDutyDaysList[i].mDutyDays.ContainsDates(wknd)
                                 && !datePlaced)
                             {
+                                MessageBox.Show("Nobody avalable for weekend " + wknd[0].ToShortDateString()
+                                                    + Environment.NewLine + "Assigning " + lowestDutyDaysList[i].mName
+                                                    + " to the " + group + " group because they currently have the fewest days.",
+                                                    "Problem Making Calendar");
+
                                 lowestDutyDaysList[i].AddDutyWeekend(wknd, group);
                                 datePlaced = true;
                             }
@@ -301,6 +306,7 @@ namespace Duty_Schedule
             Random rand = new Random();
 
             // Schedule all the weekdays
+            // TODO: Put into its own function
             foreach (DateTime wkday in mWeekdays)
             {
                 foreach (string group in mGroups)
@@ -392,6 +398,11 @@ namespace Duty_Schedule
                                     && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)
                                     && !datePlaced)
                                 {
+                                    MessageBox.Show("Nobody avalable for " + wkday.ToShortDateString()
+                                                    + Environment.NewLine + "Assigning " + lowestDutyDaysList[i].mName
+                                                    + " to the " + group + " group because they currently have the fewest days.",
+                                                    "Problem Making Calendar");
+
                                     lowestDutyDaysList[i].AddDutyDay(wkday, group);
                                     datePlaced = true;
                                 }
@@ -445,7 +456,7 @@ namespace Duty_Schedule
             }
             mCalendar.mDateList.Clear();
             mCalendar.mPeopleList.Clear();
-        }
+        }   // End ClearCalendar()
 
         //Output to a CSV file
         public void MakeCSVFile()
@@ -782,6 +793,7 @@ namespace Duty_Schedule
                     //    }
                     //}
 
+                    excelApp.Visible = true;
                     // Resize all the cells
                     for (int z = 1; z <= 7; z++)
                     {
@@ -795,7 +807,6 @@ namespace Duty_Schedule
 
                     Cursor.Current = Cursors.Default;
                     // Make the object visible
-                    excelApp.Visible = true;
                 }
             }
             catch (System.Exception e)
@@ -829,12 +840,13 @@ namespace Duty_Schedule
         //Output to calendar events
         public void MakeOutlookEvents(int startHour, int startMin, List<string> ccEmailList, string senderEmail = "")
         {
-            Microsoft.Office.Interop.Outlook.Application outlookApp = new Microsoft.Office.Interop.Outlook.Application();
 
             for (int i = 0; i < mCalendar.mDateList.Count; i++)
             {
                 try
                 {
+                    Microsoft.Office.Interop.Outlook.Application outlookApp = new Microsoft.Office.Interop.Outlook.Application();
+
                     Microsoft.Office.Interop.Outlook.AppointmentItem appt =
                             (Microsoft.Office.Interop.Outlook.AppointmentItem)
                             outlookApp.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
@@ -898,14 +910,14 @@ namespace Duty_Schedule
                     appt.Recipients.ResolveAll();
                     appt.Save();
                     appt.Send();
+
+                    outlookApp.Quit();
                 }
                 catch (System.Exception ex)
                 {
                     MessageBox.Show("The following error occurred: " + ex.Message);
                 }
             }
-
-            outlookApp.Quit();
 
         }   // End MakeOutlookEvents()
 
@@ -931,8 +943,6 @@ namespace Duty_Schedule
 
             List<Person> shuffledList = ShuffleList<Person>(sortedList);
             shuffledList = ShuffleList<Person>(sortedList);
-            shuffledList = ShuffleList<Person>(sortedList);
-            shuffledList = ShuffleList<Person>(sortedList);
 
             //Reverse the list half of the time
             Random rnd = new Random();
@@ -940,6 +950,9 @@ namespace Duty_Schedule
             {
                 sortedList.Reverse();
             }
+
+            shuffledList = ShuffleList<Person>(sortedList);
+            shuffledList = ShuffleList<Person>(sortedList);
 
             return shuffledList;
         }   // End WhoHasFewestDays()
@@ -953,42 +966,22 @@ namespace Duty_Schedule
 
             //Randomly swap any pairs that have equal scheduled days
             Random rnd = new Random();
-            for (int i = 0; i < sortedList.Count - 1; i++ )
+            for (int j = 0; j < 50; j++)
             {
-                rnd.Next();
-
-                if(sortedList[i].mDutyDays.mDates.Count == sortedList[i+1].mDutyDays.mDates.Count 
-                    && (rnd.Next() % 2) == 0)
+                for (int i = 0; i < sortedList.Count - 1; i++)
                 {
-                    Person tempPerson = sortedList[i];
-                    sortedList[i] = sortedList[i + 1];
-                    sortedList[i + 1] = tempPerson;
+                    rnd.Next();
+
+                    if (sortedList[i].mDutyDays.mDates.Count == sortedList[i + 1].mDutyDays.mDates.Count
+                        && (rnd.Next() % 2) == 0)
+                    {
+                        Person tempPerson = sortedList[i];
+                        sortedList[i] = sortedList[i + 1];
+                        sortedList[i + 1] = tempPerson;
+                    }
                 }
             }
-            for (int i = 0; i < sortedList.Count - 1; i++)
-            {
-                rnd.Next();
-
-                if (sortedList[i].mDutyDays.mDates.Count == sortedList[i + 1].mDutyDays.mDates.Count
-                    && (rnd.Next() % 2) == 0)
-                {
-                    Person tempPerson = sortedList[i];
-                    sortedList[i] = sortedList[i + 1];
-                    sortedList[i + 1] = tempPerson;
-                }
-            }
-            for (int i = 0; i < sortedList.Count - 1; i++)
-            {
-                rnd.Next();
-
-                if (sortedList[i].mDutyDays.mDates.Count == sortedList[i + 1].mDutyDays.mDates.Count
-                    && (rnd.Next() % 2) == 0)
-                {
-                    Person tempPerson = sortedList[i];
-                    sortedList[i] = sortedList[i + 1];
-                    sortedList[i + 1] = tempPerson;
-                }
-            }
+                
 
             return sortedList;
         }   // End WhoHasFewestDays()
@@ -1043,6 +1036,44 @@ namespace Duty_Schedule
             }
 
             return groupList;
+        }   // End WhoIsInGroup(string groupIn)
+
+        // Returns the index of the person with the most days scheduled. 
+        // If there's a tie, returns the first in the list.
+        public bool CheckDaysOff()
+        {
+            List<Tuple<string, DateTime>> sage = new List<Tuple<string, DateTime>>();
+
+            foreach (Person per in mPeople)
+            {
+                foreach (DateTime dayOff in per.mDaysOffRequested)
+                {
+                    if (mStartDay > dayOff || dayOff > mEndDay)
+                    {
+                        sage.Add(new Tuple<string, DateTime>(per.mName, dayOff));
+                    }
+
+                }
+            }
+            
+            bool fixThings = false;
+            if (sage.Count() > 0)
+            {
+                string errorDays = "Found the following people with invalid days off:\n";
+                foreach (Tuple<string, DateTime> tup in sage)
+                {
+                    errorDays += tup.Item1 + ": " + tup.Item2 + "\n";
+                }
+                errorDays += "Do you want to re-write the file and try again?";
+
+            
+
+                DialogResult result = MessageBox.Show(errorDays, "Error in days off",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if(result != DialogResult.No)
+                    fixThings = true;
+            }
+            return fixThings;
         }   // End WhoIsInGroup(string groupIn)
 
     }   // End class

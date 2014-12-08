@@ -29,46 +29,60 @@ namespace Duty_Schedule
         [STAThread]
         static void Main()
         {
-            string filePath = "";
-            CalendarMaker calMaker = new CalendarMaker();
-            DatesAndAssignments cal = new DatesAndAssignments();
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Page2FileSelect pg2 = new Page2FileSelect();
-            var pageResult = System.Windows.Forms.DialogResult.Cancel;
-
-            // Show the file select page, run until it has enough inputs
-            while (cal.mPeopleList.Count  <= 0 && cal.mDateList.Count <= 0)
+            try
             {
-                pageResult = pg2.ShowDialog();
+                string filePath = "";
+                CalendarMaker calMaker = new CalendarMaker();
+                DatesAndAssignments cal = new DatesAndAssignments();
 
-                if (pageResult == DialogResult.OK)
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Page2FileSelect pg2 = new Page2FileSelect();
+                var pageResult = System.Windows.Forms.DialogResult.Cancel;
+
+                // Show the file select page, run until it has enough inputs
+                while (cal.mPeopleList.Count <= 0 && cal.mDateList.Count <= 0)
                 {
-                    cal = pg2.GetCalendar();
-                    calMaker = pg2.mCalendarMaker;
-                    filePath = pg2.GetDateFilePath();
-                    int loc = filePath.LastIndexOf("\\");
-                    int loc2 = filePath.LastIndexOf("/");
-                    if (loc2 > loc)
-                        loc = loc2;
-                    if (loc != -1)
-                        filePath = filePath.Remove(loc);
-                } 
-                else if (pageResult == DialogResult.Cancel)
+                    pageResult = pg2.ShowDialog();
+
+                    if (pageResult == DialogResult.OK)
+                    {
+                        cal = pg2.GetCalendar();
+                        calMaker = pg2.mCalendarMaker;
+                        filePath = pg2.GetDateFilePath();
+                        int loc = filePath.LastIndexOf("\\");
+                        int loc2 = filePath.LastIndexOf("/");
+                        if (loc2 > loc)
+                            loc = loc2;
+                        if (loc != -1)
+                            filePath = filePath.Remove(loc);
+                    }
+                    else if (pageResult == DialogResult.Cancel)
+                    {
+                        break;
+                    }
+
+                    bool redoDaysOff = calMaker.CheckDaysOff();
+                    if (redoDaysOff)
+                    {
+                        cal.mDateList.Clear();
+                        cal.mPeopleList.Clear();
+                    }
+                }
+                // Display the output dialog
+                if (pageResult == DialogResult.OK
+                    && cal.mPeopleList.Count > 0
+                    && cal.mDateList.Count > 0)
                 {
-                    break;
+                    Page3FileOutput pg3 = new Page3FileOutput(calMaker);
+                    pageResult = pg3.ShowDialog();
                 }
             }
-            // Display the output dialog
-            if (pageResult == DialogResult.OK 
-                && cal.mPeopleList.Count > 0
-                && cal.mDateList.Count > 0)
+            catch(Exception e)
             {
-                Page3FileOutput pg3 = new Page3FileOutput(calMaker);
-                pageResult = pg3.ShowDialog();
+                DialogResult result = MessageBox.Show(e.Message, "Error in scheduling app",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
     }
 }
