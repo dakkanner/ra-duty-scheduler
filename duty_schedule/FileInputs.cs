@@ -205,7 +205,6 @@ namespace Duty_Schedule
                                 int commaIndex = datesRequestedOff.IndexOf(',');
                                 while (datesRequestedOff.Length > 0)//(commaIndex > -1)
                                 {
-                                    // TODO: Add support for "Mondays" in addition to explicit dates
                                     // TODO: Add support for date ranges (e.g. "1/15/2015 - 1/18/2015")
                                     // TODO: Add error message if date not in range
                                     string tempDateStr = "";
@@ -227,7 +226,112 @@ namespace Duty_Schedule
                                         int slashCt = tempDateStr.Split('/').Length - 1;
                                         int dashCt = tempDateStr.Split('-').Length - 1;
 
-                                        if ((slashCt == 2 && dashCt == 0) || (slashCt == 0 && dashCt == 2))
+                                        if ((slashCt == 4 && dashCt == 1))// || (slashCt == 0 && dashCt == 5))
+                                        {
+                                            // Date is probably a range in form of "mm/dd/yy[yy] - mm/dd/yy[yy]" 
+                                            // TODO: Either remove xx-xx[-xxxx] format from being valid or add it to the range capability
+
+                                            int dashIndex = tempDateStr.IndexOf('-');
+
+                                            //Get the two dates
+                                            string tempDateStr1 = tempDateStr.Substring(0, dashIndex).Trim('-').Trim();
+                                            string tempDateStr2 = tempDateStr.Substring(dashIndex).Trim('-').Trim();
+
+                                            // Attempt to parse the start and end dates
+                                            DateTime dStart = new DateTime();
+                                            DateTime dEnd = new DateTime();
+                                            try
+                                            {
+                                                dStart = DateTime.Parse(tempDateStr1);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                MessageBox.Show(e.Message
+                                                    + Environment.NewLine + "Person: " + personName
+                                                    + Environment.NewLine + "Found problem with date: " + tempDateStr1,
+                                                    "Error in groups file");
+                                            }
+
+                                            try
+                                            {
+                                                dEnd = DateTime.Parse(tempDateStr2);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                MessageBox.Show(e.Message
+                                                    + Environment.NewLine + "Person: " + personName
+                                                    + Environment.NewLine + "Found problem with date: " + tempDateStr2,
+                                                    "Error in groups file");
+                                            }
+
+                                            // Add the range to a temp list
+                                            List<DateTime> tempDateList = new List<DateTime>();
+                                            for(DateTime d = dStart; d <= dEnd; d = d.AddDays(1))
+                                            {
+                                                tempDateList.Add(d);
+                                            }
+
+                                            // If the day count seems reasonable, add to to the real list.
+                                            if (tempDateList.Count > 1 && tempDateList.Count < 50)    // 50 seems like a reasonable max mnumber of days off, right?
+                                            {
+                                                dateList.AddRange(tempDateList);
+                                            }
+                                        }
+                                        else if (slashCt == 2 && dashCt == 1)
+                                        {
+                                            // Date is probably a range in form of "mm/dd - mm/dd" 
+                                            // TODO: Either remove xx-xx[-xxxx] format from being valid or add it to the range capability
+
+                                            int dashIndex = tempDateStr.IndexOf('-');
+
+                                            //Get the two dates
+                                            string tempDateStr1 = tempDateStr.Substring(0, dashIndex).Trim('-').Trim();
+                                            string tempDateStr2 = tempDateStr.Substring(dashIndex).Trim('-').Trim();
+                                            // Add the year
+                                            tempDateStr1 += "/" + dates.startDate.Year.ToString();
+                                            tempDateStr2 += "/" + dates.startDate.Year.ToString();
+
+                                            // Attempt to parse the start and end dates
+                                            DateTime dStart = new DateTime();
+                                            DateTime dEnd = new DateTime();
+                                            try
+                                            {
+                                                dStart = DateTime.Parse(tempDateStr1);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                MessageBox.Show(e.Message
+                                                    + Environment.NewLine + "Person: " + personName
+                                                    + Environment.NewLine + "Found problem with date: " + tempDateStr1,
+                                                    "Error in groups file");
+                                            }
+
+                                            try
+                                            {
+                                                dEnd = DateTime.Parse(tempDateStr2);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                MessageBox.Show(e.Message
+                                                    + Environment.NewLine + "Person: " + personName
+                                                    + Environment.NewLine + "Found problem with date: " + tempDateStr2,
+                                                    "Error in groups file");
+                                            }
+
+                                            // Add the range to a temp list
+                                            List<DateTime> tempDateList = new List<DateTime>();
+                                            for (DateTime d = dStart; d <= dEnd; d = d.AddDays(1))
+                                            {
+                                                tempDateList.Add(d);
+                                            }
+
+                                            // If the day count seems reasonable, add to to the real list.
+                                            if (tempDateList.Count > 1 && tempDateList.Count < 50)    // 50 seems like a reasonable max mnumber of days off, right?
+                                            {
+                                                dateList.AddRange(tempDateList);
+                                            }
+                                        }
+                                        else if ((slashCt == 2 && dashCt == 0) || (slashCt == 0 && dashCt == 2))
                                         {
                                             // Date is probably in form of "mm/dd/yy[yy]" or "mm-dd-yy[yy]"
                                             try

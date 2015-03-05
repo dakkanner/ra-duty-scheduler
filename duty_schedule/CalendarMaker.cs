@@ -840,7 +840,7 @@ namespace Duty_Schedule
         //Output to calendar events
         public void MakeOutlookEvents(int startHour, int startMin, List<string> ccEmailList, string senderEmail = "")
         {
-
+            Cursor.Current = Cursors.WaitCursor;
             for (int i = 0; i < mCalendar.mDateList.Count; i++)
             {
                 try
@@ -912,12 +912,15 @@ namespace Duty_Schedule
                     appt.Send();
 
                     outlookApp.Quit();
+                    
                 }
                 catch (System.Exception ex)
                 {
+                    Cursor.Current = Cursors.Default;
                     MessageBox.Show("The following error occurred: " + ex.Message);
                 }
             }
+            Cursor.Current = Cursors.Default;
 
         }   // End MakeOutlookEvents()
 
