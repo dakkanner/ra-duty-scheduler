@@ -412,6 +412,7 @@ namespace Duty_Schedule
 
                 }
             }
+
         }   // End FirstScheduleRun()
 
 
@@ -442,7 +443,45 @@ namespace Duty_Schedule
                 }
                 currentDay = currentDay.AddDays(1);
             }
+
+            RotateSaturdays();
+
         }   // End FillCalendar()
+
+        /// <summary>
+        /// Rotates anyone im simular groups for saturdays
+        /// </summary>
+        public void RotateSaturdays()
+        {
+            // TODO: At the moment, this only really works if there's two dual-groups.
+            //       Fix it so that it actually rotates everyone possible.
+            for(int i = 0; i < mCalendar.mDateList.Count(); i++)
+            {
+                // For only saturdays
+                if(mCalendar.mDateList[i].DayOfWeek.ToString().ToLower().Contains("sat"))
+                {
+                    List<string> grps = new List<string>();
+                    //For each person each day
+                    for (int j = 1; j < mCalendar.mPeopleList[i].Count(); j++)
+                    {
+                        if(mCalendar.mPeopleList[i][j].person.mGroups.Contains(mCalendar.mPeopleList[i][j - 1].group)
+                            && mCalendar.mPeopleList[i][j - 1].person.mGroups.Contains(mCalendar.mPeopleList[i][j].group))
+                        {
+                            // These two people are able to be swapped
+                            var tempPer1 = mCalendar.mPeopleList[i][j];
+                            var tempPer2 = mCalendar.mPeopleList[i][j - 1];
+
+                            Person temp = tempPer1.person;
+                            tempPer1.person = tempPer2.person;
+                            tempPer2.person = temp;
+
+                            mCalendar.mPeopleList[i][j] = tempPer1;
+                            mCalendar.mPeopleList[i][j - 1] = tempPer2;
+                        }
+                    }
+                }
+            }
+        }   // End RotateSaturdays()
 
         //Clears the scheduled info
         public void ClearCalendar()
