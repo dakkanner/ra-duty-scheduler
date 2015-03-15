@@ -149,6 +149,20 @@ namespace Duty_Schedule
             int dayCount = 0;
             int weekendCount = 0;
             int breakCount = 0;
+            bool endsOnWeekend = false;
+            DateTime tempEndDay = mEndDay;
+
+            // Check if the last day of duty lands on a Fri/Sat
+            // Schedule final weekend like normal days if true
+            if (mEndDay.DayOfWeek == DayOfWeek.Friday
+                || mEndDay.DayOfWeek == DayOfWeek.Saturday)
+            {
+                endsOnWeekend = true;
+                if (mEndDay.DayOfWeek == DayOfWeek.Friday)
+                    tempEndDay = mEndDay.AddDays(-1);
+                else
+                    tempEndDay = mEndDay.AddDays(-2);
+            }
 
             // This section finds all the groups
             foreach (Person per in mPeople)
@@ -162,7 +176,7 @@ namespace Duty_Schedule
             }
 
             // This section loads each day into mWeekends or mWeekdays
-            while (currentDay <= mEndDay)
+            while (currentDay <= tempEndDay)
             {
                 //Standard weekday
                 if (currentDay.DayOfWeek >= DayOfWeek.Monday
@@ -208,6 +222,18 @@ namespace Duty_Schedule
                     currentDay = currentDay.AddDays(1);
                 }
             }
+
+            // This part only runs if the last day is Fri/Sat so it doesn't get added as a weekend.
+            // Hopefully it's only standard days because I'm not going to check. lol
+            // TODO: Actually fix the weekends so they can end early too.
+            while (currentDay <= mEndDay)
+            {
+                mWeekdays.Add(currentDay);
+                currentDay = currentDay.AddDays(1);
+                dayCount++;
+            }
+
+
         }   // End Initalize()
 
         public void FirstScheduleRun()
@@ -880,12 +906,23 @@ namespace Duty_Schedule
         public void MakeOutlookEvents(int startHour, int startMin, List<string> ccEmailList, string senderEmail = "")
         {
             Cursor.Current = Cursors.WaitCursor;
+
+            
+            PageSendInvites pageSend = new PageSendInvites();
+
+            float percentMult = mCalendar.mDateList.Count / 102;
+            int secondsEst = mCalendar.mDateList.Count * 4 + 10;
+
+            pageSend.SetLoadingBarPercent(0);
+            pageSend.SetTimeRemaining(secondsEst);
+
+            pageSend.Show();
+            
+            Microsoft.Office.Interop.Outlook.Application outlookApp = new Microsoft.Office.Interop.Outlook.Application();
             for (int i = 0; i < mCalendar.mDateList.Count; i++)
             {
                 try
                 {
-                    Microsoft.Office.Interop.Outlook.Application outlookApp = new Microsoft.Office.Interop.Outlook.Application();
-
                     Microsoft.Office.Interop.Outlook.AppointmentItem appt =
                             (Microsoft.Office.Interop.Outlook.AppointmentItem)
                             outlookApp.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
@@ -906,11 +943,14 @@ namespace Duty_Schedule
                             + mCalendar.mPeopleList[i][j].person.mName 
                             + "\n";
 
-                        // Add main recipients
-                        Microsoft.Office.Interop.Outlook.Recipient recipRequired =
-                            appt.Recipients.Add(mCalendar.mPeopleList[i][j].person.mEmailAddress);
-                        recipRequired.Type =
-                            (int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olRequired;
+                        // Add main recipients (check that the email address exists)
+                        if (mCalendar.mPeopleList[i][j].person.mEmailAddress.Length > 3)
+                        {
+                            Microsoft.Office.Interop.Outlook.Recipient recipRequired =
+                                appt.Recipients.Add(mCalendar.mPeopleList[i][j].person.mEmailAddress);
+                            recipRequired.Type =
+                                (int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olRequired;
+                        }
                     }
                     appt.Body = bodyStr;
 
@@ -948,18 +988,47 @@ namespace Duty_Schedule
 
                     appt.Recipients.ResolveAll();
                     appt.Save();
+
+                    // My computer seems to not like this. Also gives the chance to edit the days before sending.
+                    // TODO: Make this a checkmark in the UI
                     appt.Send();
 
-                    outlookApp.Quit();
-                    
+                    // My system can't seem to handle a few hundred Outlook emails in one go.
+                    // Wait four seconds between each invite creation.
+                    System.Threading.Thread.Sleep(2000);
+                    secondsEst = (mCalendar.mDateList.Count - i) * 4 + 8;
+                    System.Threading.Thread.Sleep(2000);
+
+
+                    pageSend.SetLoadingBarPercent( Convert.ToInt32((i+1) * percentMult) );
+                    secondsEst = (mCalendar.mDateList.Count - (i+1)) * 4 + 10;
+                    pageSend.SetTimeRemaining(secondsEst);
+
                 }
                 catch (System.Exception ex)
                 {
                     Cursor.Current = Cursors.Default;
                     MessageBox.Show("The following error occurred: " + ex.Message);
                 }
+
+
             }
+
+            // Reset from loading cursor to normal
             Cursor.Current = Cursors.Default;
+
+            // Close Outlook after an additional 10 seconds (just in case)
+            System.Threading.Thread.Sleep(5000);
+            pageSend.SetLoadingBarPercent(99);
+            pageSend.SetTimeRemaining(5);
+            
+            System.Threading.Thread.Sleep(5000);
+            pageSend.SetLoadingBarPercent(100);
+            pageSend.SetTimeRemaining(0);
+
+            outlookApp.Quit();
+
+            pageSend.Close();
 
         }   // End MakeOutlookEvents()
 
