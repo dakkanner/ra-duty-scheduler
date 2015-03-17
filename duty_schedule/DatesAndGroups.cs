@@ -21,17 +21,30 @@ using System.Threading.Tasks;
 
 namespace Duty_Schedule
 {
+    /// <summary>
+    /// A list of dates and groups. Used in Person to create a list of the 
+    /// days they have scheduled and for which group.
+    /// </summary>
     public class DatesAndGroups
     {
         // Public members because I'm lazy. 
         public List<DateTime> mDates;
         public List<string> mGroups;
 
+        /// <summary>
+        /// Default ctor
+        /// </summary>
         public DatesAndGroups()
         {
             mDates = new List<DateTime>();
             mGroups = new List<string>();
         }
+
+        /// <summary>
+        /// Ctor with a date and a group.
+        /// </summary>
+        /// <param name="date">DateTime that the person is scheduled for</param>
+        /// <param name="group">Group that the person will be in for that day</param>
         public DatesAndGroups(DateTime date, string group)
         {
             mDates = new List<DateTime>();
@@ -39,18 +52,34 @@ namespace Duty_Schedule
             mGroups = new List<string>();
             mGroups.Add(group);
         }
+
+        /// <summary>
+        /// Ctor with lists of dates and groups.
+        /// </summary>
+        /// <param name="dates">List of DateTimes that the person is scheduled for</param>
+        /// <param name="groups">List of groups that the person will be in for those days</param>
         public DatesAndGroups(List<DateTime> dates, List<string> groups)
         {
             mDates = new List<DateTime>(dates);
             mGroups = new List<string>(groups);
         }
 
+        /// <summary>
+        /// Adds a single scheduled day and group
+        /// </summary>
+        /// <param name="date">DateTime that the person is scheduled for</param>
+        /// <param name="group">Group that the person will be in for that day</param>
         public void AddDate(DateTime date, string group)
         {
             mDates.Add(date);
             mGroups.Add(group);
         }
 
+        /// <summary>
+        /// Adds a list of dates and groups.
+        /// </summary>
+        /// <param name="dates">List of DateTimes that the person is scheduled for</param>
+        /// <param name="groups">List of groups that the person will be in for those days</param>
         public void AddDates(List<DateTime> dates, List<string> groups)
         {
             if (dates.Count != groups.Count)
@@ -67,6 +96,10 @@ namespace Duty_Schedule
             }
         }
 
+        /// <summary>
+        /// Removes a previously scheduled date from the list and the corresponding group.
+        /// </summary>
+        /// <param name="date">The date to remove from this person</param>
         public void RemoveDate(DateTime date)
         {
             int index = mDates.IndexOf(date);
@@ -78,6 +111,11 @@ namespace Duty_Schedule
             }
         }
 
+        /// <summary>
+        /// Returns true if the list contains any of the passed-in dates
+        /// </summary>
+        /// <param name="dates">List of dates to see if they are in mDates</param>
+        /// <returns>Returns true if the list contains the date</returns>
         public bool ContainsDates(List<DateTime> dates)
         {
             bool found = false;
@@ -98,8 +136,5 @@ namespace Duty_Schedule
             }
             return found;
         }
-
-
-
     }
 }

@@ -21,6 +21,10 @@ using System.Threading.Tasks;
 
 namespace Duty_Schedule
 {
+    /// <summary>
+    /// A list of dates and a list of PersonAndGorup. A "simple" was of being able to 
+    /// keep track of who is scheduled for what dates in what groups.
+    /// </summary>
     public class DatesAndAssignments
     {
         public struct PersonAndGroup
@@ -33,16 +37,27 @@ namespace Duty_Schedule
         public List<DateTime> mDateList;
         public List<List<PersonAndGroup>> mPeopleList;
 
+        /// <summary>
+        /// Default ctor
+        /// </summary>
         public DatesAndAssignments()
         {
             mDateList = new List<DateTime>();
             mPeopleList = new List<List<PersonAndGroup>>();
         }
 
+        /// <summary>
+        /// If the date isn't already in the list, add the date.
+        /// Add the Person/group pair to the other list in the corresponding location.
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="prs"></param>
+        /// <param name="grp"></param>
         public void AddDayAndAssignment(DateTime dt, Person prs, string grp)
         {
             int index = mDateList.IndexOf(dt);
 
+            // Date needs to be created
             if (index == -1)
             {
                 mDateList.Add(dt);
@@ -60,7 +75,7 @@ namespace Duty_Schedule
             }
             else
             {
-
+                // This date already exists
                 PersonAndGroup pg = new PersonAndGroup();
                 pg.person = prs;
                 pg.group = grp;
@@ -69,10 +84,5 @@ namespace Duty_Schedule
                     mPeopleList[index].Add(pg);
             }
         }
-
-
-
-
-
     }
 }

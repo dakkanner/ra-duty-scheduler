@@ -23,22 +23,38 @@ using System.Windows.Forms;
 
 namespace Duty_Schedule
 {
+    /// <summary>
+    /// The class for reading in all the files
+    /// </summary>
     public class FileInputs
     {
+        /// <summary>
+        /// The present working directory
+        /// </summary>
         private string mDirectory;
 
-
+        /// <summary>
+        /// The defualt ctor. Gets the directory of the .exe
+        /// </summary>
         public FileInputs() 
         {
             mDirectory = Directory.GetCurrentDirectory();
         }
 
+        /// <summary>
+        /// Ctor with manual directory input
+        /// </summary>
+        /// <param name="directory"></param>
         public FileInputs(string directory)
         {
             mDirectory = directory;
         }
 
-        // Gets the all the groups and names from a file
+        /// <summary>
+        /// Gets the start and end days along with holidays and breaks
+        /// </summary>
+        /// <param name="dateFileName">The name of the file to read from</param>
+        /// <returns></returns>
         public DatesStruct GetDates(string dateFileName = "Dates.txt")
         {
             DateTime startDate = new DateTime();
@@ -105,6 +121,7 @@ namespace Duty_Schedule
                                     holidayList.Add(DateTime.Parse(lnStr));
                             }
                         }
+                        // Break = 'b'
                         else if (lnStr.ToLower()[0] == 'b')
                         {
                             int sepIndex = lnStr.IndexOf('-');
@@ -134,6 +151,7 @@ namespace Duty_Schedule
                 strRead.Close();
             }
 
+            // Display errors is there wasn't a start or end date
             if (startDate == new DateTime())
             {
                 MessageBox.Show("No start date found in file " + dateFileName, "Calendar Input",
@@ -154,7 +172,12 @@ namespace Duty_Schedule
             return ds;
         }   //End GetGroups(string groupsFileName = "Groups.txt")
 
-        // Gets the all the groups and names from a file
+        /// <summary>
+        /// Gets the all the groups and names from a file
+        /// </summary>
+        /// <param name="groupsFileName">The name of the file containing people and groups</param>
+        /// <param name="dates">The DatesStruct that should be made immediatly before this from Dates.txt</param>
+        /// <returns></returns>
         public List<Person> GetGroups(string groupsFileName, DatesStruct dates)
         {
             List<Person> pplLst = new List<Person>();
@@ -187,6 +210,18 @@ namespace Duty_Schedule
                         string datesRequestedOff = "";
                         // This should be a person so remove leading/ending whitespace and find where the name ends
                         string personName = lnStr.Trim();
+
+
+
+
+
+                        //TODO: Add optional email address in here
+
+
+
+
+
+
                         int sepIndex = personName.IndexOf('-');
 
                         // Ignore comments in the file
@@ -503,7 +538,13 @@ namespace Duty_Schedule
             return pplLst;
         }   // End GetGroups(string groupsFileName = "Groups.txt")
 
-        // Gets all specified days within a date range
+        /// <summary>
+        /// Gets all specified days-of-the-week within a date range (e.g. all Mondays)
+        /// </summary>
+        /// <param name="startDate">The day to start the list of days (inclusive)</param>
+        /// <param name="endDate">The day to end the list of da (inclusive)y</param>
+        /// <param name="dayToMatch">The day-of-the-week to find</param>
+        /// <returns>A list of all days that are dayToMatch (e.g. all Mondays)</returns>
         List<DateTime> GetDatesForDayOfWeek(DateTime startDate, DateTime endDate, DayOfWeek dayToMatch)
         {
             List<DateTime> returnList = new List<DateTime>();
@@ -524,6 +565,5 @@ namespace Duty_Schedule
 
             return returnList;
         }
-
     }
 }

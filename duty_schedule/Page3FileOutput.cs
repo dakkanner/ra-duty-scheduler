@@ -35,8 +35,12 @@ namespace Duty_Schedule
         {
             mCalendarMaker = cmIn;
             mCcEmail = new List<string>();
-            InitializeComponent(cmIn.mGroups.Count, cmIn.mPeople.Count, cmIn.mCalendar.mDateList.Count);
-            //InitializeComponent();
+            InitializeComponent();
+
+
+            this.label1.Text = cmIn.mGroups.Count + " groups";
+            this.label2.Text = cmIn.mPeople.Count.ToString() + " people";
+            this.label3.Text = cmIn.mCalendar.mDateList.Count.ToString() + " days";
         }
 
         public DatesAndAssignments GetCalendar()
@@ -127,6 +131,22 @@ namespace Duty_Schedule
             {
                 MessageBox.Show(exc.Message,
                     "Error while rescheduling",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation,
+                    MessageBoxDefaultButton.Button1);
+            }
+        }
+
+        private void csvExportBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mCalendarMaker.ExportCSVFile();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message,
+                    "Error in CSV Export",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation,
                     MessageBoxDefaultButton.Button1);

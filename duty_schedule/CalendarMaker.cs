@@ -441,8 +441,46 @@ namespace Duty_Schedule
 
         }   // End FirstScheduleRun()
 
+        /// <summary>
+        /// This function should check that everyone is +/- one duty day of everyone else in their group(s). 
+        /// If the person is in multiple groups, it goes by the group with the highest number of duty days per person. 
+        /// It will trade people if they don't have it requested off, if it doesn't give them multiple consecutive
+        /// days, and try to avoid consecutive weekends (low priority).
+        /// </summary>
+        public void SecondScheduleRun()
+        {
+            throw new NotImplementedException("SecondScheduleRun has not been made yet.");
+        }   // End SecondScheduleRun()
 
-        // Once all the people have been scheduled, it creates a calendar containing all people
+        /// <summary>
+        /// This function should check that anyone in multiple groups is spread out approximatly evenly
+        /// between the groups. If the person is below the threshold in any one group, this is a 
+        /// low-prority problem. Try to trade them, first locally, then with nearby days.
+        /// If they can't be traded, that's alright.
+        /// </summary>
+        public void ThirdScheduleRun()
+        {
+            throw new NotImplementedException("ThirdScheduleRun has not been made yet.");
+
+            // Threshold for trading is 
+            // floor( (avg # days scheduled for people within that group) * ( 1 / (# groups this person is in) ) )
+            // 
+            // EX: For both groups, each member having 20 duty days.
+            // # groups |  threshold percent | threshold days
+            //    2     |          33%       |       6
+            //    3     |          25%       |       5
+            //    4     |          20%       |       4
+            //    5     |          17%       |       3
+
+            
+
+        }   // End ThirdScheduleRun()
+
+
+        /// <summary>
+        /// Once all the people have been scheduled, it creates a calendar containing 
+        /// all people for each day.
+        /// </summary>
         public void FillCalendar()
         {
             DateTime currentDay = mStartDay;
@@ -509,7 +547,9 @@ namespace Duty_Schedule
             }
         }   // End RotateSaturdays()
 
-        //Clears the scheduled info
+        /// <summary>
+        /// Clears the scheduled info
+        /// </summary>
         public void ClearCalendar()
         {
             foreach (Person per in mPeople)
@@ -523,7 +563,9 @@ namespace Duty_Schedule
             mCalendar.mPeopleList.Clear();
         }   // End ClearCalendar()
 
-        //Output to a CSV file
+        /// <summary>
+        /// Output to a CSV file for human use
+        /// </summary>
         public void MakeCSVFile()
         {
             // Show the "Save As" dialog and get the name/location from the user
@@ -619,13 +661,68 @@ namespace Duty_Schedule
                             }
                         }
                     }
-
                 }
             }
-
-
         }   // End MakeCSVFile()
 
+        /// <summary>
+        /// Output to a CSV file to be easily imported again later.
+        /// 
+        /// TODO: Implement the GUI and backend to import this back.
+        /// </summary>
+        public void ExportCSVFile()
+        {
+            // Show the "Save As" dialog and get the name/location from the user
+            var fileName = "DutyScheduleExport_" + mStartDay.ToString("MM-dd-yyyy");
+
+            string sName = Path.GetFileName(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "/" + fileName);
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+            saveFileDialog1.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 1;
+            saveFileDialog1.RestoreDirectory = true;
+            saveFileDialog1.FileName = fileName;
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                // Delete any old file if it's there
+                System.IO.File.Delete(saveFileDialog1.FileName);
+
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(saveFileDialog1.FileName, true))
+                {
+                    // The first line will be the list of groups if there's at least one person
+                    if (mCalendar.mPeopleList.Count >= 1)
+                    {
+                        string groupsStr = "";
+                        foreach (DatesAndAssignments.PersonAndGroup pg in mCalendar.mPeopleList[0])
+                        {
+                            groupsStr += pg.group + ",";
+                        }
+                        file.WriteLine(groupsStr);
+                    }
+
+                    // Then make a new line for each day
+                    // [date], [name1], [name2], ...
+                    for (int i = 0; i < mCalendar.mDateList.Count; i++)
+                    {
+                        string dayStr = mCalendar.mDateList[i].Date.ToString("MM-dd-yyyy");
+                        dayStr += ",";
+
+                        foreach (DatesAndAssignments.PersonAndGroup pg in mCalendar.mPeopleList[i])
+                        {
+                            dayStr += pg.person.mName + "," ;
+                        }
+
+                        file.WriteLine(dayStr);
+                    }
+                }
+            }
+        }   // End ExportCSVFile()
+
+        /// <summary>
+        /// Creates an Excel file for the calendar including formatting 
+        /// and summary of days worked.
+        /// </summary>
         public void MakeExcelFile()
         {
             try
@@ -799,6 +896,7 @@ namespace Duty_Schedule
                     }
 
                     //// Print duty summery for each group
+                    //// TODO: Switch to this version once SecondScheduleRun() and ThirdScheduleRun() are done
                     //cRow += 3;
                     //workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
                     //workSheet.Cells[cRow, cCol.ToString()] = "Group";
@@ -882,6 +980,11 @@ namespace Duty_Schedule
 
         }   // End MakeExcelFile()
 
+        /// <summary>
+        /// Create a border around a range of Excel cells.
+        /// </summary>
+        /// <param name="range">A range of Excel cells</param>
+        /// <param name="color">The color to border the cells</param>
         private void BorderAround(Microsoft.Office.Interop.Excel.Range range, int color)
         {
             Microsoft.Office.Interop.Excel.Borders borders = range.Borders;
@@ -902,9 +1005,19 @@ namespace Duty_Schedule
         }
 
 
-        //Output to calendar events
+        /// <summary>
+        /// Uses Outlook to create calendar events and send them. Has a slight delay between 
+        /// each email so Outlook doesn't crash.
+        /// </summary>
+        /// <param name="startHour">The hour of the day to start the events</param>
+        /// <param name="startMin">The minute of the day to start the events</param>
+        /// <param name="ccEmailList">A list of people to CC for all events</param>
+        /// <param name="senderEmail">An optional email address of the sender (if it doesn't work without it)</param>
         public void MakeOutlookEvents(int startHour, int startMin, List<string> ccEmailList, string senderEmail = "")
         {
+            const int delayBetweenEmails = 3;
+            const int delayAfterSending = 10;
+
             Cursor.Current = Cursors.WaitCursor;
 
             
@@ -995,13 +1108,13 @@ namespace Duty_Schedule
 
                     // My system can't seem to handle a few hundred Outlook emails in one go.
                     // Wait four seconds between each invite creation.
-                    System.Threading.Thread.Sleep(2000);
-                    secondsEst = (mCalendar.mDateList.Count - i) * 4 + 8;
-                    System.Threading.Thread.Sleep(2000);
+                    System.Threading.Thread.Sleep(delayBetweenEmails * 500);        // Delay half of the delayBetweenEmails time
+                    secondsEst = (mCalendar.mDateList.Count - i) * delayBetweenEmails + delayAfterSending - 2;
+                    System.Threading.Thread.Sleep(delayBetweenEmails * 500);        // Delay the other half of the delayBetweenEmails time
 
 
                     pageSend.SetLoadingBarPercent( Convert.ToInt32((i+1) * percentMult) );
-                    secondsEst = (mCalendar.mDateList.Count - (i+1)) * 4 + 10;
+                    secondsEst = (mCalendar.mDateList.Count - (i + 1)) * delayBetweenEmails + delayAfterSending;
                     pageSend.SetTimeRemaining(secondsEst);
 
                 }
@@ -1017,12 +1130,12 @@ namespace Duty_Schedule
             // Reset from loading cursor to normal
             Cursor.Current = Cursors.Default;
 
-            // Close Outlook after an additional 10 seconds (just in case)
-            System.Threading.Thread.Sleep(5000);
+            // Close Outlook after an additional few seconds (just in case)
+            System.Threading.Thread.Sleep(delayAfterSending * 500);         // Delay half of the delayAfterSending time
             pageSend.SetLoadingBarPercent(99);
-            pageSend.SetTimeRemaining(5);
-            
-            System.Threading.Thread.Sleep(5000);
+            pageSend.SetTimeRemaining(delayAfterSending / 2);
+
+            System.Threading.Thread.Sleep(delayAfterSending * 500);         // Delay the other half of the delayAfterSending time
             pageSend.SetLoadingBarPercent(100);
             pageSend.SetTimeRemaining(0);
 
@@ -1033,7 +1146,10 @@ namespace Duty_Schedule
         }   // End MakeOutlookEvents()
 
 
-        // Returns the list of people with the fewest number of days + randomness within (partial list)
+        /// <summary>
+        /// Returns the list of people with the fewest number of days + randomness within (partial list)
+        /// </summary>
+        /// <returns></returns>
         public List<Person> WhoHasFewestDays()
         {
             List<Person> sortedList = new List<Person>(mPeople);
@@ -1068,8 +1184,10 @@ namespace Duty_Schedule
             return shuffledList;
         }   // End WhoHasFewestDays()
 
-
-        // Returns the list of people sorted by fewest number of days + randomness within (full list)
+        /// <summary>
+        /// Returns the list of people sorted by fewest number of days + randomness within (full list)
+        /// </summary>
+        /// <returns></returns>
         public List<Person> SortByFewestDays()
         {
             List<Person> sortedList = new List<Person>(mPeople);
@@ -1097,7 +1215,12 @@ namespace Duty_Schedule
             return sortedList;
         }   // End WhoHasFewestDays()
 
-        // Shuffles a list
+        /// <summary>
+        /// Shuffles a list
+        /// </summary>
+        /// <typeparam name="T">Type of list to shuffle</typeparam>
+        /// <param name="inputList">The list to be shuffled</param>
+        /// <returns></returns>
         private List<T> ShuffleList<T>(List<T> inputList)
         {
             List<T> inList = new List<T>(inputList);
@@ -1115,8 +1238,11 @@ namespace Duty_Schedule
             return randomList;  // Return the new random list
         }   //End ShuffleList(...)
 
-        // Returns the index of the person with the most days scheduled. 
-        // If there's a tie, returns the first in the list.
+        /// <summary>
+        /// Returns the index of the person with the most days scheduled.
+        /// If there's a tie, returns the first in the list.
+        /// </summary>
+        /// <returns></returns>
         public int WhoHasMostDays()
         {
             int index = -1;
@@ -1134,8 +1260,11 @@ namespace Duty_Schedule
             return index;
         }   // End WhoHasMostDays()
 
-        // Returns the index of the person with the most days scheduled. 
-        // If there's a tie, returns the first in the list.
+        /// <summary>
+        /// Returns a list of people who are in a certain group.
+        /// </summary>
+        /// <param name="groupIn">Name of the group to check for.</param>
+        /// <returns></returns>
         public List<Person> WhoIsInGroup(string groupIn)
         {
             List<Person> groupList = new List<Person>();
@@ -1149,8 +1278,13 @@ namespace Duty_Schedule
             return groupList;
         }   // End WhoIsInGroup(string groupIn)
 
-        // Returns the index of the person with the most days scheduled. 
-        // If there's a tie, returns the first in the list.
+        /// <summary>
+        /// Goes through each person and checks that their requested days 
+        /// off are in the range. Just a check to help the user.
+        /// Important to check because someone [*cough* Sage] gave me a 
+        /// giant list of days off that were for the wrong year.
+        /// </summary>
+        /// <returns></returns>
         public bool CheckDaysOff()
         {
             List<Tuple<string, DateTime>> sage = new List<Tuple<string, DateTime>>();

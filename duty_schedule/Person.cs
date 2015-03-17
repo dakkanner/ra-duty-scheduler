@@ -21,6 +21,15 @@ using System.Threading.Tasks;
 
 namespace Duty_Schedule
 {
+    /// <summary>
+    /// A person is an object with the following attributes: 
+    /// Name, 
+    /// Email, 
+    /// List of groups they belong to, 
+    /// Count of weekends and duty days they're on for (for convenience),
+    /// List of days they request off,
+    /// And a DatesAndGroups, which is the days they're scheduled for duty.
+    /// </summary>
     public class Person
     {
         // Public members because I'm lazy
@@ -32,6 +41,9 @@ namespace Duty_Schedule
         public List<DateTime> mDaysOffRequested;
         public DatesAndGroups mDutyDays;
 
+        /// <summary>
+        /// Default ctor. All vars initalize to 0, empty, etc.
+        /// </summary>
         public Person()
         {
             mName = "";
@@ -42,6 +54,13 @@ namespace Duty_Schedule
             mDaysOffRequested = new List<DateTime>();
             mDutyDays = new DatesAndGroups();
         }   //End Person()
+
+        /// <summary>
+        /// Ctor that sets some of the values. This one takes a single group string.
+        /// </summary>
+        /// <param name="name">The person's name</param>
+        /// <param name="group">The group (singluar) that this person belongs in</param>
+        /// <param name="daysOff">The requested days off from the person</param>
         public Person(string name, string group, List<DateTime> daysOff)
         {
             mName = name;
@@ -53,6 +72,13 @@ namespace Duty_Schedule
             mDaysOffRequested = new List<DateTime>(daysOff);
             mDutyDays = new DatesAndGroups();
         }   //End Person(string name, string group, List<DateTime> daysOff)
+
+        /// <summary>
+        /// Ctor that sets some of the values. This one takes a list of group strings if they belong to multiple groups.
+        /// </summary>
+        /// <param name="name">The person's name</param>
+        /// <param name="groups">The groups that this person belongs in</param>
+        /// <param name="daysOff">The requested days off from the person</param>
         public Person(string name, List<string> groups, List<DateTime> daysOff)
         {
             mName = name;
@@ -64,16 +90,29 @@ namespace Duty_Schedule
             mDutyDays = new DatesAndGroups();
         }   //End Person(string name, string group, List<DateTime> daysOff)
 
-
+        /// <summary>
+        /// Adds a single group that this person belongs in
+        /// </summary>
+        /// <param name="group"></param>
         public void AddGroup(string group)
         {
             mGroups.Add(group);
         }   //End AddGroup(string group)
+
+        /// <summary>
+        /// Adds a single day that this person would like off.
+        /// </summary>
+        /// <param name="DayOff">A DateTime that this person would like off. Time does not matter, just the day.</param>
         public void AddDayOffRequested(DateTime DayOff)
         {
             mDaysOffRequested.Add(DayOff);
         }   //End AddDayOffRequested(DateTime DayOff)
 
+        /// <summary>
+        /// Assigns this person a duty day for a passed-in date and group.
+        /// </summary>
+        /// <param name="newDutyDay">The day that this person will be scheduled</param>
+        /// <param name="group">The group/location that this person will be for that day</param>
         public void AddDutyDay(DateTime newDutyDay, string group)
         {
             if (mDutyDays.mDates.Contains(newDutyDay))
@@ -91,6 +130,12 @@ namespace Duty_Schedule
 
         }   //End AddDutyDay(DateTime newDutyDay)
 
+        /// <summary>
+        /// Assigns this person a duty weekend for a passed-in date and group.
+        /// Note: If they belong to multiple groups, this gets swapped later.
+        /// </summary>
+        /// <param name="newDutyWeekend"></param>
+        /// <param name="group"></param>
         public void AddDutyWeekend(List<DateTime> newDutyWeekend, string group)
         {
             try
@@ -111,7 +156,10 @@ namespace Duty_Schedule
 
         }   //End AddDutyWeekend(List<DateTime> newDutyDay)
 
-
+        /// <summary>
+        /// Remove a previously scheduled duty day from a person
+        /// </summary>
+        /// <param name="dutyDay">DateTime to remove</param>
         public void RemoveDutyDay(DateTime dutyDay)
         {
             if (mDutyDays.mDates.Contains(dutyDay))
@@ -121,6 +169,10 @@ namespace Duty_Schedule
             }
         }   //End RemoveDutyDay(DateTime dutyDay)
 
+        /// <summary>
+        /// Remove a previously scheduled duty weekend from a person
+        /// </summary>
+        /// <param name="dutyWeekend">List of DateTimes to remove</param>
         public void RemoveDutyWeekend(List<DateTime> dutyWeekend)
         {
             bool weekendFound = false;
@@ -138,7 +190,11 @@ namespace Duty_Schedule
 
         }   //End RemoveDutyWeekend(List<DateTime> dutyWeekend)
 
-
+        /// <summary>
+        /// Returns true if this person is scheduled for a specific date
+        /// </summary>
+        /// <param name="dutyDay">The day to check for</param>
+        /// <returns></returns>
         public bool IsScheduledForDate(DateTime dutyDay)
         {
             bool dateFound = false;
@@ -151,6 +207,11 @@ namespace Duty_Schedule
             return dateFound;
         }   //End IsScheduledForDate(DateTime dutyDay)
 
+        /// <summary>
+        /// Returns true if this person is scheduled for any day in a list of DateTimes
+        /// </summary>
+        /// <param name="dutyWeekend">List of dates that the weekend contains</param>
+        /// <returns></returns>
         public bool IsScheduledForWeekend(List<DateTime> dutyWeekend)
         {
             bool dateFound = false;
@@ -164,6 +225,11 @@ namespace Duty_Schedule
             return dateFound;
         }   //End IsScheduledForWeekend(List<DateTime> dutyWeekend)
 
+        /// <summary>
+        /// Returns true if this person requested the day off
+        /// </summary>
+        /// <param name="dutyDay">The day to check against</param>
+        /// <returns></returns>
         public bool IsDateRequestedOff(DateTime dutyDay)
         {
             bool dateFound = false;
@@ -176,6 +242,11 @@ namespace Duty_Schedule
             return dateFound;
         }   //End IsDateRequestedOff(DateTime dutyDay)
 
+        /// <summary>
+        /// Returns true if this person requested any day in a list of DateTimes off
+        /// </summary>
+        /// <param name="dutyWeekend">The list of days to check against</param>
+        /// <returns></returns>
         public bool IsWeekendRequestedOff(List<DateTime> dutyWeekend)
         {
             bool dateFound = false;
