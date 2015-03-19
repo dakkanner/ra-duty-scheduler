@@ -30,11 +30,16 @@ namespace Duty_Schedule
     {
         public string mDateFilePath { get; set; }
         public string mGroupFilePath { get; set; }
+        public string mCsvFilePath { get; set; }
         public CalendarMaker mCalendarMaker { get; set; }
 
         public Page2FileSelect()
         {
             InitializeComponent();
+
+            mDateFilePath = "";
+            mGroupFilePath = "";
+            mCsvFilePath = "";
         }
 
         public DatesAndAssignments GetCalendar()
@@ -42,19 +47,8 @@ namespace Duty_Schedule
             return this.mCalendarMaker.mCalendar;
         }
 
-        public string GetDateFilePath()
-        {
-            return this.mDateFilePath;
-        }
-
-        public string GetGroupFilePath()
-        {
-            return this.mGroupFilePath;
-        }
-
         private void Form1_Load(object sender, EventArgs e)
-        {
-        }
+        { }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -106,6 +100,25 @@ namespace Duty_Schedule
         {
             PageAbout pa = new PageAbout();
             pa.ShowDialog();
+        }
+
+        private void csvFileSelBtn_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.InitialDirectory = this.mCsvFilePath;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                this.mCsvFilePath = openFileDialog1.FileName;
+
+            this.csvTextBox.Text = this.mCsvFilePath;
+        }
+
+        private void buttonP2Next_Click(object sender, EventArgs e)
+        {
+            mCalendarMaker = new CalendarMaker(this.csvTextBox.Text);
+            mCsvFilePath = this.csvTextBox.Text;
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

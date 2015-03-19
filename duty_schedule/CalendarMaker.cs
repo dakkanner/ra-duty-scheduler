@@ -35,6 +35,8 @@ namespace Duty_Schedule
         private List<List<DateTime>> mWeekends;
         private List<DateTime> mWeekdays;
 
+        public bool isFromImport;
+
         public List<Person> mPeople;
         public List<string> mGroups;
         public DatesAndAssignments mCalendar;
@@ -50,11 +52,66 @@ namespace Duty_Schedule
             mWeekdays = new List<DateTime>();
             mCalendar = new DatesAndAssignments();
 
+            isFromImport = false;
+
             mPeople = new List<Person>();
             mGroups = new List<string>();
         }
 
+        /// <summary>
+        /// This ctor is used when importing from a previously generated CSV. 
+        /// It keeps the 
+        /// </summary>
+        /// <param name="csvFilePath">The path the the CSV file.</param>
+        public CalendarMaker(string csvFilePath)
+        {
+            mStartDay = new DateTime();
+            mEndDay = new DateTime();
 
+            mBreaks = new List<DateTime>();
+            mHolidays = new List<DateTime>();
+            mWeekends = new List<List<DateTime>>();
+            mWeekdays = new List<DateTime>();
+            mCalendar = new DatesAndAssignments();
+
+            isFromImport = true;
+
+            //mPeople = new List<Person>();
+            mGroups = new List<string>();
+
+            FileInputs fi = new FileInputs();
+            Tuple<DatesStruct, List<Person>> datesAndPeople = fi.GetImportFromCsv(csvFilePath);
+
+            DatesStruct dates = datesAndPeople.Item1;
+            mPeople = datesAndPeople.Item2;
+
+            mStartDay = dates.startDate;
+            mEndDay = dates.endDate;
+            mHolidays = dates.holidayList;
+            mBreaks = dates.breakList;
+
+            // This section finds all the groups
+            foreach (Person per in mPeople)
+            {
+                foreach (string grp in per.mGroups)
+                {
+                    if (!mGroups.Contains(grp))
+                    {
+                        mGroups.Add(grp);
+                    }
+                }
+            }
+
+            //Initalize();
+            //FirstScheduleRun();
+            FillCalendar();
+        }
+
+        /// <summary>
+        /// This ctor is used when creatign a new calendar for creation
+        /// </summary>
+        /// <param name="dateFilePath"></param>
+        /// <param name="groupFilePath"></param>
         public CalendarMaker(string dateFilePath, string groupFilePath)
         {
             mStartDay = new DateTime();
@@ -65,6 +122,8 @@ namespace Duty_Schedule
             mWeekends = new List<List<DateTime>>();
             mWeekdays = new List<DateTime>();
             mCalendar = new DatesAndAssignments();
+
+            isFromImport = false;
 
             mPeople = new List<Person>();
             mGroups = new List<string>();
@@ -508,7 +567,9 @@ namespace Duty_Schedule
                 currentDay = currentDay.AddDays(1);
             }
 
-            RotateSaturdays();
+            // If we are making the calendar from scratch, don't rotate saturdays.
+            if (!isFromImport)
+                RotateSaturdays();
 
         }   // End FillCalendar()
 

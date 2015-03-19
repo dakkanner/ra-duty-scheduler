@@ -539,6 +539,236 @@ namespace Duty_Schedule
         }   // End GetGroups(string groupsFileName = "Groups.txt")
 
         /// <summary>
+        /// This 
+        /// </summary>
+        /// <param name="csvFileName">The name of the file to be importe from.</param>
+        /// <returns>A tuple. The first part is a DatesStruct filled with the start and 
+        /// end dates. The second is a list of people and their associated duty days.</returns>
+        public Tuple<DatesStruct, List<Person>> GetImportFromCsv(string csvFileName)
+        {
+            // A list of groups. Should be the first line of the CSV.
+            List<string> groupsLst = new List<string>();
+
+            // The list of people. Filled as more people are found. Will be returned.
+            List<Person> pplLst = new List<Person>();
+
+            // The dates of duty. Will be returned. 
+            DatesStruct dates = new DatesStruct();
+
+
+            //string fullFileLoc = mDirectory + "\\" + groupsFileName;
+
+
+            if (File.Exists(csvFileName))
+            {
+                StreamReader strRead = File.OpenText(csvFileName);
+
+                string lnStr = "";
+
+                //The first line should be the list of groups
+                if((lnStr = strRead.ReadLine()) != null)
+                {
+                    // Remove outside whitespace just in case
+                    lnStr = lnStr.Trim();
+                    //lnStr = lnStr.Trim(',');
+                    string tempGroupName = "";
+
+                    // Peel away each group then add it to the group list
+                    while (lnStr.Length > 0)
+                    {
+                        // Get the first index of a comma
+                        int commaIndex = lnStr.IndexOf(',');
+
+                        if (commaIndex > -1)
+                        {
+                            // Get the name of the group
+                            tempGroupName = lnStr.Substring(0,commaIndex);
+                            tempGroupName = tempGroupName.Trim();
+                            tempGroupName = tempGroupName.Trim(',');
+
+                            if (tempGroupName.Length > 0)
+                            {
+                                groupsLst.Add(tempGroupName);
+                            }
+
+                            lnStr = lnStr.Substring(commaIndex + 1, lnStr.Length - commaIndex - 1);
+                        }
+                        else
+                        {
+                            // Else to prevent infinite looping if there's no end comma of the line
+                            tempGroupName = lnStr;
+                            tempGroupName = tempGroupName.Trim();
+
+                            if (tempGroupName.Length > 0)
+                            {
+                                groupsLst.Add(tempGroupName);
+                            }
+                            lnStr = "";
+                        }
+                    }
+
+
+                }
+
+                // The date to be used 
+                string currentDateStr = "";
+                DateTime currentDate = new DateTime();
+
+                while ((lnStr = strRead.ReadLine()) != null)
+                {
+                    lnStr = lnStr.Trim();
+                    if (lnStr.Length > 0)
+                    {
+                        // A list of each person scheduled for this day. 
+                        // Must equal the number of groups at the top of the page.
+                        List<string> personNames = new List<string>();
+
+                        // First get the date for this line
+                        if (lnStr.Length > 0)
+                        {
+                            // Get the first index of a comma
+                            int commaIndex = lnStr.IndexOf(',');
+
+                            if (commaIndex > -1)
+                            {
+                                currentDateStr = lnStr.Substring(0, commaIndex);
+                                currentDateStr = currentDateStr.Trim();
+                                currentDateStr = currentDateStr.Trim(',');
+
+                                if (currentDateStr.Length > 0)
+                                {
+                                    try
+                                    {
+
+                                        // TODO: Test this part more
+                                        // 
+                                        DateTime tempDate = DateTime.Parse(currentDateStr);
+                                        // I really hope that this isn't used for too far in the past because 
+                                        // this is how I'm going to check if this is the first line of the file
+                                        if (dates.startDate.Year < 1000)
+                                        {
+                                            dates.startDate = tempDate;
+                                        }
+                                        // This part checks if there are any non-scheduled days (breaks)
+                                        else if(tempDate != currentDate.AddDays(1))
+                                        {
+                                            DateTime breakDate = currentDate.AddDays(1);
+                                            while (breakDate != tempDate)
+                                            {
+                                                dates.breakList.Add(breakDate);
+                                                breakDate = breakDate.AddDays(1);
+                                            }
+                                        }
+
+
+                                        // Actually set the current line's date
+                                        currentDate = tempDate;
+
+                                        // Also set the end date to the farthest date found
+                                        if (currentDate > dates.endDate)
+                                            dates.endDate = currentDate;
+
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        DialogResult result = MessageBox.Show(e.Message, "Error reading date: " + currentDateStr,
+                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
+                                }
+
+                                lnStr = lnStr.Substring(commaIndex + 1, lnStr.Length - commaIndex - 1);
+                            }
+                        }
+
+                        // Then get each of the people for this line
+                        while (lnStr.Length > 0)
+                        {
+                            // Get the first index of a comma
+                            int commaIndex = lnStr.IndexOf(',');
+                            string currentNameStr = "";
+
+                            if (commaIndex > -1)
+                            {
+                                // Get the date for this line
+                                currentNameStr = lnStr.Substring(0, commaIndex);
+                                currentNameStr = currentNameStr.Trim();
+                                currentNameStr = currentNameStr.Trim(',');
+
+                                if (currentNameStr.Length > 0)
+                                {
+                                    personNames.Add(currentNameStr);
+                                }
+
+                                lnStr = lnStr.Substring(commaIndex + 1, lnStr.Length - commaIndex - 1);
+                            }
+                            else
+                            {
+                                // Else to prevent infinite looping if there's no end comma in the line
+                                currentNameStr = lnStr;
+                                currentNameStr = currentNameStr.Trim();
+
+                                if (currentNameStr.Length > 0)
+                                {
+                                    personNames.Add(currentNameStr);
+                                }
+                                lnStr = "";
+                            }
+                        }
+
+                        for(int i = 0; i < personNames.Count; i++)
+                        {
+                            bool wasFound = false;
+                            foreach(Person per in pplLst)
+                            {
+                                if(per.mName == personNames[i])
+                                {
+                                    //Add the group if they don't already belong in that group
+                                    if (!per.mGroups.Contains(groupsLst[i]))
+                                        per.mGroups.Add(groupsLst[i]);
+
+                                    // Actually add the date to the existing Person
+                                    per.mDutyDays.AddDate(currentDate, groupsLst[i]);
+                                    wasFound = true;
+                                }
+                            }
+
+                            if (!wasFound)
+                            {
+                                // No Person found with this name
+                                // Create a new person with these details
+                                Person newPerson = new Person();
+                                newPerson.mName = personNames[i];
+                                newPerson.mGroups.Add(groupsLst[i]);
+                                newPerson.mDutyDays.AddDate(currentDate, groupsLst[i]);
+
+                                pplLst.Add(newPerson);
+                            }
+
+                        }
+
+                        //TODO: Add optional email address reading
+                
+                
+                
+                
+                
+                    }
+                }
+                strRead.Close();
+            }
+
+
+            if (pplLst.Count <= 0)
+            {
+                MessageBox.Show("No people in file " + csvFileName, "Calendar Input",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+
+            return new Tuple<DatesStruct, List<Person>>(dates, pplLst);
+        }   // End GetImportFromCsv(string csvFileName)
+
+        /// <summary>
         /// Gets all specified days-of-the-week within a date range (e.g. all Mondays)
         /// </summary>
         /// <param name="startDate">The day to start the list of days (inclusive)</param>

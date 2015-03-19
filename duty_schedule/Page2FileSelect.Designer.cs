@@ -57,12 +57,20 @@ namespace Duty_Schedule
             this.groupFileSelBtn = new System.Windows.Forms.Button();
             this.groupTextBox = new System.Windows.Forms.TextBox();
             this.aboutLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.csvFileSelBtn = new System.Windows.Forms.Button();
+            this.csvTextBox = new System.Windows.Forms.TextBox();
+            this.buttonP2Next = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.SuspendLayout();
             // 
             // buttonP1Next
             // 
             this.buttonP1Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.buttonP1Next.Location = new System.Drawing.Point(677, 419);
+            this.buttonP1Next.Location = new System.Drawing.Point(146, 360);
             this.buttonP1Next.Name = "buttonP1Next";
             this.buttonP1Next.Size = new System.Drawing.Size(95, 30);
             this.buttonP1Next.TabIndex = 0;
@@ -74,7 +82,7 @@ namespace Duty_Schedule
             // 
             this.labelHeader.AutoSize = true;
             this.labelHeader.Font = new System.Drawing.Font("Verdana", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelHeader.Location = new System.Drawing.Point(60, 72);
+            this.labelHeader.Location = new System.Drawing.Point(43, 42);
             this.labelHeader.Name = "labelHeader";
             this.labelHeader.Size = new System.Drawing.Size(695, 35);
             this.labelHeader.TabIndex = 1;
@@ -85,7 +93,7 @@ namespace Duty_Schedule
             // 
             this.labelSubHeader.AutoSize = true;
             this.labelSubHeader.Font = new System.Drawing.Font("Verdana", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSubHeader.Location = new System.Drawing.Point(326, 144);
+            this.labelSubHeader.Location = new System.Drawing.Point(309, 114);
             this.labelSubHeader.Name = "labelSubHeader";
             this.labelSubHeader.Size = new System.Drawing.Size(151, 25);
             this.labelSubHeader.TabIndex = 2;
@@ -95,7 +103,7 @@ namespace Duty_Schedule
             // 
             this.linkLabel2.AutoSize = true;
             this.linkLabel2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabel2.Location = new System.Drawing.Point(297, 343);
+            this.linkLabel2.Location = new System.Drawing.Point(88, 324);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(206, 14);
             this.linkLabel2.TabIndex = 6;
@@ -105,14 +113,14 @@ namespace Duty_Schedule
             // 
             // dateTextBox
             // 
-            this.dateTextBox.Location = new System.Drawing.Point(260, 219);
+            this.dateTextBox.Location = new System.Drawing.Point(51, 219);
             this.dateTextBox.Name = "dateTextBox";
             this.dateTextBox.Size = new System.Drawing.Size(262, 20);
             this.dateTextBox.TabIndex = 7;
             // 
             // DateFileSelBtn
             // 
-            this.DateFileSelBtn.Location = new System.Drawing.Point(523, 218);
+            this.DateFileSelBtn.Location = new System.Drawing.Point(314, 218);
             this.DateFileSelBtn.Name = "DateFileSelBtn";
             this.DateFileSelBtn.Size = new System.Drawing.Size(29, 22);
             this.DateFileSelBtn.TabIndex = 8;
@@ -124,7 +132,7 @@ namespace Duty_Schedule
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(260, 200);
+            this.label1.Location = new System.Drawing.Point(51, 200);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(87, 15);
             this.label1.TabIndex = 9;
@@ -134,7 +142,7 @@ namespace Duty_Schedule
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(260, 263);
+            this.label2.Location = new System.Drawing.Point(51, 263);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(130, 15);
             this.label2.TabIndex = 12;
@@ -142,7 +150,7 @@ namespace Duty_Schedule
             // 
             // groupFileSelBtn
             // 
-            this.groupFileSelBtn.Location = new System.Drawing.Point(523, 281);
+            this.groupFileSelBtn.Location = new System.Drawing.Point(314, 281);
             this.groupFileSelBtn.Name = "groupFileSelBtn";
             this.groupFileSelBtn.Size = new System.Drawing.Size(29, 22);
             this.groupFileSelBtn.TabIndex = 11;
@@ -152,7 +160,7 @@ namespace Duty_Schedule
             // 
             // groupTextBox
             // 
-            this.groupTextBox.Location = new System.Drawing.Point(260, 282);
+            this.groupTextBox.Location = new System.Drawing.Point(51, 282);
             this.groupTextBox.Name = "groupTextBox";
             this.groupTextBox.Size = new System.Drawing.Size(262, 20);
             this.groupTextBox.TabIndex = 10;
@@ -169,12 +177,94 @@ namespace Duty_Schedule
             this.aboutLinkLabel.Text = "About Calendar Maker";
             this.aboutLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aboutLinkLabel_LinkClicked);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Verdana", 13F);
+            this.label3.Location = new System.Drawing.Point(133, 166);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(135, 22);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "From scratch:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Verdana", 13F);
+            this.label4.Location = new System.Drawing.Point(494, 166);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(213, 22);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "From previous export:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(445, 201);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(86, 15);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "Select CSV file";
+            // 
+            // csvFileSelBtn
+            // 
+            this.csvFileSelBtn.Location = new System.Drawing.Point(708, 219);
+            this.csvFileSelBtn.Name = "csvFileSelBtn";
+            this.csvFileSelBtn.Size = new System.Drawing.Size(29, 22);
+            this.csvFileSelBtn.TabIndex = 17;
+            this.csvFileSelBtn.Text = "...";
+            this.csvFileSelBtn.UseVisualStyleBackColor = true;
+            this.csvFileSelBtn.Click += new System.EventHandler(this.csvFileSelBtn_Click);
+            // 
+            // csvTextBox
+            // 
+            this.csvTextBox.Location = new System.Drawing.Point(445, 220);
+            this.csvTextBox.Name = "csvTextBox";
+            this.csvTextBox.Size = new System.Drawing.Size(262, 20);
+            this.csvTextBox.TabIndex = 16;
+            // 
+            // buttonP2Next
+            // 
+            this.buttonP2Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.buttonP2Next.Location = new System.Drawing.Point(547, 263);
+            this.buttonP2Next.Name = "buttonP2Next";
+            this.buttonP2Next.Size = new System.Drawing.Size(95, 30);
+            this.buttonP2Next.TabIndex = 19;
+            this.buttonP2Next.Text = "Next";
+            this.buttonP2Next.UseVisualStyleBackColor = true;
+            this.buttonP2Next.Click += new System.EventHandler(this.buttonP2Next_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Location = new System.Drawing.Point(425, 152);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(334, 151);
+            this.groupBox1.TabIndex = 20;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Option 2";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Location = new System.Drawing.Point(33, 152);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(334, 251);
+            this.groupBox2.TabIndex = 21;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Option 1";
+            // 
             // Page2FileSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(784, 462);
+            this.Controls.Add(this.buttonP2Next);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.csvFileSelBtn);
+            this.Controls.Add(this.csvTextBox);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.aboutLinkLabel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.groupFileSelBtn);
@@ -186,10 +276,12 @@ namespace Duty_Schedule
             this.Controls.Add(this.labelSubHeader);
             this.Controls.Add(this.labelHeader);
             this.Controls.Add(this.buttonP1Next);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Page2FileSelect";
             this.MaximizeBox = false;
+            this.Name = "Page2FileSelect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Calendar Maker";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -211,6 +303,14 @@ namespace Duty_Schedule
         private System.Windows.Forms.Button groupFileSelBtn;
         private System.Windows.Forms.TextBox groupTextBox;
         private System.Windows.Forms.LinkLabel aboutLinkLabel;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button csvFileSelBtn;
+        private System.Windows.Forms.TextBox csvTextBox;
+        private System.Windows.Forms.Button buttonP2Next;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
         
     }
 }

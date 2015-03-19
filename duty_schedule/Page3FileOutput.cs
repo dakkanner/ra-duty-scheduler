@@ -41,6 +41,10 @@ namespace Duty_Schedule
             this.label1.Text = cmIn.mGroups.Count + " groups";
             this.label2.Text = cmIn.mPeople.Count.ToString() + " people";
             this.label3.Text = cmIn.mCalendar.mDateList.Count.ToString() + " days";
+
+            // TODO: Make re-run work even if the schedule has been imported.
+            // Or not. This one's pretty low priority.
+            rerunBtn.Enabled = !cmIn.isFromImport;
         }
 
         public DatesAndAssignments GetCalendar()

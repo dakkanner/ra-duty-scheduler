@@ -49,7 +49,9 @@ namespace Duty_Schedule
                     {
                         cal = pg2.GetCalendar();
                         calMaker = pg2.mCalendarMaker;
-                        filePath = pg2.GetDateFilePath();
+                        filePath = pg2.mDateFilePath;
+                        if(filePath.Length <= 0)
+                            filePath = pg2.mCsvFilePath;
                         int loc = filePath.LastIndexOf("\\");
                         int loc2 = filePath.LastIndexOf("/");
                         if (loc2 > loc)

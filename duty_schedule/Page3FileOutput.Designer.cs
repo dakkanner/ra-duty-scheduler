@@ -44,6 +44,7 @@ namespace Duty_Schedule
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Page3FileOutput));
             this.labelHeader = new System.Windows.Forms.Label();
             this.labelSubHeader = new System.Windows.Forms.Label();
             this.excelOutputBtn = new System.Windows.Forms.Button();
@@ -163,11 +164,11 @@ namespace Duty_Schedule
             // 
             // csvExportBtn
             // 
-            this.csvExportBtn.Location = new System.Drawing.Point(320, 372);
+            this.csvExportBtn.Location = new System.Drawing.Point(285, 372);
             this.csvExportBtn.Name = "csvExportBtn";
-            this.csvExportBtn.Size = new System.Drawing.Size(150, 22);
+            this.csvExportBtn.Size = new System.Drawing.Size(220, 22);
             this.csvExportBtn.TabIndex = 16;
-            this.csvExportBtn.Text = "Export calendar for later";
+            this.csvExportBtn.Text = "Export calendar for later or to manually edit";
             this.csvExportBtn.UseVisualStyleBackColor = true;
             this.csvExportBtn.Click += new System.EventHandler(this.csvExportBtn_Click);
             // 
@@ -189,6 +190,7 @@ namespace Duty_Schedule
             this.Controls.Add(this.labelSubHeader);
             this.Controls.Add(this.labelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Page3FileOutput";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
