@@ -1,4 +1,3 @@
-#
 # Dates.txt
 # This is the file that contains all the dates to tell the calendar maker when you want to schedule your people.
 # Note that any line that begins with '#' is taken as a comment, but it won't understand in-line comments.
@@ -14,12 +13,10 @@
 # 		Holidays are for extending the period of time that anyone on weekend duty will get scheduled. Primarily used for 3-day weekends
 #
 # Other notes: 
-# 	Dates can be in different formats for your convenience
+# 	Dates can be in different formats (m/d/yy, mm-dd-yyy, etc.)
 # 	Holidays and breaks can be in multiple lines and any order 
-#
 
-Start - 9/22/12
-End - 12/7/2012
-Breaks - 11/24/2012, 11/25/2012
-Breaks - 11/22/2012, 11/23/2012
-Holiday - 11/12/2012
+Start -  3/28/2015
+End - 6/12/2015
+Breaks - 4/6/15, 4/7/15, 4/8/15
+Holiday - 5/25/2015

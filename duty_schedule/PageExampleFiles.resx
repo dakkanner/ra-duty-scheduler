@@ -133,17 +133,19 @@
 # 		Holidays are for extending the period of time that anyone on weekend duty will get scheduled. Primarily used for 3-day weekends
 #
 # Other notes: 
-# 	Dates can be in different formats for your convenience
+# 	Dates can be in different formats (m/d/yy, mm-dd-yyy, etc.)
 # 	Holidays and breaks can be in multiple lines and any order 
 
-Start - 9/22/14
-End - 12/7/2014
-Breaks - 11/24/2014, 11/25/2014
-Breaks - 11/22/2014, 11/23/2014
-Holiday - 11/12/2014</value>
+Start -  3/28/2015
+End - 6/12/2015
+Breaks - 4/6/15, 4/7/15, 4/8/15
+Holiday - 5/25/2015</value>
   </data>
   <data name="textBox2.Text" xml:space="preserve">
     <value># PeopleAndGroups.txt
+# This is the file that contains all the groups and their members along with which days off they want.
+# Note that any line that begins with '#' is taken as a comment, but it won't understand in-line comments.
+# PeopleAndGroups.txt
 # This is the file that contains all the groups and their members along with which days off they want.
 # Note that any line that begins with '#' is taken as a comment, but it won't understand in-line comments.
 #
@@ -156,35 +158,76 @@ Holiday - 11/12/2014</value>
 # People explained: 
 # 	People should be listed after the group name that they belong to.
 # 	If any individual wants to request a day off, add '-' after their name followed by the date.
-# 	If you have multiple people with the same name, make sure you include a last initial/name to differentiate (see Matt A. and Matt B.)
+# 	If you have multiple people with the same name, make sure you include a last initial/name to differentiate
 # 
 # Other notes: 
-# 	Dates can be in different formats for your convenience
-#	If you list one person in multiple groups, they will be scheduled for both groups (see Ashley vs. Matt A. and Matt B.)
-# 		If you list requested days off for someone in multiple groups, the program will append those days to their list of days off (see Ashley)
+# 	Dates can be in different formats (m/d/yy, mm/dd/yyy, etc.) or days of the week
+# 		If a date does not contain a year, it defaults to the same year as the starting date
+#	If you list one person in multiple groups, they will be scheduled for both groups
+# 		If you list requested days off for someone in multiple groups, the program will append those days to their list of days off
 #	Any requested days off will be honored unless every person in that group has the same day listed
-# 	If you need multiple shifts per night for the same position, just make two groups with the same people
+# 	If you need multiple shifts per night for the same position, just make two different groups with the same people
+################################
 
-Senior RA
-	Michael - 12/4/2014, 8/4/14
-	Jessica
-	Chris
-Inside Rounds
-	Ashley - 11-10-2014, 9-9-14, 8/8/2014 
-	Matt A.	
-	David
-	Sarah
-	Brittany - 12/4/2014, 8/4/14, 11-4-2014, 9-4-14 
-	Joshua
-	Samantha
-Outside Rounds
-	Ashley - 12/11/2014
-	Matt B. 
-	Amanda
-	Andrew - 11-4-2014, 9-4-14
+Senior
+	Taylor  - 3/28, 3/29, 4/3 - 4/5, 4/20
+	Kanissa - 3/28, 3/29, 6/5 - 6/7
+	Dak     - 3/28, 3/29, 6/5 - 6/7, 6/11 - 6/13
+	Ralph   - Wednesdays, 4/10, 4/11, 6/9 - 6/13
+
+Building One
+	Matt A.   - 3/28 - 3/31, 6/8, 6/9
+	Matt B.   - 3/28, 3/29, 4/9 - 4/12, 6/5 - 6/10
+	Taran     - 4/17 - 4/19, 5/8 - 5/10, 5/22 - 5/25
+	Alyssa    - 3/28, 3/29, 4/3 - 4/5, 4/11, 4/12, 4/18
+	Stephanie - 4/17 - 4/20, 5/22 - 5/24, 6/5 - 6/7
+	Sam       - 4/2/15 - 4/5/15, 
+	Miranda   - 5/22 - 5/25, 6/5 - 6/8, 6/12, 6/13 
+	Batman
+	Haley     - 4/3 - 4/5, 5/22 - 5/25, 5/29, 6/6, 6/9 - 6/11
+	Joe       - 
+	Morgan    - Thursdays, 4/20/15, 5/6/15,
+	Gabi      - 4/3 - 4/5, 5/9, 5/10, 5/22 - 5/25
+	Blake     - 
+	Greg      - 5/14 - 5/18
+	Shelby    - 4/3, 4/4 ,4/5, 5/25, 6/5, 6/6, 6/7
+	Sage      - 4/17 - 4/20, 5/22 - 5/25, 5/29 - 5/31, 6/5 - 6/7
+
+Building Two
+	Matt A.
+	Matt B.
+	Taran
+	Alyssa
 	Stephanie
-	James- 8/1/14, 12/2/2014, 11-30-2014, 9-2-14
-	Jennifer</value>
+	Sam
+	Miranda
+	Batman
+	Haley
+	Joe
+	Morgan
+	Gabi
+	Blake
+	Greg
+	Shelby
+	Sage
+
+Outside
+	Matt A.
+	Matt B.
+	Taran
+	Alyssa
+	Stephanie
+	Sam
+	Miranda
+	Batman
+	Haley
+	Joe
+	Morgan
+	Gabi
+	Blake
+	Greg
+	Shelby
+	Sage</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

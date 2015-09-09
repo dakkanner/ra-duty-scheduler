@@ -1,4 +1,4 @@
-﻿//Copyright (C) 2014  Dakota Kanner
+﻿//Copyright (C) 2014-2015  Dakota Kanner
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,9 @@ namespace Duty_Schedule
 {
     public class CalendarMaker
     {
+        private bool mWeekendsSamePeople;
+        private bool mShuffleWeekendPeople;
+
         private DateTime mStartDay;
         private DateTime mEndDay;
         private List<DateTime> mBreaks;
@@ -43,6 +46,9 @@ namespace Duty_Schedule
 
         public CalendarMaker()
         {
+            mWeekendsSamePeople = true;
+            mShuffleWeekendPeople = true;
+
             mStartDay = new DateTime();
             mEndDay = new DateTime();
 
@@ -62,9 +68,14 @@ namespace Duty_Schedule
         /// This ctor is used when importing from a previously generated CSV. 
         /// It keeps the 
         /// </summary>
-        /// <param name="csvFilePath">The path the the CSV file.</param>
-        public CalendarMaker(string csvFilePath)
+        /// <param name="csvFilePathIn">The path the the CSV file.</param>
+        /// <param name="weekendsSamePeopleIn">True if Friday, Saturday, and Sunday should be the same people.</param>
+        /// <param name="weekendsSamePeopleIn">True if you want people on weekends to be rotated if they can be put into different groups.</param>
+        public CalendarMaker(string csvFilePathIn, bool weekendsSamePeopleIn, bool shuffleWeekendPeopleIn)
         {
+            mWeekendsSamePeople = weekendsSamePeopleIn;
+            mShuffleWeekendPeople = shuffleWeekendPeopleIn;
+
             mStartDay = new DateTime();
             mEndDay = new DateTime();
 
@@ -79,8 +90,8 @@ namespace Duty_Schedule
             //mPeople = new List<Person>();
             mGroups = new List<string>();
 
-            FileInputs fi = new FileInputs();
-            Tuple<DatesStruct, List<Person>> datesAndPeople = fi.GetImportFromCsv(csvFilePath);
+            FileInputs fileIn = new FileInputs();
+            Tuple<DatesStruct, List<Person>> datesAndPeople = fileIn.GetImportFromCsv(csvFilePathIn);
 
             DatesStruct dates = datesAndPeople.Item1;
             mPeople = datesAndPeople.Item2;
@@ -93,11 +104,11 @@ namespace Duty_Schedule
             // This section finds all the groups
             foreach (Person per in mPeople)
             {
-                foreach (string grp in per.mGroups)
+                foreach (string group in per.mGroups)
                 {
-                    if (!mGroups.Contains(grp))
+                    if (!mGroups.Contains(group))
                     {
-                        mGroups.Add(grp);
+                        mGroups.Add(group);
                     }
                 }
             }
@@ -110,10 +121,15 @@ namespace Duty_Schedule
         /// <summary>
         /// This ctor is used when creatign a new calendar for creation
         /// </summary>
-        /// <param name="dateFilePath"></param>
-        /// <param name="groupFilePath"></param>
-        public CalendarMaker(string dateFilePath, string groupFilePath)
+        /// <param name="dateFilePathIn"></param>
+        /// <param name="groupFilePathIn"></param>
+        /// <param name="weekendsSamePeopleIn">True if Friday, Saturday, and Sunday should be the same people.</param>
+        /// <param name="weekendsSamePeopleIn">True if you want people on weekends to be rotated if they can be put into different groups.</param>
+        public CalendarMaker(string dateFilePathIn, string groupFilePathIn, bool weekendsSamePeopleIn, bool shuffleWeekendPeopleIn)
         {
+            mWeekendsSamePeople = weekendsSamePeopleIn;
+            mShuffleWeekendPeople = shuffleWeekendPeopleIn;
+
             mStartDay = new DateTime();
             mEndDay = new DateTime();
 
@@ -129,8 +145,8 @@ namespace Duty_Schedule
             mGroups = new List<string>();
 
             FileInputs fi = new FileInputs();
-            var dates = fi.GetDates(dateFilePath);
-            mPeople = fi.GetGroups(groupFilePath, dates);
+            var dates = fi.GetDates(dateFilePathIn);
+            mPeople = fi.GetGroups(groupFilePathIn, dates);
 
             mStartDay = dates.startDate;
             mEndDay = dates.endDate;
@@ -210,17 +226,6 @@ namespace Duty_Schedule
             int breakCount = 0;
             DateTime tempEndDay = mEndDay;
 
-            // Check if the last day of duty lands on a Fri/Sat
-            // Schedule final weekend like normal days if true
-            if (mEndDay.DayOfWeek == DayOfWeek.Friday
-                || mEndDay.DayOfWeek == DayOfWeek.Saturday)
-            {
-                if (mEndDay.DayOfWeek == DayOfWeek.Friday)
-                    tempEndDay = mEndDay.AddDays(-1);
-                else
-                    tempEndDay = mEndDay.AddDays(-2);
-            }
-
             // This section finds all the groups
             foreach (Person per in mPeople)
             {
@@ -232,65 +237,101 @@ namespace Duty_Schedule
 
             }
 
-            // This section loads each day into mWeekends or mWeekdays
-            while (currentDay <= tempEndDay)
+            //
+
+            //If weekends are the same people
+            if (mWeekendsSamePeople)
             {
-                //Standard weekday
-                if (currentDay.DayOfWeek >= DayOfWeek.Monday
-                    && currentDay.DayOfWeek <= DayOfWeek.Thursday
-                    && !tempHolidays.Contains(currentDay)
-                    && !mBreaks.Contains(currentDay))
+                // Check if the last day of duty lands on a Fri/Sat
+                // Schedule final weekend like normal days if true
+                if (mEndDay.DayOfWeek == DayOfWeek.Friday
+                    || mEndDay.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    if (mEndDay.DayOfWeek == DayOfWeek.Friday)
+                        tempEndDay = mEndDay.AddDays(-1);
+                    else
+                        tempEndDay = mEndDay.AddDays(-2);
+                }
+
+                // This section loads each day into mWeekends or mWeekdays
+                while (currentDay <= tempEndDay)
+                {
+                    //Standard weekday
+                    if (currentDay.DayOfWeek >= DayOfWeek.Monday
+                        && currentDay.DayOfWeek <= DayOfWeek.Thursday
+                        && !tempHolidays.Contains(currentDay)
+                        && !mBreaks.Contains(currentDay))
+                    {
+                        mWeekdays.Add(currentDay);
+                        currentDay = currentDay.AddDays(1);
+                        dayCount++;
+                    }
+                    //Standard or long weekend
+                    else if (!mBreaks.Contains(currentDay))
+                    {
+                        mWeekends.Add(new List<DateTime>());
+
+                        while ((currentDay.DayOfWeek != DayOfWeek.Monday
+                                && currentDay.DayOfWeek != DayOfWeek.Tuesday
+                                && currentDay.DayOfWeek != DayOfWeek.Wednesday
+                                && currentDay.DayOfWeek != DayOfWeek.Thursday)
+                            || tempHolidays.Contains(currentDay))
+                        {
+                            mWeekends[weekendCount].Add(currentDay);
+
+                            // Remove holidays from list
+                            if (tempHolidays.Contains(currentDay))
+                            {
+                                tempHolidays.Remove(currentDay);
+                            }
+
+
+                            currentDay = currentDay.AddDays(1);
+                        }
+
+                        weekendCount++;
+                    }
+                    //Should only be breaks here
+                    else
+                    {
+                        if (!mBreaks.Contains(currentDay))
+                            throw new System.Exception("Found invalid date - Should be break, but " + currentDay.ToShortDateString() + "is not listed as a break.");
+                        breakCount++;
+                        currentDay = currentDay.AddDays(1);
+                    }
+                }
+
+                // This part only runs if the last day is Fri/Sat so it doesn't get added as a weekend.
+                // Hopefully it's only standard days because I'm not going to check. lol
+                while (currentDay <= mEndDay)
                 {
                     mWeekdays.Add(currentDay);
                     currentDay = currentDay.AddDays(1);
                     dayCount++;
                 }
-                //Standard or long weekend
-                else if (!mBreaks.Contains(currentDay))
+            }
+            else    // If weekends contain different people for each day
+            {
+                // This section loads each day into mWeekdays
+                while (currentDay <= mEndDay)
                 {
-                    mWeekends.Add(new List<DateTime>());
-
-                    while (   (currentDay.DayOfWeek != DayOfWeek.Monday
-                            && currentDay.DayOfWeek != DayOfWeek.Tuesday
-                            && currentDay.DayOfWeek != DayOfWeek.Wednesday
-                            && currentDay.DayOfWeek != DayOfWeek.Thursday)
-                        || tempHolidays.Contains(currentDay))
+                    //Standard day or long weekends are treated the same
+                    if (!mBreaks.Contains(currentDay))
                     {
-                        mWeekends[weekendCount].Add(currentDay);
-
-                        // Remove holidays from list
-                        if (tempHolidays.Contains(currentDay))
-                        {
-                            tempHolidays.Remove(currentDay);
-                        }
-
-
+                        mWeekdays.Add(currentDay);
+                        currentDay = currentDay.AddDays(1);
+                        dayCount++;
+                    }
+                    //Should only be breaks here
+                    else
+                    {
+                        if (!mBreaks.Contains(currentDay))
+                            throw new System.Exception("Found invalid date - Should be break, but " + currentDay.ToShortDateString() + "is not listed as a break.");
+                        breakCount++;
                         currentDay = currentDay.AddDays(1);
                     }
-
-                    weekendCount++;
-                }
-                //Should only be breaks here
-                else
-                {
-                    if (!mBreaks.Contains(currentDay))
-                        throw new System.Exception("Found invalid date - Should be break, but " + currentDay.ToShortDateString() + "is not listed as a break.");
-                    breakCount++;
-                    currentDay = currentDay.AddDays(1);
                 }
             }
-
-            // This part only runs if the last day is Fri/Sat so it doesn't get added as a weekend.
-            // Hopefully it's only standard days because I'm not going to check. lol
-            // TODO: Actually fix the weekends so they can end early too.
-            while (currentDay <= mEndDay)
-            {
-                mWeekdays.Add(currentDay);
-                currentDay = currentDay.AddDays(1);
-                dayCount++;
-            }
-
-
         }   // End Initalize()
 
         public void FirstScheduleRun()
@@ -565,29 +606,67 @@ namespace Duty_Schedule
                 currentDay = currentDay.AddDays(1);
             }
 
-            // If we are making the calendar from scratch, don't rotate saturdays.
-            if (!isFromImport)
-                RotateSaturdays();
+            // If we are making the calendar from scratch and the settings are correct, rotate saturdays.
+            if (!isFromImport && mWeekendsSamePeople && mShuffleWeekendPeople)
+                RotateWeekends();
 
         }   // End FillCalendar()
 
         /// <summary>
-        /// Rotates anyone im simular groups for saturdays
+        /// Rotates anyone in similar groups for weekends
         /// </summary>
-        public void RotateSaturdays()
+        public void RotateWeekends()
         {
             // TODO: At the moment, this only really works if there's two dual-groups.
             //       Fix it so that it actually rotates everyone possible.
             for(int i = 0; i < mCalendar.mDateList.Count(); i++)
             {
-                // For only saturdays
+                // For Saturdays
                 if(mCalendar.mDateList[i].DayOfWeek.ToString().ToLower().Contains("sat"))
                 {
-                    List<string> grps = new List<string>();
-                    //For each person each day
+                    // For each person each day
                     for (int j = 1; j < mCalendar.mPeopleList[i].Count(); j++)
                     {
                         if(mCalendar.mPeopleList[i][j].person.mGroups.Contains(mCalendar.mPeopleList[i][j - 1].group)
+                            && mCalendar.mPeopleList[i][j - 1].person.mGroups.Contains(mCalendar.mPeopleList[i][j].group))
+                        {
+                            // These two people are able to be swapped
+                            var tempPer1 = mCalendar.mPeopleList[i][j];
+                            var tempPer2 = mCalendar.mPeopleList[i][j - 1];
+
+                            Person temp = tempPer1.person;
+                            tempPer1.person = tempPer2.person;
+                            tempPer2.person = temp;
+
+                            mCalendar.mPeopleList[i][j] = tempPer1;
+                            mCalendar.mPeopleList[i][j - 1] = tempPer2;
+                        }
+                    }
+                }
+                // Twice for Sundays
+                if (mCalendar.mDateList[i].DayOfWeek.ToString().ToLower().Contains("sun"))
+                {
+                    // For each person twice
+                    for (int j = 1; j < mCalendar.mPeopleList[i].Count(); j++)
+                    {
+                        if (mCalendar.mPeopleList[i][j].person.mGroups.Contains(mCalendar.mPeopleList[i][j - 1].group)
+                            && mCalendar.mPeopleList[i][j - 1].person.mGroups.Contains(mCalendar.mPeopleList[i][j].group))
+                        {
+                            // These two people are able to be swapped
+                            var tempPer1 = mCalendar.mPeopleList[i][j];
+                            var tempPer2 = mCalendar.mPeopleList[i][j - 1];
+
+                            Person temp = tempPer1.person;
+                            tempPer1.person = tempPer2.person;
+                            tempPer2.person = temp;
+
+                            mCalendar.mPeopleList[i][j] = tempPer1;
+                            mCalendar.mPeopleList[i][j - 1] = tempPer2;
+                        }
+                    }
+                    for (int j = 1; j < mCalendar.mPeopleList[i].Count(); j++)
+                    {
+                        if (mCalendar.mPeopleList[i][j].person.mGroups.Contains(mCalendar.mPeopleList[i][j - 1].group)
                             && mCalendar.mPeopleList[i][j - 1].person.mGroups.Contains(mCalendar.mPeopleList[i][j].group))
                         {
                             // These two people are able to be swapped

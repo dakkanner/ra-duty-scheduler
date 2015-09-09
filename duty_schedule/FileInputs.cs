@@ -1,4 +1,4 @@
-﻿//Copyright (C) 2014  Dakota Kanner
+﻿//Copyright (C) 2014-2015  Dakota Kanner
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -83,8 +83,16 @@ namespace Duty_Schedule
                             if (sepIndex >= 0)
                             {
                                 lnStr = lnStr.Substring(sepIndex + 1).Trim();
-                                startDate = DateTime.Parse(lnStr);
-                            }
+                                try
+                                {
+                                    startDate = DateTime.Parse(lnStr);
+                                }
+                                catch
+                                {
+                                    MessageBox.Show("Unable to parse date in 'Start' section of date file: " + lnStr, "Calendar Input",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                        }
                         }
                         // End date = 'e'
                         else if (lnStr.ToLower()[0] == 'e')
@@ -93,7 +101,16 @@ namespace Duty_Schedule
                             if (sepIndex >= 0)
                             {
                                 lnStr = lnStr.Substring(sepIndex + 1).Trim();
-                                endDate = DateTime.Parse(lnStr);
+
+                                try
+                                {
+                                    endDate = DateTime.Parse(lnStr);
+                                }
+                                catch
+                                {
+                                    MessageBox.Show("Unable to parse date in 'End' section of date file: " + lnStr, "Calendar Input",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
                             }
                         }
                         // Holiday = 'h'
@@ -112,13 +129,33 @@ namespace Duty_Schedule
                                     lnStr = lnStr.Substring(commaIndex).Trim(',').Trim();
 
                                     if (tempDateStr.Length > 0)
+                                    {
+                                        try
+                                        {
                                         holidayList.Add(DateTime.Parse(tempDateStr));
+                                        }
+                                        catch
+                                        {
+                                            MessageBox.Show("Unable to parse date in 'Holiday' section of date file: " + tempDateStr, "Calendar Input",
+                                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        }
+                                    }
 
                                     commaIndex = lnStr.IndexOf(',');
                                 }
                                 // Handle the last date in the string
                                 if (lnStr.Length > 0)
-                                    holidayList.Add(DateTime.Parse(lnStr));
+                                {
+                                    try
+                                    {
+                                        holidayList.Add(DateTime.Parse(lnStr));
+                                    }
+                                    catch
+                                    {
+                                        MessageBox.Show("Unable to parse date in 'Holiday' section of date file: " + lnStr, "Calendar Input",
+                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
+                                }
                             }
                         }
                         // Break = 'b'
@@ -137,13 +174,33 @@ namespace Duty_Schedule
                                     lnStr = lnStr.Substring(commaIndex).Trim(',').Trim();
 
                                     if (tempDateStr.Length > 0)
-                                        breakList.Add(DateTime.Parse(tempDateStr));
+                                    {
+                                        try
+                                        {
+                                            breakList.Add(DateTime.Parse(tempDateStr));
+                                        }
+                                        catch
+                                        {
+                                            MessageBox.Show("Unable to parse date in 'Break' section of date file: " + tempDateStr, "Calendar Input",
+                                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        }
+                                    }
 
                                     commaIndex = lnStr.IndexOf(',');
                                 }
                                 // Handle the last date in the string
                                 if (lnStr.Length > 0)
-                                    breakList.Add(DateTime.Parse(lnStr));
+                                {
+                                    try
+                                    {
+                                        breakList.Add(DateTime.Parse(lnStr));
+                                    }
+                                    catch
+                                    {
+                                        MessageBox.Show("Unable to parse date in 'Break' section of date file: " + lnStr, "Calendar Input",
+                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
+                                }
                             }
                         }
                     }
@@ -659,8 +716,7 @@ namespace Duty_Schedule
                                                 breakDate = breakDate.AddDays(1);
                                             }
                                         }
-
-
+                                        
                                         // Actually set the current line's date
                                         currentDate = tempDate;
 

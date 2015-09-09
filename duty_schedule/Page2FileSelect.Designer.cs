@@ -51,7 +51,7 @@ namespace Duty_Schedule
             this.labelSubHeader = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.dateTextBox = new System.Windows.Forms.TextBox();
-            this.DateFileSelBtn = new System.Windows.Forms.Button();
+            this.dateFileSelBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupFileSelBtn = new System.Windows.Forms.Button();
@@ -65,12 +65,15 @@ namespace Duty_Schedule
             this.buttonP2Next = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.ShuffleCheckBox = new System.Windows.Forms.CheckBox();
+            this.WeekendsSamePersonCheckBox = new System.Windows.Forms.CheckBox();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonP1Next
             // 
             this.buttonP1Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.buttonP1Next.Location = new System.Drawing.Point(146, 360);
+            this.buttonP1Next.Location = new System.Drawing.Point(113, 255);
             this.buttonP1Next.Name = "buttonP1Next";
             this.buttonP1Next.Size = new System.Drawing.Size(95, 30);
             this.buttonP1Next.TabIndex = 0;
@@ -103,7 +106,7 @@ namespace Duty_Schedule
             // 
             this.linkLabel2.AutoSize = true;
             this.linkLabel2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabel2.Location = new System.Drawing.Point(88, 324);
+            this.linkLabel2.Location = new System.Drawing.Point(55, 219);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(206, 14);
             this.linkLabel2.TabIndex = 6;
@@ -118,15 +121,15 @@ namespace Duty_Schedule
             this.dateTextBox.Size = new System.Drawing.Size(262, 20);
             this.dateTextBox.TabIndex = 7;
             // 
-            // DateFileSelBtn
+            // dateFileSelBtn
             // 
-            this.DateFileSelBtn.Location = new System.Drawing.Point(314, 218);
-            this.DateFileSelBtn.Name = "DateFileSelBtn";
-            this.DateFileSelBtn.Size = new System.Drawing.Size(29, 22);
-            this.DateFileSelBtn.TabIndex = 8;
-            this.DateFileSelBtn.Text = "...";
-            this.DateFileSelBtn.UseVisualStyleBackColor = true;
-            this.DateFileSelBtn.Click += new System.EventHandler(this.DateFileSelBtn_Click);
+            this.dateFileSelBtn.Location = new System.Drawing.Point(314, 218);
+            this.dateFileSelBtn.Name = "dateFileSelBtn";
+            this.dateFileSelBtn.Size = new System.Drawing.Size(29, 22);
+            this.dateFileSelBtn.TabIndex = 8;
+            this.dateFileSelBtn.Text = "...";
+            this.dateFileSelBtn.UseVisualStyleBackColor = true;
+            this.dateFileSelBtn.Click += new System.EventHandler(this.dateFileSelBtn_Click);
             // 
             // label1
             // 
@@ -169,7 +172,7 @@ namespace Duty_Schedule
             // 
             this.aboutLinkLabel.AutoSize = true;
             this.aboutLinkLabel.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.aboutLinkLabel.Location = new System.Drawing.Point(12, 439);
+            this.aboutLinkLabel.Location = new System.Drawing.Point(12, 462);
             this.aboutLinkLabel.Name = "aboutLinkLabel";
             this.aboutLinkLabel.Size = new System.Drawing.Size(147, 14);
             this.aboutLinkLabel.TabIndex = 13;
@@ -246,19 +249,45 @@ namespace Duty_Schedule
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.ShuffleCheckBox);
+            this.groupBox2.Controls.Add(this.WeekendsSamePersonCheckBox);
+            this.groupBox2.Controls.Add(this.buttonP1Next);
+            this.groupBox2.Controls.Add(this.linkLabel2);
             this.groupBox2.Location = new System.Drawing.Point(33, 152);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(334, 251);
+            this.groupBox2.Size = new System.Drawing.Size(334, 295);
             this.groupBox2.TabIndex = 21;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Option 1";
+            // 
+            // ShuffleCheckBox
+            // 
+            this.ShuffleCheckBox.AutoSize = true;
+            this.ShuffleCheckBox.Enabled = false;
+            this.ShuffleCheckBox.Location = new System.Drawing.Point(58, 179);
+            this.ShuffleCheckBox.Name = "ShuffleCheckBox";
+            this.ShuffleCheckBox.Size = new System.Drawing.Size(196, 17);
+            this.ShuffleCheckBox.TabIndex = 8;
+            this.ShuffleCheckBox.Text = "Shuffle on weekends when possible";
+            this.ShuffleCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // WeekendsSamePersonCheckBox
+            // 
+            this.WeekendsSamePersonCheckBox.AutoSize = true;
+            this.WeekendsSamePersonCheckBox.Location = new System.Drawing.Point(47, 156);
+            this.WeekendsSamePersonCheckBox.Name = "WeekendsSamePersonCheckBox";
+            this.WeekendsSamePersonCheckBox.Size = new System.Drawing.Size(233, 17);
+            this.WeekendsSamePersonCheckBox.TabIndex = 7;
+            this.WeekendsSamePersonCheckBox.Text = "Weekends have the same people each day";
+            this.WeekendsSamePersonCheckBox.UseVisualStyleBackColor = true;
+            this.WeekendsSamePersonCheckBox.CheckedChanged += new System.EventHandler(this.buttonWeekend_Click);
             // 
             // Page2FileSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(784, 462);
+            this.ClientSize = new System.Drawing.Size(784, 494);
             this.Controls.Add(this.buttonP2Next);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.csvFileSelBtn);
@@ -270,12 +299,10 @@ namespace Duty_Schedule
             this.Controls.Add(this.groupFileSelBtn);
             this.Controls.Add(this.groupTextBox);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.DateFileSelBtn);
+            this.Controls.Add(this.dateFileSelBtn);
             this.Controls.Add(this.dateTextBox);
-            this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.labelSubHeader);
             this.Controls.Add(this.labelHeader);
-            this.Controls.Add(this.buttonP1Next);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -285,6 +312,8 @@ namespace Duty_Schedule
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Calendar Maker";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -297,7 +326,7 @@ namespace Duty_Schedule
         private System.Windows.Forms.Label labelSubHeader;
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.TextBox dateTextBox;
-        private System.Windows.Forms.Button DateFileSelBtn;
+        private System.Windows.Forms.Button dateFileSelBtn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button groupFileSelBtn;
@@ -311,7 +340,8 @@ namespace Duty_Schedule
         private System.Windows.Forms.Button buttonP2Next;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        
+        private System.Windows.Forms.CheckBox WeekendsSamePersonCheckBox;
+        private System.Windows.Forms.CheckBox ShuffleCheckBox;
     }
 }
 

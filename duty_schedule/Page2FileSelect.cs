@@ -40,6 +40,9 @@ namespace Duty_Schedule
             mDateFilePath = "";
             mGroupFilePath = "";
             mCsvFilePath = "";
+
+            this.WeekendsSamePersonCheckBox.Checked = true;
+            this.ShuffleCheckBox.Checked = true;
         }
 
         public DatesAndAssignments GetCalendar()
@@ -65,7 +68,7 @@ namespace Duty_Schedule
                 return "";
         }
 
-        private void DateFileSelBtn_Click(object sender, EventArgs e)
+        private void dateFileSelBtn_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.InitialDirectory = this.mDateFilePath;
@@ -89,7 +92,8 @@ namespace Duty_Schedule
 
         private void buttonP1Next_Click(object sender, EventArgs e)
         {
-            mCalendarMaker = new CalendarMaker(this.dateTextBox.Text, this.groupTextBox.Text);
+            mCalendarMaker = new CalendarMaker(this.dateTextBox.Text, this.groupTextBox.Text, 
+                this.WeekendsSamePersonCheckBox.Checked, this.ShuffleCheckBox.Checked);
             mGroupFilePath = this.groupTextBox.Text;
             mDateFilePath = this.dateTextBox.Text;
             this.DialogResult = DialogResult.OK;
@@ -115,10 +119,24 @@ namespace Duty_Schedule
 
         private void buttonP2Next_Click(object sender, EventArgs e)
         {
-            mCalendarMaker = new CalendarMaker(this.csvTextBox.Text);
+            mCalendarMaker = new CalendarMaker(this.csvTextBox.Text, this.WeekendsSamePersonCheckBox.Checked,
+                this.ShuffleCheckBox.Checked);
             mCsvFilePath = this.csvTextBox.Text;
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void buttonWeekend_Click(object sender, EventArgs e)
+        {
+            if (this.WeekendsSamePersonCheckBox.Checked)
+            {
+                this.ShuffleCheckBox.Enabled = true;
+            }
+            else
+            {
+                this.ShuffleCheckBox.Enabled = false;
+            }
+
         }
     }
 }
