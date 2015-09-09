@@ -105,8 +105,7 @@ namespace Duty_Schedule
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
+        
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel GPLlinkLabel;
         private System.Windows.Forms.Button okButton;

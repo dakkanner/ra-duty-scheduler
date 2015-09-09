@@ -208,7 +208,6 @@ namespace Duty_Schedule
             int dayCount = 0;
             int weekendCount = 0;
             int breakCount = 0;
-            bool endsOnWeekend = false;
             DateTime tempEndDay = mEndDay;
 
             // Check if the last day of duty lands on a Fri/Sat
@@ -216,7 +215,6 @@ namespace Duty_Schedule
             if (mEndDay.DayOfWeek == DayOfWeek.Friday
                 || mEndDay.DayOfWeek == DayOfWeek.Saturday)
             {
-                endsOnWeekend = true;
                 if (mEndDay.DayOfWeek == DayOfWeek.Friday)
                     tempEndDay = mEndDay.AddDays(-1);
                 else
