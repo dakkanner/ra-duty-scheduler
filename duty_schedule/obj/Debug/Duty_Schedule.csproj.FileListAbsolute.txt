@@ -163,3 +163,4 @@ E:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Sched
 E:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.application
 E:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.exe
 E:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.pdb
+E:\Dropbox\RA\Duty_Schedule\ra-duty-scheduler\Duty_Schedule\obj\Debug\Duty_Schedule.csprojResolveAssemblyReference.cache

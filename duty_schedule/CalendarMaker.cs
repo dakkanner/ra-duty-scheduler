@@ -68,7 +68,7 @@ namespace Duty_Schedule
         /// This ctor is used when importing from a previously generated CSV. 
         /// It keeps the 
         /// </summary>
-        /// <param name="csvFilePathIn">The path the the CSV file.</param>
+        /// <param name="csvFilePathIn">The path the CSV file.</param>
         /// <param name="weekendsSamePeopleIn">True if Friday, Saturday, and Sunday should be the same people.</param>
         /// <param name="weekendsSamePeopleIn">True if you want people on weekends to be rotated if they can be put into different groups.</param>
         public CalendarMaker(string csvFilePathIn, bool weekendsSamePeopleIn, bool shuffleWeekendPeopleIn)
@@ -113,13 +113,13 @@ namespace Duty_Schedule
                 }
             }
 
-            //Initalize();
+            //Initialize();
             //FirstScheduleRun();
             FillCalendar();
         }
 
         /// <summary>
-        /// This ctor is used when creatign a new calendar for creation
+        /// This ctor is used when creating a new calendar for creation
         /// </summary>
         /// <param name="dateFilePathIn"></param>
         /// <param name="groupFilePathIn"></param>
@@ -153,7 +153,7 @@ namespace Duty_Schedule
             mHolidays = dates.holidayList;
             mBreaks = dates.breakList;
 
-            Initalize();
+            Initialize();
             FirstScheduleRun();
             FillCalendar();
         }
@@ -217,7 +217,7 @@ namespace Duty_Schedule
             return isValid;
         }
 
-        public void Initalize()
+        public void Initialize()
         {
             DateTime currentDay = mStartDay;
             List<DateTime> tempHolidays = new List<DateTime>(mHolidays);
@@ -302,7 +302,6 @@ namespace Duty_Schedule
                 }
 
                 // This part only runs if the last day is Fri/Sat so it doesn't get added as a weekend.
-                // Hopefully it's only standard days because I'm not going to check. lol
                 while (currentDay <= mEndDay)
                 {
                     mWeekdays.Add(currentDay);
@@ -332,7 +331,7 @@ namespace Duty_Schedule
                     }
                 }
             }
-        }   // End Initalize()
+        }   // End Initialize()
 
         public void FirstScheduleRun()
         {
@@ -414,7 +413,7 @@ namespace Duty_Schedule
                                 && !lowestDutyDaysList[i].mDutyDays.ContainsDates(wknd)
                                 && !datePlaced)
                             {
-                                MessageBox.Show("Nobody avalable for weekend " + wknd[0].ToShortDateString()
+                                MessageBox.Show("Nobody available for weekend " + wknd[0].ToShortDateString()
                                                     + Environment.NewLine + "Assigning " + lowestDutyDaysList[i].mName
                                                     + " to the " + group + " group because they currently have the fewest days.",
                                                     "Problem Making Calendar");
@@ -500,7 +499,7 @@ namespace Duty_Schedule
                     //Nobody available without the date requested off
                     if (!datePlaced)     
                     {
-                        // If someone is avalable, but would work back-to-back, add them.
+                        // If someone is available, but would work back-to-back, add them.
                         if (tempPersonSelected != null)
                         {
                             if (groupList.Contains(tempPersonSelected)
@@ -522,7 +521,7 @@ namespace Duty_Schedule
                                     && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)
                                     && !datePlaced)
                                 {
-                                    MessageBox.Show("Nobody avalable for " + wkday.ToShortDateString()
+                                    MessageBox.Show("Nobody available for " + wkday.ToShortDateString()
                                                     + Environment.NewLine + "Assigning " + lowestDutyDaysList[i].mName
                                                     + " to the " + group + " group because they currently have the fewest days.",
                                                     "Problem Making Calendar");
@@ -551,9 +550,9 @@ namespace Duty_Schedule
         }   // End SecondScheduleRun()
 
         /// <summary>
-        /// This function should check that anyone in multiple groups is spread out approximatly evenly
+        /// This function should check that anyone in multiple groups is spread out approximately evenly
         /// between the groups. If the person is below the threshold in any one group, this is a 
-        /// low-prority problem. Try to trade them, first locally, then with nearby days.
+        /// low-priority problem. Try to trade them, first locally, then with nearby days.
         /// If they can't be traded, that's alright.
         /// </summary>
         public void ThirdScheduleRun()
@@ -806,7 +805,7 @@ namespace Duty_Schedule
         /// <summary>
         /// Output to a CSV file to be easily imported again later.
         /// 
-        /// TODO: Implement the GUI and backend to import this back.
+        /// TODO: Implement the GUI and back-end to import this back.
         /// </summary>
         public void ExportCSVFile()
         {
@@ -875,7 +874,7 @@ namespace Duty_Schedule
 
                     // Create a new, empty workbook and add it to the collection returned  
                     // by property Workbooks. The new workbook becomes the active workbook. 
-                    // Add has an optional parameter for specifying a praticular template.  
+                    // Add has an optional parameter for specifying a particular template.  
                     // Because no argument is sent in this example, Add creates a new workbook. 
                     excelApp.Workbooks.Add();
 

@@ -34,7 +34,7 @@ namespace Duty_Schedule
         private string mDirectory;
 
         /// <summary>
-        /// The defualt ctor. Gets the directory of the .exe
+        /// The default ctor. Gets the directory of the .exe
         /// </summary>
         public FileInputs() 
         {
@@ -233,7 +233,7 @@ namespace Duty_Schedule
         /// Gets the all the groups and names from a file
         /// </summary>
         /// <param name="groupsFileName">The name of the file containing people and groups</param>
-        /// <param name="dates">The DatesStruct that should be made immediatly before this from Dates.txt</param>
+        /// <param name="dates">The DatesStruct that should be made immediately before this from Dates.txt</param>
         /// <returns></returns>
         public List<Person> GetGroups(string groupsFileName, DatesStruct dates)
         {
@@ -363,8 +363,8 @@ namespace Duty_Schedule
                                                 tempDateList.Add(d);
                                             }
 
-                                            // If the day count seems reasonable, add to to the real list.
-                                            if (tempDateList.Count > 1 && tempDateList.Count < 50)    // 50 seems like a reasonable max mnumber of days off, right?
+                                            // If the day count seems reasonable, add to the real list.
+                                            if (tempDateList.Count > 1 && tempDateList.Count < 50)    // 50 seems like a reasonable max number of days off, right?
                                             {
                                                 dateList.AddRange(tempDateList);
                                             }
@@ -417,8 +417,8 @@ namespace Duty_Schedule
                                                 tempDateList.Add(d);
                                             }
 
-                                            // If the day count seems reasonable, add to to the real list.
-                                            if (tempDateList.Count > 1 && tempDateList.Count < 50)    // 50 seems like a reasonable max mnumber of days off, right?
+                                            // If the day count seems reasonable, add to the real list.
+                                            if (tempDateList.Count > 1 && tempDateList.Count < 50)    // 50 seems like a reasonable max number of days off, right?
                                             {
                                                 dateList.AddRange(tempDateList);
                                             }
@@ -598,7 +598,7 @@ namespace Duty_Schedule
         /// <summary>
         /// This 
         /// </summary>
-        /// <param name="csvFileName">The name of the file to be importe from.</param>
+        /// <param name="csvFileName">The name of the file to be imported from.</param>
         /// <returns>A tuple. The first part is a DatesStruct filled with the start and 
         /// end dates. The second is a list of people and their associated duty days.</returns>
         public Tuple<DatesStruct, List<Person>> GetImportFromCsv(string csvFileName)
@@ -828,7 +828,7 @@ namespace Duty_Schedule
         /// Gets all specified days-of-the-week within a date range (e.g. all Mondays)
         /// </summary>
         /// <param name="startDate">The day to start the list of days (inclusive)</param>
-        /// <param name="endDate">The day to end the list of da (inclusive)y</param>
+        /// <param name="endDate">The day to end the list of days (inclusive)</param>
         /// <param name="dayToMatch">The day-of-the-week to find</param>
         /// <returns>A list of all days that are dayToMatch (e.g. all Mondays)</returns>
         List<DateTime> GetDatesForDayOfWeek(DateTime startDate, DateTime endDate, DayOfWeek dayToMatch)

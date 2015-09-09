@@ -42,7 +42,7 @@ namespace Duty_Schedule
         public DatesAndGroups mDutyDays;
 
         /// <summary>
-        /// Default ctor. All vars initalize to 0, empty, etc.
+        /// Default ctor. All vars initialize to 0, empty, etc.
         /// </summary>
         public Person()
         {
@@ -59,7 +59,7 @@ namespace Duty_Schedule
         /// Ctor that sets some of the values. This one takes a single group string.
         /// </summary>
         /// <param name="name">The person's name</param>
-        /// <param name="group">The group (singluar) that this person belongs in</param>
+        /// <param name="group">The group (singular) that this person belongs in</param>
         /// <param name="daysOff">The requested days off from the person</param>
         public Person(string name, string group, List<DateTime> daysOff)
         {

@@ -128,7 +128,7 @@ namespace Duty_Schedule
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(290, 18);
             this.label1.TabIndex = 5;
-            this.label1.Text = "What are the email adresses for everyone?";
+            this.label1.Text = "What are the email addresses for everyone?";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2
