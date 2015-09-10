@@ -30,6 +30,7 @@ namespace Duty_Schedule
     {
         private bool mWeekendsSamePeople;
         private bool mShuffleWeekendPeople;
+        private List<DayOfWeek> mWeekendDaysOfWeek;
 
         private DateTime mStartDay;
         private DateTime mEndDay;
@@ -48,6 +49,7 @@ namespace Duty_Schedule
         {
             mWeekendsSamePeople = true;
             mShuffleWeekendPeople = true;
+            mWeekendDaysOfWeek = new List<DayOfWeek>();
 
             mStartDay = new DateTime();
             mEndDay = new DateTime();
@@ -71,10 +73,11 @@ namespace Duty_Schedule
         /// <param name="csvFilePathIn">The path the CSV file.</param>
         /// <param name="weekendsSamePeopleIn">True if Friday, Saturday, and Sunday should be the same people.</param>
         /// <param name="weekendsSamePeopleIn">True if you want people on weekends to be rotated if they can be put into different groups.</param>
-        public CalendarMaker(string csvFilePathIn, bool weekendsSamePeopleIn, bool shuffleWeekendPeopleIn)
+        public CalendarMaker(string csvFilePathIn)
         {
-            mWeekendsSamePeople = weekendsSamePeopleIn;
-            mShuffleWeekendPeople = shuffleWeekendPeopleIn;
+            mWeekendsSamePeople = false;
+            mShuffleWeekendPeople = false;
+            mWeekendDaysOfWeek = new List<DayOfWeek>();
 
             mStartDay = new DateTime();
             mEndDay = new DateTime();
@@ -125,10 +128,13 @@ namespace Duty_Schedule
         /// <param name="groupFilePathIn"></param>
         /// <param name="weekendsSamePeopleIn">True if Friday, Saturday, and Sunday should be the same people.</param>
         /// <param name="weekendsSamePeopleIn">True if you want people on weekends to be rotated if they can be put into different groups.</param>
-        public CalendarMaker(string dateFilePathIn, string groupFilePathIn, bool weekendsSamePeopleIn, bool shuffleWeekendPeopleIn)
+        /// <param name="weekendDaysOfWeek">List of days of the week to use for weekends.</param>
+        public CalendarMaker(string dateFilePathIn, string groupFilePathIn, bool weekendsSamePeopleIn, 
+            bool shuffleWeekendPeopleIn, List<DayOfWeek> weekendDaysOfWeek)
         {
             mWeekendsSamePeople = weekendsSamePeopleIn;
             mShuffleWeekendPeople = shuffleWeekendPeopleIn;
+            mWeekendDaysOfWeek = weekendDaysOfWeek;
 
             mStartDay = new DateTime();
             mEndDay = new DateTime();
@@ -234,102 +240,75 @@ namespace Duty_Schedule
                 {
                     mGroups.Add(grp);
                 }
-
             }
 
-            //
-
-            //If weekends are the same people
-            if (mWeekendsSamePeople)
+            // Check if the last day of duty lands on a Fri/Sat
+            // Schedule final weekend like normal days if true
+            if (mEndDay.DayOfWeek == DayOfWeek.Friday
+                || mEndDay.DayOfWeek == DayOfWeek.Saturday)
             {
-                // Check if the last day of duty lands on a Fri/Sat
-                // Schedule final weekend like normal days if true
-                if (mEndDay.DayOfWeek == DayOfWeek.Friday
-                    || mEndDay.DayOfWeek == DayOfWeek.Saturday)
-                {
-                    if (mEndDay.DayOfWeek == DayOfWeek.Friday)
-                        tempEndDay = mEndDay.AddDays(-1);
-                    else
-                        tempEndDay = mEndDay.AddDays(-2);
-                }
+                if (mEndDay.DayOfWeek == DayOfWeek.Friday)
+                    tempEndDay = mEndDay.AddDays(-1);
+                else
+                    tempEndDay = mEndDay.AddDays(-2);
+            }
 
-                // This section loads each day into mWeekends or mWeekdays
-                while (currentDay <= tempEndDay)
-                {
-                    //Standard weekday
-                    if (currentDay.DayOfWeek >= DayOfWeek.Monday
-                        && currentDay.DayOfWeek <= DayOfWeek.Thursday
-                        && !tempHolidays.Contains(currentDay)
-                        && !mBreaks.Contains(currentDay))
-                    {
-                        mWeekdays.Add(currentDay);
-                        currentDay = currentDay.AddDays(1);
-                        dayCount++;
-                    }
-                    //Standard or long weekend
-                    else if (!mBreaks.Contains(currentDay))
-                    {
-                        mWeekends.Add(new List<DateTime>());
-
-                        while ((currentDay.DayOfWeek != DayOfWeek.Monday
-                                && currentDay.DayOfWeek != DayOfWeek.Tuesday
-                                && currentDay.DayOfWeek != DayOfWeek.Wednesday
-                                && currentDay.DayOfWeek != DayOfWeek.Thursday)
-                            || tempHolidays.Contains(currentDay))
-                        {
-                            mWeekends[weekendCount].Add(currentDay);
-
-                            // Remove holidays from list
-                            if (tempHolidays.Contains(currentDay))
-                            {
-                                tempHolidays.Remove(currentDay);
-                            }
-
-
-                            currentDay = currentDay.AddDays(1);
-                        }
-
-                        weekendCount++;
-                    }
-                    //Should only be breaks here
-                    else
-                    {
-                        if (!mBreaks.Contains(currentDay))
-                            throw new System.Exception("Found invalid date - Should be break, but " + currentDay.ToShortDateString() + "is not listed as a break.");
-                        breakCount++;
-                        currentDay = currentDay.AddDays(1);
-                    }
-                }
-
-                // This part only runs if the last day is Fri/Sat so it doesn't get added as a weekend.
-                while (currentDay <= mEndDay)
+            // This section loads each day into mWeekends or mWeekdays
+            while (currentDay <= tempEndDay)
+            {
+                //Standard weekday
+                if (!mWeekendDaysOfWeek.Contains(currentDay.DayOfWeek)
+                    && !tempHolidays.Contains(currentDay)
+                    && !mBreaks.Contains(currentDay))
                 {
                     mWeekdays.Add(currentDay);
                     currentDay = currentDay.AddDays(1);
                     dayCount++;
                 }
-            }
-            else    // If weekends contain different people for each day
-            {
-                // This section loads each day into mWeekdays
-                while (currentDay <= mEndDay)
+                //Standard or long weekend
+                else if (!mBreaks.Contains(currentDay))
                 {
-                    //Standard day or long weekends are treated the same
-                    if (!mBreaks.Contains(currentDay))
+                    mWeekends.Add(new List<DateTime>());
+
+                    while (mWeekendDaysOfWeek.Contains(currentDay.DayOfWeek)
+                        || tempHolidays.Contains(currentDay))
                     {
-                        mWeekdays.Add(currentDay);
+                        mWeekends[weekendCount].Add(currentDay);
+
+                        // Remove holidays from list
+                        if (tempHolidays.Contains(currentDay))
+                        {
+                            tempHolidays.Remove(currentDay);
+                        }
+
+                        // If the weekends have different people, weekends last one day so 
+                        // weekend shifts get balanced
+                        if (!mWeekendsSamePeople)
+                        {
+                            mWeekends.Add(new List<DateTime>());
+                            weekendCount++;
+                        }
                         currentDay = currentDay.AddDays(1);
-                        dayCount++;
                     }
-                    //Should only be breaks here
-                    else
-                    {
-                        if (!mBreaks.Contains(currentDay))
-                            throw new System.Exception("Found invalid date - Should be break, but " + currentDay.ToShortDateString() + "is not listed as a break.");
-                        breakCount++;
-                        currentDay = currentDay.AddDays(1);
-                    }
+
+                    weekendCount++;
                 }
+                //Should only be breaks here
+                else
+                {
+                    if (!mBreaks.Contains(currentDay))
+                        throw new System.Exception("Found invalid date - Should be break, but " + currentDay.ToShortDateString() + "is not listed as a break.");
+                    breakCount++;
+                    currentDay = currentDay.AddDays(1);
+                }
+            }
+
+            // This part only runs if the last day is Fri/Sat so it doesn't get added as a weekend.
+            while (currentDay <= mEndDay)
+            {
+                mWeekdays.Add(currentDay);
+                currentDay = currentDay.AddDays(1);
+                dayCount++;
             }
         }   // End Initialize()
 
@@ -605,7 +584,7 @@ namespace Duty_Schedule
                 currentDay = currentDay.AddDays(1);
             }
 
-            // If we are making the calendar from scratch and the settings are correct, rotate saturdays.
+            // If we are making the calendar from scratch and the settings are correct, rotate Saturdays.
             if (!isFromImport && mWeekendsSamePeople && mShuffleWeekendPeople)
                 RotateWeekends();
 
@@ -781,7 +760,7 @@ namespace Duty_Schedule
                         i++;
                     }
 
-                    // Print duty summery for each group
+                    // Print duty summary for each group
                     file.WriteLine();
                     file.WriteLine();
                     file.WriteLine();
@@ -993,54 +972,26 @@ namespace Duty_Schedule
                         cRow++;
                         cCol = 'A';
                         i++;
-
                     }
 
 
 
                     /*
-                     * Temporarily using the first summary instead of the second until I can fairly force more even load balancing
+                     * Temporarily using the cross-group summary only instead of the full one until I can fairly force more even load balancing
                      */
 
-                    // Print duty summery for each group
-                    cRow += 3;
-                    workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Group";
-                    cCol++;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Name";
-                    cCol++;
-                    workSheet.Cells[cRow, cCol.ToString()] = "Total days";
-                    cCol++;
-                    foreach (string grp in mGroups)
-                    {
-                        cRow++;
-                        cCol = 'A';
-                        workSheet.Cells[cRow, cCol.ToString()] = grp;
-                        cRow++;
-
-                        foreach (Person per in mPeople)
-                        {
-                            if (per.mGroups.Contains(grp))
-                            {
-                                cCol++;
-                                workSheet.Cells[cRow, cCol.ToString()] = per.mName;
-                                cCol++;
-                                workSheet.Cells[cRow, cCol.ToString()] = per.mDutyDays.mDates.Count.ToString();
-                                cCol = 'A';
-                                cRow++;
-                            }
-                        }
-                    }
-
-                    //// Print duty summery for each group
-                    //// TODO: Switch to this version once SecondScheduleRun() and ThirdScheduleRun() are done
+                    // Print duty summary for each group
                     //cRow += 3;
                     //workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
                     //workSheet.Cells[cRow, cCol.ToString()] = "Group";
                     //cCol++;
                     //workSheet.Cells[cRow, cCol.ToString()] = "Name";
                     //cCol++;
-                    //workSheet.Cells[cRow, cCol.ToString()] = "Days count";
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Total days";
+                    //cCol++;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Wknd days";
+                    //cCol++;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Weekdays";
                     //cCol++;
                     //foreach (string grp in mGroups)
                     //{
@@ -1048,7 +999,44 @@ namespace Duty_Schedule
                     //    cCol = 'A';
                     //    workSheet.Cells[cRow, cCol.ToString()] = grp;
                     //    cRow++;
-                    //
+
+                    //    foreach (Person per in mPeople)
+                    //    {
+                    //        if (per.mGroups.Contains(grp))
+                    //        {
+                    //            int weekendCount = per.mDutyDays.mDates.Count(x => mWeekendDaysOfWeek.Contains(x.DayOfWeek));
+
+                    //            cCol++;
+                    //            workSheet.Cells[cRow, cCol.ToString()] = per.mName;
+                    //            cCol++;
+                    //            workSheet.Cells[cRow, cCol.ToString()] = per.mDutyDays.mDates.Count.ToString();
+                    //            cCol++;
+                    //            workSheet.Cells[cRow, cCol.ToString()] = weekendCount.ToString();
+                    //            cCol++;
+                    //            workSheet.Cells[cRow, cCol.ToString()] = (per.mDutyDays.mDates.Count - weekendCount).ToString();
+
+                    //            cCol = 'A';
+                    //            cRow++;
+                    //        }
+                    //    }
+                    //}
+
+                    //// Print duty summary for each group
+                    //// TODO: Switch to this version once SecondScheduleRun() and ThirdScheduleRun() are done
+                    //cRow += 3;
+                    //workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Group";
+                    //cCol++;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Name";
+                    //cCol++;
+                    //workSheet.Cells[cRow, cCol.ToString()] = "Total days";
+                    //foreach (string grp in mGroups)
+                    //{
+                    //    cRow++;
+                    //    cCol = 'A';
+                    //    workSheet.Cells[cRow, cCol.ToString()] = grp;
+                    //    cRow++;
+
                     //    for(int j = 0; j < mPeople.Count(); j++)
                     //    {
                     //        if (mPeople[j].mGroups.Contains(grp))
@@ -1057,45 +1045,94 @@ namespace Duty_Schedule
                     //            workSheet.Cells[cRow, cCol.ToString()] = mPeople[j].mName;
                     //            cCol++;
                     //            int dutyCount = 0;
-                    //            foreach(string groupCt in mPeople[j].mDutyDays.mGroups)
+                    //            foreach (string groupCt in mPeople[j].mDutyDays.mGroups)
                     //            {
                     //                if (groupCt == grp)
                     //                    dutyCount++;
                     //            }
-                    //            workSheet.Cells[cRow, cCol.ToString()] = dutyCount; //mPeople[j].mDutyDays.mDates.Count.ToString();
+                    //            workSheet.Cells[cRow, cCol.ToString()] = dutyCount;
                     //            cCol = 'A';
                     //            cRow++;
                     //        }
                     //    }
                     //}
-                    //
-                    // Print the combined duty days count
-                    //cRow += 2;
-                    //workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
-                    //workSheet.Cells[cRow, cCol.ToString()] = "Summary";
-                    //cCol++;
-                    //workSheet.Cells[cRow, cCol.ToString()] = "Name";
-                    //cCol++;
-                    //workSheet.Cells[cRow, cCol.ToString()] = "Total Days";
-                    //cRow++;
-                    //cCol = 'A';
-                    //
-                    //foreach (Person per in mPeople)
-                    //{
-                    //    if (per.mGroups.Count() > 1)
-                    //    {
-                    //        cCol++;
-                    //        workSheet.Cells[cRow, cCol.ToString()] = per.mName;
-                    //        cCol++;
-                    //        workSheet.Cells[cRow, cCol.ToString()] = per.mDutyDays.mDates.Count.ToString();
-                    //        cCol = 'A';
-                    //        cRow++;
-                    //    }
-                    //}
+
+
+                    /*
+                    * The cross-group summary: Lists each person, how many days working, how many are weekend days, 
+                    * and how many are weekdays.
+                    */
+                    cRow += 2;
+                    workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
+                    workSheet.Cells[cRow, cCol.ToString()] = "Cross-group\nsummary";
+                    cCol++;
+                    workSheet.Cells[cRow, cCol.ToString()] = "Name";
+                    cCol++;
+                    workSheet.Cells[cRow, cCol.ToString()] = "Total days";
+                    cCol++;
+                    workSheet.Cells[cRow, cCol.ToString()] = "Wknd days";
+                    cCol++;
+                    workSheet.Cells[cRow, cCol.ToString()] = "Weekdays";
+                    cRow++;
+                    cCol = 'A';
+
+                    foreach (Person per in mPeople)
+                    {
+                        int weekendCount = per.mDutyDays.mDates.Count(x => mWeekendDaysOfWeek.Contains(x.DayOfWeek));
+
+                        cCol++;
+                        workSheet.Cells[cRow, cCol.ToString()] = per.mName;
+                        cCol++;
+                        workSheet.Cells[cRow, cCol.ToString()] = per.mDutyDays.mDates.Count.ToString();
+                        cCol++;
+                        workSheet.Cells[cRow, cCol.ToString()] = weekendCount.ToString();
+                        cCol++;
+                        workSheet.Cells[cRow, cCol.ToString()] = (per.mDutyDays.mDates.Count - weekendCount).ToString();
+
+                        cCol = 'A';
+                        cRow++;
+                    }
+
+                    /*
+                    * The group summary: Lists each group and each member below that
+                    */
+                    cRow += 2;
+                    workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
+                    workSheet.Cells[cRow, cCol.ToString()] = "Groups";
+                    cRow++;
+
+                    cCol = 'A';
+                    workSheet.Cells[cRow, cCol.ToString()].EntireRow.Font.Bold = true;
+                    foreach (String groupName in mGroups)
+                    {
+                        workSheet.Cells[cRow, cCol.ToString()] = groupName;
+                        cCol++;
+                    }
+                    cRow++;
+                    cCol = 'A';
+                    int topRow = cRow;
+
+                    foreach (String groupName in mGroups)
+                    {
+                        foreach (Person per in mPeople)
+                        {
+                            if (per.mGroups.Contains(groupName))
+                            {
+                                workSheet.Cells[cRow, cCol.ToString()] = per.mName;
+                                cRow++;
+                            }
+                        }
+                        cCol++;
+                        cRow = topRow;
+                    }
+
+                    // Set cCol to be used for auto-adjust column size
+                    if (cCol < 'g')
+                        cCol = 'g';
 
                     excelApp.Visible = true;
                     // Resize all the cells
-                    for (int z = 1; z <= 7; z++)
+                    for (int z = 1; z <= cCol; z++)
                     {
                         workSheet.Columns[z].ColumnWidth = 35;
                         workSheet.Columns[z].AutoFit();
@@ -1456,7 +1493,6 @@ namespace Duty_Schedule
                     fixThings = true;
             }
             return fixThings;
-        }   // End WhoIsInGroup(string groupIn)
-
+        }   // End CheckDaysOff()
     }   // End class
 }

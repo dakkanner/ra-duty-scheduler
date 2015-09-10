@@ -138,7 +138,7 @@
 
 Start -  3/28/2015
 End - 6/12/2015
-Breaks - 4/6/15, 4/7/15, 4/8/15
+Breaks - 4/9/15, 4/10/15, 4/11/15
 Holiday - 5/25/2015</value>
   </data>
   <data name="textBox2.Text" xml:space="preserve">
@@ -152,46 +152,48 @@ Holiday - 5/25/2015</value>
 # Groups explained:
 # 	Each line that doesn't begin with whitespace is a group name. 
 # 	One person from each group will be scheduled for every duty day on the schedule.
-# 	Anyone with the same name in multiple groups will be assigned to both groups.
-# 		Groups in this example: Senior RA, Inside Rounds, and Outside Rounds
+# 	Anyone with the same name in multiple groups will be assigned to both groups (Building One and Building Two).
+# 		Groups in this example: Senior RA, Building One, Building Two, and Outside
 # 	
 # People explained: 
 # 	People should be listed after the group name that they belong to.
 # 	If any individual wants to request a day off, add '-' after their name followed by the date.
-# 	If you have multiple people with the same name, make sure you include a last initial/name to differentiate
+# 	If you have multiple people with the same name, make sure you include a last initial/name to differentiate (Matt A. vs Matt B.).
 # 
 # Other notes: 
-# 	Dates can be in different formats (m/d/yy, mm/dd/yyy, etc.) or days of the week
-# 		If a date does not contain a year, it defaults to the same year as the starting date
-#	If you list one person in multiple groups, they will be scheduled for both groups
-# 		If you list requested days off for someone in multiple groups, the program will append those days to their list of days off
-#	Any requested days off will be honored unless every person in that group has the same day listed
-# 	If you need multiple shifts per night for the same position, just make two different groups with the same people
+# 	Dates can be in different formats (m/d/yy, mm/dd/yyy, etc.) or days of the week.
+# 		If a date does not contain a year, it defaults to the same year as the starting date.
+# 		You can enter a range of dates (inclusive of the first and last day) using the form "[date] - [date]".
+# 		Another way is to request days of the week off by saying, for instance, "Mondays," in the normal list.
+#	If you list one person in multiple groups, they will be scheduled for both groups.
+# 		If you list requested days off for someone in multiple groups, the program will append those days to their list of days off.
+#	Any requested days off will be honored unless every person in that group has the same day listed.
+# 	If you need multiple shifts per night for the same position, just make two different groups with the same people.
 ################################
 
-Senior
-	Taylor  - 3/28, 3/29, 4/3 - 4/5, 4/20
-	Kanissa - 3/28, 3/29, 6/5 - 6/7
-	Dak     - 3/28, 3/29, 6/5 - 6/7, 6/11 - 6/13
-	Ralph   - Wednesdays, 4/10, 4/11, 6/9 - 6/13
+Senior RA
+	Taylor  - 3/28/15, 3/29/15, 4/3/15 - 4/5/15, 4/20/15,
+	Kanissa - 3/28/15, 3/29/15, 5/5/15 - 5/7/15
+	Dak     - 3/28/15, 3/29/15, 5/5/15 - 5/7/15
+	Ralph   - Wednesdays, 4/10/15, 4/11/15
 
 Building One
-	Matt A.   - 3/28 - 3/31, 6/8, 6/9
-	Matt B.   - 3/28, 3/29, 4/9 - 4/12, 6/5 - 6/10
-	Taran     - 4/17 - 4/19, 5/8 - 5/10, 5/22 - 5/25
-	Alyssa    - 3/28, 3/29, 4/3 - 4/5, 4/11, 4/12, 4/18
-	Stephanie - 4/17 - 4/20, 5/22 - 5/24, 6/5 - 6/7
+	Matt A.   - 3/28/15 - 3/31/15, 6/8/15, 6/9/15
+	Matt B.   - 3/28/15, 3/29/15, 4/9/15 - 4/12/15, 6/5/15 - 6/10/15
+	Taran     - 4/17/15 - 4/19/15, 5/8/15 - 5/10/15, 5/22/15 - 5/25/15
+	Alyssa    - 3/28/15, 3/29/15, 4/3/15 - 4/5/15, 4/11/15, 4/12/15, 4/18/15
+	Stephanie - 4/17/15 - 4/20/15, 5/22/15 - 5/24/15
 	Sam       - 4/2/15 - 4/5/15, 
-	Miranda   - 5/22 - 5/25, 6/5 - 6/8, 6/12, 6/13 
+	Miranda   - 5/22/15 - 5/25/15, 6/5/15 - 6/8/15, 6/12/15, 6/13/15
 	Batman
-	Haley     - 4/3 - 4/5, 5/22 - 5/25, 5/29, 6/6, 6/9 - 6/11
+	Haley     - 4/3/15 - 4/5/15, 5/22/15 - 5/25/15, 5/29/15, 6/6/15
 	Joe       - 
-	Morgan    - Thursdays, 4/20/15, 5/6/15,
-	Gabi      - 4/3 - 4/5, 5/9, 5/10, 5/22 - 5/25
+	Morgan    - Thursdays, 4/20/15, 5/6/15
+	Gabi      - 4/3/15 - 4/5/15, 5/9/15, 5/10/15, 5/22/15 - 5/25/15
 	Blake     - 
-	Greg      - 5/14 - 5/18
-	Shelby    - 4/3, 4/4 ,4/5, 5/25, 6/5, 6/6, 6/7
-	Sage      - 4/17 - 4/20, 5/22 - 5/25, 5/29 - 5/31, 6/5 - 6/7
+	Greg      - 5/14/15 - 5/18/15
+	Shelby    - 4/3/15, 4/4/15 ,4/5/15, 5/25/15, 6/5/15, 6/6/15, 6/7/15
+	Sage      - 4/17/15 - 4/20/15, 5/22/15 - 5/25/15, 5/29/15 - 5/31/15
 
 Building Two
 	Matt A.
@@ -212,22 +214,14 @@ Building Two
 	Sage
 
 Outside
-	Matt A.
-	Matt B.
-	Taran
-	Alyssa
-	Stephanie
-	Sam
-	Miranda
-	Batman
-	Haley
-	Joe
-	Morgan
-	Gabi
-	Blake
-	Greg
-	Shelby
-	Sage</value>
+	Keaton
+	Rocko
+	Wes
+	Amanda
+	Katrina
+	Ashley
+	Justin
+	Carl</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

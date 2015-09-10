@@ -43,6 +43,7 @@ namespace Duty_Schedule
 
             this.WeekendsSamePersonCheckBox.Checked = true;
             this.ShuffleCheckBox.Checked = true;
+            this.weekendRadioButton1.Checked = true;
         }
 
         public DatesAndAssignments GetCalendar()
@@ -92,8 +93,26 @@ namespace Duty_Schedule
 
         private void buttonP1Next_Click(object sender, EventArgs e)
         {
-            mCalendarMaker = new CalendarMaker(this.dateTextBox.Text, this.groupTextBox.Text, 
-                this.WeekendsSamePersonCheckBox.Checked, this.ShuffleCheckBox.Checked);
+            List<DayOfWeek> daysList = new List<DayOfWeek>();
+            if (this.weekendRadioButton1.Checked)
+            {
+                daysList.Add(DayOfWeek.Friday);
+                daysList.Add(DayOfWeek.Saturday);
+                daysList.Add(DayOfWeek.Sunday);
+            }
+            else if (this.weekendRadioButton2.Checked)
+            {
+                daysList.Add(DayOfWeek.Friday);
+                daysList.Add(DayOfWeek.Saturday);
+            }
+            else
+            {
+                daysList.Add(DayOfWeek.Saturday);
+                daysList.Add(DayOfWeek.Sunday);
+            }
+            
+            mCalendarMaker = new CalendarMaker(dateTextBox.Text, groupTextBox.Text, 
+                WeekendsSamePersonCheckBox.Checked, ShuffleCheckBox.Checked, daysList);
             mGroupFilePath = this.groupTextBox.Text;
             mDateFilePath = this.dateTextBox.Text;
             this.DialogResult = DialogResult.OK;
@@ -119,8 +138,7 @@ namespace Duty_Schedule
 
         private void buttonP2Next_Click(object sender, EventArgs e)
         {
-            mCalendarMaker = new CalendarMaker(this.csvTextBox.Text, this.WeekendsSamePersonCheckBox.Checked,
-                this.ShuffleCheckBox.Checked);
+            mCalendarMaker = new CalendarMaker(this.csvTextBox.Text);
             mCsvFilePath = this.csvTextBox.Text;
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -136,7 +154,6 @@ namespace Duty_Schedule
             {
                 this.ShuffleCheckBox.Enabled = false;
             }
-
         }
     }
 }

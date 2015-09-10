@@ -67,13 +67,18 @@ namespace Duty_Schedule
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ShuffleCheckBox = new System.Windows.Forms.CheckBox();
             this.WeekendsSamePersonCheckBox = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.weekendRadioButton1 = new System.Windows.Forms.RadioButton();
+            this.weekendRadioButton2 = new System.Windows.Forms.RadioButton();
+            this.weekendRadioButton3 = new System.Windows.Forms.RadioButton();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonP1Next
             // 
             this.buttonP1Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.buttonP1Next.Location = new System.Drawing.Point(113, 255);
+            this.buttonP1Next.Location = new System.Drawing.Point(113, 274);
             this.buttonP1Next.Name = "buttonP1Next";
             this.buttonP1Next.Size = new System.Drawing.Size(95, 30);
             this.buttonP1Next.TabIndex = 0;
@@ -106,7 +111,7 @@ namespace Duty_Schedule
             // 
             this.linkLabel2.AutoSize = true;
             this.linkLabel2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabel2.Location = new System.Drawing.Point(55, 219);
+            this.linkLabel2.Location = new System.Drawing.Point(48, 139);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(206, 14);
             this.linkLabel2.TabIndex = 6;
@@ -145,7 +150,7 @@ namespace Duty_Schedule
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(51, 263);
+            this.label2.Location = new System.Drawing.Point(51, 244);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(130, 15);
             this.label2.TabIndex = 12;
@@ -153,7 +158,7 @@ namespace Duty_Schedule
             // 
             // groupFileSelBtn
             // 
-            this.groupFileSelBtn.Location = new System.Drawing.Point(314, 281);
+            this.groupFileSelBtn.Location = new System.Drawing.Point(314, 262);
             this.groupFileSelBtn.Name = "groupFileSelBtn";
             this.groupFileSelBtn.Size = new System.Drawing.Size(29, 22);
             this.groupFileSelBtn.TabIndex = 11;
@@ -163,7 +168,7 @@ namespace Duty_Schedule
             // 
             // groupTextBox
             // 
-            this.groupTextBox.Location = new System.Drawing.Point(51, 282);
+            this.groupTextBox.Location = new System.Drawing.Point(51, 263);
             this.groupTextBox.Name = "groupTextBox";
             this.groupTextBox.Size = new System.Drawing.Size(262, 20);
             this.groupTextBox.TabIndex = 10;
@@ -172,7 +177,7 @@ namespace Duty_Schedule
             // 
             this.aboutLinkLabel.AutoSize = true;
             this.aboutLinkLabel.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.aboutLinkLabel.Location = new System.Drawing.Point(12, 462);
+            this.aboutLinkLabel.Location = new System.Drawing.Point(12, 478);
             this.aboutLinkLabel.Name = "aboutLinkLabel";
             this.aboutLinkLabel.Size = new System.Drawing.Size(147, 14);
             this.aboutLinkLabel.TabIndex = 13;
@@ -249,13 +254,14 @@ namespace Duty_Schedule
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.groupBox3);
             this.groupBox2.Controls.Add(this.ShuffleCheckBox);
             this.groupBox2.Controls.Add(this.WeekendsSamePersonCheckBox);
             this.groupBox2.Controls.Add(this.buttonP1Next);
             this.groupBox2.Controls.Add(this.linkLabel2);
             this.groupBox2.Location = new System.Drawing.Point(33, 152);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(334, 295);
+            this.groupBox2.Size = new System.Drawing.Size(334, 315);
             this.groupBox2.TabIndex = 21;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Option 1";
@@ -264,7 +270,7 @@ namespace Duty_Schedule
             // 
             this.ShuffleCheckBox.AutoSize = true;
             this.ShuffleCheckBox.Enabled = false;
-            this.ShuffleCheckBox.Location = new System.Drawing.Point(58, 179);
+            this.ShuffleCheckBox.Location = new System.Drawing.Point(58, 193);
             this.ShuffleCheckBox.Name = "ShuffleCheckBox";
             this.ShuffleCheckBox.Size = new System.Drawing.Size(196, 17);
             this.ShuffleCheckBox.TabIndex = 8;
@@ -274,7 +280,7 @@ namespace Duty_Schedule
             // WeekendsSamePersonCheckBox
             // 
             this.WeekendsSamePersonCheckBox.AutoSize = true;
-            this.WeekendsSamePersonCheckBox.Location = new System.Drawing.Point(47, 156);
+            this.WeekendsSamePersonCheckBox.Location = new System.Drawing.Point(47, 170);
             this.WeekendsSamePersonCheckBox.Name = "WeekendsSamePersonCheckBox";
             this.WeekendsSamePersonCheckBox.Size = new System.Drawing.Size(233, 17);
             this.WeekendsSamePersonCheckBox.TabIndex = 7;
@@ -282,12 +288,57 @@ namespace Duty_Schedule
             this.WeekendsSamePersonCheckBox.UseVisualStyleBackColor = true;
             this.WeekendsSamePersonCheckBox.CheckedChanged += new System.EventHandler(this.buttonWeekend_Click);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.weekendRadioButton3);
+            this.groupBox3.Controls.Add(this.weekendRadioButton2);
+            this.groupBox3.Controls.Add(this.weekendRadioButton1);
+            this.groupBox3.Location = new System.Drawing.Point(18, 217);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(292, 51);
+            this.groupBox3.TabIndex = 9;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Weekend days";
+            // 
+            // weekendRadioButton1
+            // 
+            this.weekendRadioButton1.AutoSize = true;
+            this.weekendRadioButton1.Location = new System.Drawing.Point(25, 20);
+            this.weekendRadioButton1.Name = "weekendRadioButton1";
+            this.weekendRadioButton1.Size = new System.Drawing.Size(83, 17);
+            this.weekendRadioButton1.TabIndex = 0;
+            this.weekendRadioButton1.TabStop = true;
+            this.weekendRadioButton1.Text = "Fri, Sat, Sun";
+            this.weekendRadioButton1.UseVisualStyleBackColor = true;
+            // 
+            // weekendRadioButton2
+            // 
+            this.weekendRadioButton2.AutoSize = true;
+            this.weekendRadioButton2.Location = new System.Drawing.Point(123, 19);
+            this.weekendRadioButton2.Name = "weekendRadioButton2";
+            this.weekendRadioButton2.Size = new System.Drawing.Size(58, 17);
+            this.weekendRadioButton2.TabIndex = 1;
+            this.weekendRadioButton2.TabStop = true;
+            this.weekendRadioButton2.Text = "Fri, Sat";
+            this.weekendRadioButton2.UseVisualStyleBackColor = true;
+            // 
+            // weekendRadioButton3
+            // 
+            this.weekendRadioButton3.AutoSize = true;
+            this.weekendRadioButton3.Location = new System.Drawing.Point(204, 20);
+            this.weekendRadioButton3.Name = "weekendRadioButton3";
+            this.weekendRadioButton3.Size = new System.Drawing.Size(66, 17);
+            this.weekendRadioButton3.TabIndex = 2;
+            this.weekendRadioButton3.TabStop = true;
+            this.weekendRadioButton3.Text = "Sat, Sun";
+            this.weekendRadioButton3.UseVisualStyleBackColor = true;
+            // 
             // Page2FileSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(784, 494);
+            this.ClientSize = new System.Drawing.Size(784, 501);
             this.Controls.Add(this.buttonP2Next);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.csvFileSelBtn);
@@ -314,6 +365,8 @@ namespace Duty_Schedule
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -342,6 +395,10 @@ namespace Duty_Schedule
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox WeekendsSamePersonCheckBox;
         private System.Windows.Forms.CheckBox ShuffleCheckBox;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.RadioButton weekendRadioButton3;
+        private System.Windows.Forms.RadioButton weekendRadioButton2;
+        private System.Windows.Forms.RadioButton weekendRadioButton1;
     }
 }
 
