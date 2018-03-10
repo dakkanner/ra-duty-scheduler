@@ -1,4 +1,4 @@
-﻿//Copyright (C) 2014  Dakota Kanner
+﻿//Copyright (C) 2014-2018 Dakota Kanner
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -7,11 +7,11 @@
 //
 //    This program is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//    along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
@@ -41,8 +41,8 @@ namespace Duty_Schedule
             mGroupFilePath = "";
             mCsvFilePath = "";
 
-            this.WeekendsSamePersonCheckBox.Checked = true;
-            this.ShuffleCheckBox.Checked = true;
+            this.checkBoxWeekendsSamePeople.Checked = true;
+            this.checkBoxWeekendsShuffle.Checked = true;
             this.weekendRadioButton1.Checked = true;
         }
 
@@ -86,33 +86,45 @@ namespace Duty_Schedule
             openFileDialog1.InitialDirectory = this.mGroupFilePath;
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                 this.mGroupFilePath = openFileDialog1.FileName;
+                this.mGroupFilePath = openFileDialog1.FileName;
 
             this.groupTextBox.Text = this.mGroupFilePath;
         }
 
         private void buttonP1Next_Click(object sender, EventArgs e)
         {
-            List<DayOfWeek> daysList = new List<DayOfWeek>();
+            List<DayOfWeek> weekdaysList = new List<DayOfWeek>();
+            weekdaysList.Add(DayOfWeek.Monday);
+            weekdaysList.Add(DayOfWeek.Tuesday);
+            weekdaysList.Add(DayOfWeek.Wednesday);
+            weekdaysList.Add(DayOfWeek.Thursday);
+
+            List<DayOfWeek> weekendsList = new List<DayOfWeek>();
             if (this.weekendRadioButton1.Checked)
             {
-                daysList.Add(DayOfWeek.Friday);
-                daysList.Add(DayOfWeek.Saturday);
-                daysList.Add(DayOfWeek.Sunday);
+                weekendsList.Add(DayOfWeek.Friday);
+                weekendsList.Add(DayOfWeek.Saturday);
+                weekendsList.Add(DayOfWeek.Sunday);
             }
             else if (this.weekendRadioButton2.Checked)
             {
-                daysList.Add(DayOfWeek.Friday);
-                daysList.Add(DayOfWeek.Saturday);
+                weekdaysList.Add(DayOfWeek.Sunday);
+
+                weekendsList.Add(DayOfWeek.Friday);
+                weekendsList.Add(DayOfWeek.Saturday);
             }
             else
             {
-                daysList.Add(DayOfWeek.Saturday);
-                daysList.Add(DayOfWeek.Sunday);
+                weekdaysList.Add(DayOfWeek.Friday);
+
+                weekendsList.Add(DayOfWeek.Saturday);
+                weekendsList.Add(DayOfWeek.Sunday);
             }
-            
-            mCalendarMaker = new CalendarMaker(dateTextBox.Text, groupTextBox.Text, 
-                WeekendsSamePersonCheckBox.Checked, ShuffleCheckBox.Checked, daysList);
+
+            mCalendarMaker = new CalendarMaker(dateTextBox.Text, groupTextBox.Text,
+                checkBoxWeekdaysSamePeople.Checked, checkBoxWeekdaysShuffle.Checked,
+                checkBoxWeekendsSamePeople.Checked, checkBoxWeekendsShuffle.Checked,
+                weekdaysList, weekendsList);
             mGroupFilePath = this.groupTextBox.Text;
             mDateFilePath = this.dateTextBox.Text;
             this.DialogResult = DialogResult.OK;
@@ -144,15 +156,47 @@ namespace Duty_Schedule
             this.Close();
         }
 
-        private void buttonWeekend_Click(object sender, EventArgs e)
+        private void checkBoxWeekendsSamePeople_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.WeekendsSamePersonCheckBox.Checked)
+            this.checkBoxWeekendsShuffle.Enabled = this.checkBoxWeekendsSamePeople.Checked;
+
+            if (!this.checkBoxWeekendsSamePeople.Checked)
             {
-                this.ShuffleCheckBox.Enabled = true;
+                this.checkBoxWeekendsShuffle.Checked = false;
             }
-            else
+        }
+
+        private void checkBoxWeekdaysSamePeople_CheckedChanged(object sender, EventArgs e)
+        {
+            this.checkBoxWeekdaysShuffle.Enabled = this.checkBoxWeekdaysSamePeople.Checked;
+
+            if (!this.checkBoxWeekdaysSamePeople.Checked)
             {
-                this.ShuffleCheckBox.Enabled = false;
+                this.checkBoxWeekdaysShuffle.Checked = false;
+            }
+        }
+
+        private void checkBoxWeekendsEnableScheduling_CheckedChanged(object sender, EventArgs e)
+        {
+            this.checkBoxWeekendsSamePeople.Enabled = this.checkBoxWeekendsEnableScheduling.Checked;
+            this.checkBoxWeekendsShuffle.Enabled = this.checkBoxWeekendsSamePeople.Checked;
+
+            if (!this.checkBoxWeekendsEnableScheduling.Checked)
+            {
+                this.checkBoxWeekendsSamePeople.Checked = false;
+                this.checkBoxWeekendsShuffle.Checked = false;
+            }
+        }
+
+        private void checkBoxWeekdaysEnableScheduling_CheckedChanged(object sender, EventArgs e)
+        {
+            this.checkBoxWeekdaysSamePeople.Enabled = this.checkBoxWeekdaysEnableScheduling.Checked;
+            this.checkBoxWeekdaysShuffle.Enabled = this.checkBoxWeekdaysSamePeople.Checked;
+
+            if (!this.checkBoxWeekdaysEnableScheduling.Checked)
+            {
+                this.checkBoxWeekdaysSamePeople.Checked = false;
+                this.checkBoxWeekdaysShuffle.Checked = false;
             }
         }
     }

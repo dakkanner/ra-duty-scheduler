@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Duty_Schedule.exe" size="567296">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Duty_Schedule.exe" size="570368">
       <assemblyIdentity name="Duty_Schedule" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Mj48rONMTIWUPlANPmlGI9e0QVTBmvyOsGGCpfGpVhU=</dsig:DigestValue>
+        <dsig:DigestValue>tfJ98FueRVSZlI6bIPeOc0qykhIrBPh/1pnnDAVcn/U=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -168,13 +168,13 @@
       <dsig:DigestValue>Y1PkiVAKOKJ7u3Ia1Uviy7DtFJ4tQJTpgU4DNibUqxk=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="ExampleDates.txt" size="1197">
+  <file name="ExampleDates.txt" size="1208">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>aQihhx4+VFZ/q3bH6An7O/Yeg2dkH3CjxQSaJJLreVg=</dsig:DigestValue>
+      <dsig:DigestValue>RZh/0tJJTFENSkm2zQsLI0J2vPzajL6TZUgA2MxaSII=</dsig:DigestValue>
     </hash>
   </file>
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">

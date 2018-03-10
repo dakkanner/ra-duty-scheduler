@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Duty_Schedule.exe" size="561152">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Duty_Schedule.exe" size="565760">
       <assemblyIdentity name="Duty_Schedule" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>6PGt63TNgeWU5/22RUsRPnzyJGwiNM95aeWP3QSn8Ag=</dsig:DigestValue>
+        <dsig:DigestValue>TwiSfPEV8xNO4PDg2CBfJx9eUJgnLdGXPWWdkXVIK6U=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

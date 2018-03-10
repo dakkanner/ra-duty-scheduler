@@ -1,4 +1,4 @@
-﻿//Copyright (C) 2014-2015  Dakota Kanner
+﻿//Copyright (C) 2014-2018 Dakota Kanner
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -7,11 +7,11 @@
 //
 //    This program is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//    along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
@@ -21,13 +21,13 @@ using System.Windows.Forms;
 
 namespace Duty_Schedule
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             try
             {
@@ -50,7 +50,7 @@ namespace Duty_Schedule
                         cal = pg2.GetCalendar();
                         calMaker = pg2.mCalendarMaker;
                         filePath = pg2.mDateFilePath;
-                        if(filePath.Length <= 0)
+                        if (filePath.Length <= 0)
                             filePath = pg2.mCsvFilePath;
                         int loc = filePath.LastIndexOf("\\");
                         int loc2 = filePath.LastIndexOf("/");
@@ -80,7 +80,7 @@ namespace Duty_Schedule
                     pageResult = pg3.ShowDialog();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 DialogResult result = MessageBox.Show(e.Message, "Error in scheduling app",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);

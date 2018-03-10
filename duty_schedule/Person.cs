@@ -1,4 +1,4 @@
-﻿//Copyright (C) 2014-2015  Dakota Kanner
+﻿//Copyright (C) 2014-2018 Dakota Kanner
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -7,11 +7,11 @@
 //
 //    This program is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//    along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
@@ -22,10 +22,10 @@ using System.Threading.Tasks;
 namespace Duty_Schedule
 {
     /// <summary>
-    /// A person is an object with the following attributes: 
-    /// Name, 
-    /// Email, 
-    /// List of groups they belong to, 
+    /// A person is an object with the following attributes:
+    /// Name,
+    /// Email,
+    /// List of groups they belong to,
     /// Count of weekends and duty days they're on for (for convenience),
     /// List of days they request off,
     /// And a DatesAndGroups, which is the days they're scheduled for duty.
@@ -34,6 +34,7 @@ namespace Duty_Schedule
     {
         // Public members because I'm lazy
         public string mName;
+
         public string mEmailAddress;
         public List<string> mGroups;
         public int mWeekendCount;
@@ -83,7 +84,7 @@ namespace Duty_Schedule
         {
             mName = name;
             mEmailAddress = "";
-            mGroups = new List<string>(groups) ;
+            mGroups = new List<string>(groups);
             mWeekendCount = 0;
             mWeekdayCount = 0;
             mDaysOffRequested = new List<DateTime>(daysOff);
@@ -127,7 +128,6 @@ namespace Duty_Schedule
             {
                 throw new Exception("Error: " + this.mName + ": " + E.ToString());
             }
-
         }   //End AddDutyDay(DateTime newDutyDay)
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Duty_Schedule
             try
             {
                 List<string> groupList = new List<string>();
-                for(int i = 0; i < newDutyWeekend.Count; i++)
+                for (int i = 0; i < newDutyWeekend.Count; i++)
                 {
                     groupList.Add(group);
                 }
@@ -149,11 +149,10 @@ namespace Duty_Schedule
                 mDutyDays.AddDates(newDutyWeekend, groupList);
                 mWeekendCount++;    //Doesn't increment if exception thrown
             }
-            catch(Exception E)
+            catch (Exception E)
             {
                 throw new Exception("Error: " + this.mName + ": " + E.ToString());
             }
-
         }   //End AddDutyWeekend(List<DateTime> newDutyDay)
 
         /// <summary>
@@ -185,9 +184,8 @@ namespace Duty_Schedule
                     weekendFound = true;
                 }
             }
-            if(weekendFound)
+            if (weekendFound)
                 mWeekendCount--;
-
         }   //End RemoveDutyWeekend(List<DateTime> dutyWeekend)
 
         /// <summary>
@@ -251,7 +249,7 @@ namespace Duty_Schedule
         {
             bool dateFound = false;
 
-            foreach(DateTime d in dutyWeekend)
+            foreach (DateTime d in dutyWeekend)
             {
                 if (mDaysOffRequested.IndexOf(d) >= 0)
                     dateFound = true;
