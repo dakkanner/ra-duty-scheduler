@@ -131,29 +131,29 @@ namespace Duty_Schedule
         }   //End AddDutyDay(DateTime newDutyDay)
 
         /// <summary>
-        /// Assigns this person a duty weekend for a passed-in date and group.
+        /// Assigns this person a duty date cluster for a passed-in date list and group.
         /// Note: If they belong to multiple groups, this gets swapped later.
         /// </summary>
-        /// <param name="newDutyWeekend"></param>
+        /// <param name="newDutyDays"></param>
         /// <param name="group"></param>
-        public void AddDutyWeekend(List<DateTime> newDutyWeekend, string group)
+        public void AddDutyDays(List<DateTime> newDutyDays, string group)
         {
             try
             {
                 List<string> groupList = new List<string>();
-                for (int i = 0; i < newDutyWeekend.Count; i++)
+                for (int i = 0; i < newDutyDays.Count; i++)
                 {
                     groupList.Add(group);
                 }
 
-                mDutyDays.AddDates(newDutyWeekend, groupList);
+                mDutyDays.AddDates(newDutyDays, groupList);
                 mWeekendCount++;    //Doesn't increment if exception thrown
             }
             catch (Exception E)
             {
                 throw new Exception("Error: " + this.mName + ": " + E.ToString());
             }
-        }   //End AddDutyWeekend(List<DateTime> newDutyDay)
+        }   //End AddDutyDays(List<DateTime> newDutyDay)
 
         /// <summary>
         /// Remove a previously scheduled duty day from a person
@@ -171,12 +171,12 @@ namespace Duty_Schedule
         /// <summary>
         /// Remove a previously scheduled duty weekend from a person
         /// </summary>
-        /// <param name="dutyWeekend">List of DateTimes to remove</param>
-        public void RemoveDutyWeekend(List<DateTime> dutyWeekend)
+        /// <param name="dutyDays">List of DateTimes to remove</param>
+        public void RemoveDutyDays(List<DateTime> dutyDays)
         {
             bool weekendFound = false;
 
-            foreach (DateTime dt in dutyWeekend)
+            foreach (DateTime dt in dutyDays)
             {
                 if (mDutyDays.mDates.Contains(dt))
                 {
@@ -186,7 +186,7 @@ namespace Duty_Schedule
             }
             if (weekendFound)
                 mWeekendCount--;
-        }   //End RemoveDutyWeekend(List<DateTime> dutyWeekend)
+        }   //End RemoveDutyDays(List<DateTime> dutyDays)
 
         /// <summary>
         /// Returns true if this person is scheduled for a specific date
@@ -195,33 +195,29 @@ namespace Duty_Schedule
         /// <returns></returns>
         public bool IsScheduledForDate(DateTime dutyDay)
         {
-            bool dateFound = false;
-
             int index = mDutyDays.mDates.IndexOf(dutyDay);
 
             if (index >= 0)
-                dateFound = true;
+                return true;
 
-            return dateFound;
+            return false;
         }   //End IsScheduledForDate(DateTime dutyDay)
 
         /// <summary>
         /// Returns true if this person is scheduled for any day in a list of DateTimes
         /// </summary>
-        /// <param name="dutyWeekend">List of dates that the weekend contains</param>
+        /// <param name="dutyDays">List of dates that the weekend contains</param>
         /// <returns></returns>
-        public bool IsScheduledForWeekend(List<DateTime> dutyWeekend)
+        public bool IsScheduledForDates(List<DateTime> dutyWeekend)
         {
-            bool dateFound = false;
-
             foreach (DateTime d in dutyWeekend)
             {
                 if (mDaysOffRequested.IndexOf(d) >= 0)
-                    dateFound = true;
+                    return true;
             }
 
-            return dateFound;
-        }   //End IsScheduledForWeekend(List<DateTime> dutyWeekend)
+            return false;
+        }   //End IsScheduledForDates(List<DateTime> dutyDays)
 
         /// <summary>
         /// Returns true if this person requested the day off
@@ -230,32 +226,28 @@ namespace Duty_Schedule
         /// <returns></returns>
         public bool IsDateRequestedOff(DateTime dutyDay)
         {
-            bool dateFound = false;
-
             int index = mDaysOffRequested.IndexOf(dutyDay);
 
             if (index >= 0)
-                dateFound = true;
+                return true;
 
-            return dateFound;
+            return false;
         }   //End IsDateRequestedOff(DateTime dutyDay)
 
         /// <summary>
         /// Returns true if this person requested any day in a list of DateTimes off
         /// </summary>
-        /// <param name="dutyWeekend">The list of days to check against</param>
+        /// <param name="dutyDays">The list of days to check against</param>
         /// <returns></returns>
-        public bool IsWeekendRequestedOff(List<DateTime> dutyWeekend)
+        public bool AreDatesRequestedOff(List<DateTime> dutyWeekend)
         {
-            bool dateFound = false;
-
             foreach (DateTime d in dutyWeekend)
             {
                 if (mDaysOffRequested.IndexOf(d) >= 0)
-                    dateFound = true;
+                    return true;
             }
 
-            return dateFound;
-        }   //End IsWeekendRequestedOff(List<DateTime> dutyWeekend)
+            return false;
+        }   //End AreDatesRequestedOff(List<DateTime> dutyDays)
     }
 }

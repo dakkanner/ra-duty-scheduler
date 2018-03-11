@@ -28,42 +28,58 @@ namespace Duty_Schedule
 {
     public class CalendarMaker
     {
+        // Weekday settings
+
+        private bool mScheduleOnWeekdays = true;
+        private bool mWeekdaysSamePeople;
+        private bool mShuffleWeekdayPeople;
+        private List<DayOfWeek> mWeekdayDaysOfWeek = new List<DayOfWeek>();
+
+        // Weekend settings
+
+        private bool mScheduleOnWeekends = true;
         private bool mWeekendsSamePeople;
         private bool mShuffleWeekendPeople;
-        private List<DayOfWeek> mWeekendDaysOfWeek;
+        private List<DayOfWeek> mWeekendDaysOfWeek = new List<DayOfWeek>();
 
-        private DateTime mStartDay;
-        private DateTime mEndDay;
-        private List<DateTime> mBreaks;
-        private List<DateTime> mHolidays;
-        private List<List<DateTime>> mWeekends;
-        private List<DateTime> mWeekdays;
+        // Calendar settings
+
+        private DateTime mStartDay = new DateTime();
+        private DateTime mEndDay = new DateTime();
+        private List<DateTime> mBreaks = new List<DateTime>();
+        private List<DateTime> mHolidays = new List<DateTime>();
+
+        // Explicitly-calculated days
+        private List<List<DateTime>> mWeekdays = new List<List<DateTime>>();
+
+        private List<List<DateTime>> mWeekends = new List<List<DateTime>>();
+
+        private List<List<DateTime>> mPartialWeekdays = new List<List<DateTime>>();
+        private List<List<DateTime>> mPartialWeekends = new List<List<DateTime>>();
 
         public bool isFromImport;
 
-        public List<Person> mPeople;
-        public List<string> mGroups;
-        public DatesAndAssignments mCalendar;
+        public List<Person> mPeople = new List<Person>();
+        public List<string> mGroups = new List<string>();
+        public DatesAndAssignments mCalendar = new DatesAndAssignments();
 
         public CalendarMaker()
         {
+            this.mWeekdaysSamePeople = true;
+            this.mShuffleWeekdayPeople = true;
+
+            this.mWeekdayDaysOfWeek.Add(DayOfWeek.Monday);
+            this.mWeekdayDaysOfWeek.Add(DayOfWeek.Tuesday);
+            this.mWeekdayDaysOfWeek.Add(DayOfWeek.Wednesday);
+            this.mWeekdayDaysOfWeek.Add(DayOfWeek.Thursday);
+
             this.mWeekendsSamePeople = true;
             this.mShuffleWeekendPeople = true;
-            this.mWeekendDaysOfWeek = new List<DayOfWeek>();
-
-            this.mStartDay = new DateTime();
-            this.mEndDay = new DateTime();
-
-            this.mBreaks = new List<DateTime>();
-            this.mHolidays = new List<DateTime>();
-            this.mWeekends = new List<List<DateTime>>();
-            this.mWeekdays = new List<DateTime>();
-            this.mCalendar = new DatesAndAssignments();
+            this.mWeekendDaysOfWeek.Add(DayOfWeek.Friday);
+            this.mWeekendDaysOfWeek.Add(DayOfWeek.Saturday);
+            this.mWeekendDaysOfWeek.Add(DayOfWeek.Sunday);
 
             this.isFromImport = false;
-
-            this.mPeople = new List<Person>();
-            this.mGroups = new List<string>();
         }
 
         /// <summary>
@@ -74,23 +90,20 @@ namespace Duty_Schedule
         /// <param name="weekendsSamePeopleIn">True if you want people on weekends to be rotated if they can be put into different groups.</param>
         public CalendarMaker(string csvFilePathIn)
         {
+            this.mWeekdaysSamePeople = false;
+            this.mShuffleWeekdayPeople = false;
+            this.mWeekdayDaysOfWeek.Add(DayOfWeek.Monday);
+            this.mWeekdayDaysOfWeek.Add(DayOfWeek.Tuesday);
+            this.mWeekdayDaysOfWeek.Add(DayOfWeek.Wednesday);
+            this.mWeekdayDaysOfWeek.Add(DayOfWeek.Thursday);
+
             this.mWeekendsSamePeople = false;
             this.mShuffleWeekendPeople = false;
-            this.mWeekendDaysOfWeek = new List<DayOfWeek>();
-
-            this.mStartDay = new DateTime();
-            this.mEndDay = new DateTime();
-
-            this.mBreaks = new List<DateTime>();
-            this.mHolidays = new List<DateTime>();
-            this.mWeekends = new List<List<DateTime>>();
-            this.mWeekdays = new List<DateTime>();
-            this.mCalendar = new DatesAndAssignments();
+            this.mWeekendDaysOfWeek.Add(DayOfWeek.Friday);
+            this.mWeekendDaysOfWeek.Add(DayOfWeek.Saturday);
+            this.mWeekendDaysOfWeek.Add(DayOfWeek.Sunday);
 
             this.isFromImport = true;
-
-            //mPeople = new List<Person>();
-            this.mGroups = new List<string>();
 
             FileInputs fileIn = new FileInputs();
             Tuple<DatesStruct, List<Person>> datesAndPeople = fileIn.GetImportFromCsv(csvFilePathIn);
@@ -133,30 +146,26 @@ namespace Duty_Schedule
         /// <param name="weekendDaysOfWeek">List of days of the week to use for weekends.</param>
         public CalendarMaker(string dateFilePathIn,
             string groupFilePathIn,
+            bool scheduleOnWeekdays,
             bool weekdaysSamePeopleIn,
             bool shuffleWeekdayPeopleIn,
+            bool scheduleOnWeekends,
             bool weekendsSamePeopleIn,
             bool shuffleWeekendPeopleIn,
             List<DayOfWeek> weekdayDaysOfWeek,
             List<DayOfWeek> weekendDaysOfWeek)
         {
+            this.mScheduleOnWeekdays = scheduleOnWeekdays;
+            this.mWeekdaysSamePeople = weekdaysSamePeopleIn;
+            this.mShuffleWeekdayPeople = shuffleWeekdayPeopleIn;
+            this.mWeekdayDaysOfWeek = weekdayDaysOfWeek;
+
+            this.mScheduleOnWeekends = scheduleOnWeekends;
             this.mWeekendsSamePeople = weekendsSamePeopleIn;
             this.mShuffleWeekendPeople = shuffleWeekendPeopleIn;
             this.mWeekendDaysOfWeek = weekendDaysOfWeek;
 
-            this.mStartDay = new DateTime();
-            this.mEndDay = new DateTime();
-
-            this.mBreaks = new List<DateTime>();
-            this.mHolidays = new List<DateTime>();
-            this.mWeekends = new List<List<DateTime>>();
-            this.mWeekdays = new List<DateTime>();
-            this.mCalendar = new DatesAndAssignments();
-
             this.isFromImport = false;
-
-            this.mPeople = new List<Person>();
-            this.mGroups = new List<string>();
 
             FileInputs fi = new FileInputs();
             var dates = fi.GetDates(dateFilePathIn);
@@ -234,11 +243,12 @@ namespace Duty_Schedule
 
         public void Initialize()
         {
-            DateTime currentDay = this.mStartDay;
             List<DateTime> tempHolidays = new List<DateTime>(mHolidays);
-            int dayCount = 0;
+            int weekdayCount = 0;
             int weekendCount = 0;
             int breakCount = 0;
+
+            DateTime currentDay = this.mStartDay;
             DateTime tempEndDay = this.mEndDay;
 
             // This section finds all the groups
@@ -246,43 +256,110 @@ namespace Duty_Schedule
             {
                 foreach (string grp in per.mGroups)
                     if (!mGroups.Contains(grp))
-                    {
                         this.mGroups.Add(grp);
-                    }
             }
 
-            // Check if the last day of duty lands on a Fri/Sat
-            // Schedule final weekend like normal days if true
-            if (mEndDay.DayOfWeek == DayOfWeek.Friday
-                || this.mEndDay.DayOfWeek == DayOfWeek.Saturday)
+            // TODO forward currentDay if it begins on a holiday/break?
+
+            // If people are assigned for whole weeks, split off partial weeks
+            if (this.mWeekdaysSamePeople)
             {
-                if (mEndDay.DayOfWeek == DayOfWeek.Friday)
-                    tempEndDay = this.mEndDay.AddDays(-1);
-                else
-                    tempEndDay = this.mEndDay.AddDays(-2);
+                // If we begin in the middle of a clustered week, advance until we hit the weekend
+                if (this.mWeekdayDaysOfWeek.Contains(currentDay.DayOfWeek)
+                    && !this.mWeekdayDaysOfWeek[0].Equals(currentDay.DayOfWeek))
+                {
+                    List<DateTime> initialWeek = new List<DateTime>();
+                    while (!this.mWeekendDaysOfWeek.Contains(currentDay.DayOfWeek))
+                    {
+                        initialWeek.Add(currentDay);
+                        currentDay = currentDay.AddDays(1);
+                    }
+                    this.mPartialWeekdays.Add(initialWeek);
+                }
+
+                // If we end in the middle of a clustered week, decrement until we hit the weekend
+                if (this.mWeekdayDaysOfWeek.Contains(tempEndDay.DayOfWeek)
+                    && !this.mWeekdayDaysOfWeek[0].Equals(tempEndDay.DayOfWeek))
+                {
+                    List<DateTime> endWeek = new List<DateTime>();
+                    while (!this.mWeekendDaysOfWeek.Contains(tempEndDay.DayOfWeek))
+                    {
+                        endWeek.Add(tempEndDay);
+                        tempEndDay = tempEndDay.AddDays(-1);
+                    }
+                    endWeek.Reverse();
+                    this.mPartialWeekdays.Add(endWeek);
+                }
+            }
+
+            // If people are assigned for whole weekends, split off partial weekends
+            if (this.mWeekendsSamePeople)
+            {
+                // If we begin in the middle of a clustered weekend, advance until we hit the week
+                if (this.mWeekendDaysOfWeek.Contains(currentDay.DayOfWeek)
+                    && !this.mWeekendDaysOfWeek[0].Equals(currentDay.DayOfWeek))
+                {
+                    List<DateTime> initialWeekend = new List<DateTime>();
+                    while (!this.mWeekdayDaysOfWeek.Contains(currentDay.DayOfWeek))
+                    {
+                        initialWeekend.Add(currentDay);
+                        currentDay = currentDay.AddDays(1);
+                    }
+                    this.mPartialWeekends.Add(initialWeekend);
+                }
+
+                // If we end in the middle of a clustered weekend, decrement until we hit the week
+                if (this.mWeekendDaysOfWeek.Contains(tempEndDay.DayOfWeek)
+                    && !this.mWeekendDaysOfWeek[0].Equals(tempEndDay.DayOfWeek))
+                {
+                    List<DateTime> endWeekend = new List<DateTime>();
+                    while (!this.mWeekdayDaysOfWeek.Contains(tempEndDay.DayOfWeek))
+                    {
+                        endWeekend.Add(tempEndDay);
+                        tempEndDay = tempEndDay.AddDays(-1);
+                    }
+                    endWeekend.Reverse();
+                    this.mPartialWeekends.Add(endWeekend);
+                }
             }
 
             // This section loads each day into this.mWeekends or this.mWeekdays
             while (currentDay <= tempEndDay)
             {
                 // Standard weekday
-                if (!mWeekendDaysOfWeek.Contains(currentDay.DayOfWeek)
+                if (mWeekdayDaysOfWeek.Contains(currentDay.DayOfWeek)
                     && !tempHolidays.Contains(currentDay)
                     && !mBreaks.Contains(currentDay))
                 {
-                    this.mWeekdays.Add(currentDay);
-                    currentDay = currentDay.AddDays(1);
-                    dayCount++;
+                    List<DateTime> currentWeek = new List<DateTime>();
+
+                    while (mWeekdayDaysOfWeek.Contains(currentDay.DayOfWeek)
+                        && !tempHolidays.Contains(currentDay))
+                    {
+                        currentWeek.Add(currentDay);
+
+                        // Each week day gets its own list if different people get assigned for each new day
+                        if (!this.mWeekdaysSamePeople)
+                        {
+                            this.mWeekdays.Add(currentWeek);
+                            currentWeek = new List<DateTime>();
+                            weekdayCount++;
+                        }
+                        currentDay = currentDay.AddDays(1);
+                    }
+                    if (currentWeek.Count > 0)
+                        this.mWeekdays.Add(currentWeek);
+                    weekdayCount++;
                 }
                 // Standard or long weekend
                 else if (!mBreaks.Contains(currentDay))
                 {
-                    this.mWeekends.Add(new List<DateTime>());
+                    List<DateTime> currentWeekend = new List<DateTime>();
 
                     while (mWeekendDaysOfWeek.Contains(currentDay.DayOfWeek)
                         || tempHolidays.Contains(currentDay))
                     {
-                        this.mWeekends[weekendCount].Add(currentDay);
+                        currentWeekend.Add(currentDay);
 
                         // Remove holidays from list
                         if (tempHolidays.Contains(currentDay))
@@ -290,16 +367,18 @@ namespace Duty_Schedule
                             tempHolidays.Remove(currentDay);
                         }
 
-                        // If the weekends have different people, weekends last one day so
-                        // weekend shifts get balanced
+                        // Each weekend day gets its own list if different people get assigned for each new day
                         if (!mWeekendsSamePeople)
                         {
-                            this.mWeekends.Add(new List<DateTime>());
+                            this.mWeekends.Add(currentWeekend);
+                            currentWeekend = new List<DateTime>();
                             weekendCount++;
                         }
                         currentDay = currentDay.AddDays(1);
                     }
 
+                    if (currentWeekend.Count > 0)
+                        this.mWeekends.Add(currentWeekend);
                     weekendCount++;
                 }
                 //Should only be breaks here
@@ -311,14 +390,6 @@ namespace Duty_Schedule
                     currentDay = currentDay.AddDays(1);
                 }
             }
-
-            // This part only runs if the last day is Fri/Sat so it doesn't get added as a weekend.
-            while (currentDay <= this.mEndDay)
-            {
-                this.mWeekdays.Add(currentDay);
-                currentDay = currentDay.AddDays(1);
-                dayCount++;
-            }
         }   // End Initialize()
 
         public void FirstScheduleRun()
@@ -326,12 +397,9 @@ namespace Duty_Schedule
             //Get total number of weekend days
             double totalWeekendDays = 0;
 
-            foreach (List<DateTime> x in this.mWeekends)
+            foreach (List<DateTime> weekendDays in this.mWeekends)
             {
-                foreach (DateTime y in x)
-                {
-                    totalWeekendDays++;
-                }
+                totalWeekendDays += weekendDays.Count;
             }
 
             double weekendDaysPerPerson = totalWeekendDays * this.mGroups.Count / this.mPeople.Count;
@@ -343,82 +411,23 @@ namespace Duty_Schedule
             double weekDaysPerPerson = System.Convert.ToDouble(mWeekdays.Count) * this.mGroups.Count / this.mPeople.Count;
             double weekDaysDiff = (System.Convert.ToDouble(mWeekdays.Count) * this.mGroups.Count) % this.mPeople.Count;
 
-            // Schedule all the weekends first
+            // Schedule from longest to shortest day groupings.
+            // (grouped weekdays, grouped weekends, partial grouped weeks, partial grouped weekends, individual days)
             // TODO: Put into its own function
-            foreach (List<DateTime> wknd in this.mWeekends)
+            List<List<DateTime>> allScheduleDays = new List<List<DateTime>>();
+            if (this.mScheduleOnWeekdays)
             {
-                foreach (string group in this.mGroups)
-                {
-                    List<Person> lowestDutyDaysList = WhoHasFewestDays();
-                    List<Person> groupList = WhoIsInGroup(group);
-
-                    bool datePlaced = false;
-
-                    for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
-                    {
-                        // Give it whoever has the least number of duty days (if possible)
-
-                        bool wkd = lowestDutyDaysList[i].IsWeekendRequestedOff(wknd);
-                        bool grp = groupList.Contains(mPeople[i]);
-
-                        if (!lowestDutyDaysList[i].IsWeekendRequestedOff(wknd)
-                            && groupList.Contains(lowestDutyDaysList[i])
-                            && !lowestDutyDaysList[i].mDutyDays.ContainsDates(wknd)
-                            && !datePlaced)
-                        {
-                            lowestDutyDaysList[i].AddDutyWeekend(wknd, group);
-                            datePlaced = true;
-                        }
-                    }
-                    //Nobody available without the date requested off; expand search to more than min number of days
-                    if (!datePlaced)
-                    {
-                        lowestDutyDaysList = SortByFewestDays();
-
-                        for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
-                        {
-                            // Give it whoever has the next least number of duty days (if possible)
-
-                            bool wkd = lowestDutyDaysList[i].IsWeekendRequestedOff(wknd);
-                            bool grp = groupList.Contains(mPeople[i]);
-
-                            if (!lowestDutyDaysList[i].IsWeekendRequestedOff(wknd)
-                                && groupList.Contains(lowestDutyDaysList[i])
-                                && !lowestDutyDaysList[i].mDutyDays.ContainsDates(wknd)
-                                && !datePlaced)
-                            {
-                                lowestDutyDaysList[i].AddDutyWeekend(wknd, group);
-                                datePlaced = true;
-                            }
-                        }
-                    }
-                    //Nobody available without the date requested off. Force operation.
-                    if (!datePlaced)
-                    {
-                        for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
-                        {
-                            if (groupList.Contains(lowestDutyDaysList[i])
-                                && !lowestDutyDaysList[i].mDutyDays.ContainsDates(wknd)
-                                && !datePlaced)
-                            {
-                                MessageBox.Show("Nobody available for weekend " + wknd[0].ToShortDateString()
-                                                    + Environment.NewLine + "Assigning " + lowestDutyDaysList[i].mName
-                                                    + " to the " + group + " group because they currently have the fewest days.",
-                                                    "Problem Making Calendar");
-
-                                lowestDutyDaysList[i].AddDutyWeekend(wknd, group);
-                                datePlaced = true;
-                            }
-                        }
-                    }
-                }
+                allScheduleDays.AddRange(this.mWeekdays);
+                allScheduleDays.AddRange(this.mPartialWeekdays);
             }
+            if (this.mScheduleOnWeekends)
+            {
+                allScheduleDays.AddRange(this.mWeekends);
+                allScheduleDays.AddRange(this.mPartialWeekends);
+            }
+            allScheduleDays = allScheduleDays.OrderByDescending(dayGroup => dayGroup.Count).ToList();
 
-            Random rand = new Random();
-
-            // Schedule all the weekdays
-            // TODO: Put into its own function
-            foreach (DateTime wkday in this.mWeekdays)
+            foreach (List<DateTime> daysCluster in allScheduleDays)
             {
                 foreach (string group in this.mGroups)
                 {
@@ -430,21 +439,20 @@ namespace Duty_Schedule
 
                     for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
                     {
-                        // Give it whomever has the least number of duty days (if possible)
+                        // Give it whoever has the least number of duty days (if possible)
 
-                        bool wkd = lowestDutyDaysList[i].IsDateRequestedOff(wkday);
-                        bool grp = groupList.Contains(mPeople[i]);
+                        bool requestedOff = lowestDutyDaysList[i].AreDatesRequestedOff(daysCluster);
 
-                        if (!lowestDutyDaysList[i].IsDateRequestedOff(wkday)            // Check whether this day is requested off
-                            && groupList.Contains(lowestDutyDaysList[i])                // Make sure they belong in the group
-                            && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)  // And that they're not already scheduled
-                            && !datePlaced)                                             // Also that nobody was already placed
+                        if (!requestedOff                                                   // Check whether this day is requested off
+                            && groupList.Contains(lowestDutyDaysList[i])                    // Make sure they belong in the group
+                            && !lowestDutyDaysList[i].mDutyDays.ContainsDates(daysCluster)  // And that they're not already scheduled
+                            && !datePlaced)                                                 // Also that nobody was already placed
                         {
                             // Try to not make people work back-to-back
-                            if (!lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(-1))
-                                && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(1)))
+                            if (!lowestDutyDaysList[i].mDutyDays.mDates.Contains(daysCluster[0].AddDays(-1))
+                                && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(daysCluster[daysCluster.Count - 1].AddDays(1)))
                             {
-                                lowestDutyDaysList[i].AddDutyDay(wkday, group);
+                                lowestDutyDaysList[i].AddDutyDays(daysCluster, group);
                                 datePlaced = true;
                             }
                             else    // ...But keep track just in case
@@ -453,70 +461,57 @@ namespace Duty_Schedule
                             }
                         }
                     }
-                    //Nobody available without the date requested off with min days count; expand search
+                    //Nobody available without the date requested off; expand search to more than min number of days
                     if (!datePlaced)
                     {
                         lowestDutyDaysList = SortByFewestDays();
 
                         for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
                         {
-                            // Give it whomever has the least number of duty days (if possible)
+                            // Give it whoever has the next least number of duty days (if possible)
 
-                            bool wkd = lowestDutyDaysList[i].IsDateRequestedOff(wkday);
-                            bool grp = groupList.Contains(mPeople[i]);
+                            bool requestedOff = lowestDutyDaysList[i].AreDatesRequestedOff(daysCluster);
 
-                            if (!lowestDutyDaysList[i].IsDateRequestedOff(wkday)            // Check whether this day is requested off
-                                && groupList.Contains(lowestDutyDaysList[i])                // Make sure they belong in the group
-                                && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)  // And that they're not already scheduled
-                                && !datePlaced)                                             // Also that nobody was already placed
+                            if (!requestedOff
+                                && groupList.Contains(lowestDutyDaysList[i])
+                                && !lowestDutyDaysList[i].mDutyDays.ContainsDates(daysCluster)
+                                && !datePlaced)
                             {
-                                // Try to not make people work back-to-back
-                                if (!lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(-1))
-                                    && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday.AddDays(1)))
-                                {
-                                    lowestDutyDaysList[i].AddDutyDay(wkday, group);
-                                    datePlaced = true;
-                                }
-                                else    // ...But keep track just in case
-                                {
-                                    tempPersonSelected = lowestDutyDaysList[i];
-                                }
+                                lowestDutyDaysList[i].AddDutyDays(daysCluster, group);
+                                datePlaced = true;
                             }
                         }
                     }
-                    //Nobody available without the date requested off
+                    //Nobody available without the date requested off. Force operation.
                     if (!datePlaced)
                     {
                         // If someone is available, but would work back-to-back, add them.
                         if (tempPersonSelected != null)
                         {
                             if (groupList.Contains(tempPersonSelected)
-                                    && !tempPersonSelected.mDutyDays.mDates.Contains(wkday)
+                                    && !tempPersonSelected.mDutyDays.mDates.Contains(daysCluster[0])
                                     && !datePlaced)
                             {
-                                tempPersonSelected.AddDutyDay(wkday, group);
+                                tempPersonSelected.AddDutyDays(daysCluster, group);
                                 datePlaced = true;
                             }
                             tempPersonSelected = null;
                         }
                         // If not, force someone
                         //TODO: Pop up message asking user what to do.
-                        else
+                        for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
                         {
-                            for (int i = 0; i < lowestDutyDaysList.Count && !datePlaced; i++)
+                            if (groupList.Contains(lowestDutyDaysList[i])
+                                && !lowestDutyDaysList[i].mDutyDays.ContainsDates(daysCluster)
+                                && !datePlaced)
                             {
-                                if (groupList.Contains(lowestDutyDaysList[i])
-                                    && !lowestDutyDaysList[i].mDutyDays.mDates.Contains(wkday)
-                                    && !datePlaced)
-                                {
-                                    MessageBox.Show("Nobody available for " + wkday.ToShortDateString()
+                                MessageBox.Show("Nobody available for weekend " + daysCluster[0].ToShortDateString()
                                                     + Environment.NewLine + "Assigning " + lowestDutyDaysList[i].mName
                                                     + " to the " + group + " group because they currently have the fewest days.",
                                                     "Problem Making Calendar");
 
-                                    lowestDutyDaysList[i].AddDutyDay(wkday, group);
-                                    datePlaced = true;
-                                }
+                                lowestDutyDaysList[i].AddDutyDays(daysCluster, group);
+                                datePlaced = true;
                             }
                         }
                     }
@@ -990,16 +985,16 @@ namespace Duty_Schedule
                     //cCol++;
                     //workSheet.Cells[cRow, cCol.ToString()] = "Weekdays";
                     //cCol++;
-                    //foreach (string grp in this.mGroups)
+                    //foreach (string isInGroup in this.mGroups)
                     //{
                     //    cRow++;
                     //    cCol = 'A';
-                    //    workSheet.Cells[cRow, cCol.ToString()] = grp;
+                    //    workSheet.Cells[cRow, cCol.ToString()] = isInGroup;
                     //    cRow++;
 
                     //    foreach (Person per in this.mPeople)
                     //    {
-                    //        if (per.mGroups.Contains(grp))
+                    //        if (per.mGroups.Contains(isInGroup))
                     //        {
                     //            int weekendCount = per.mDutyDays.mDates.Count(x => this.mWeekendDaysOfWeek.Contains(x.DayOfWeek));
 
@@ -1027,16 +1022,16 @@ namespace Duty_Schedule
                     //workSheet.Cells[cRow, cCol.ToString()] = "Name";
                     //cCol++;
                     //workSheet.Cells[cRow, cCol.ToString()] = "Total days";
-                    //foreach (string grp in this.mGroups)
+                    //foreach (string isInGroup in this.mGroups)
                     //{
                     //    cRow++;
                     //    cCol = 'A';
-                    //    workSheet.Cells[cRow, cCol.ToString()] = grp;
+                    //    workSheet.Cells[cRow, cCol.ToString()] = isInGroup;
                     //    cRow++;
 
                     //    for(int j = 0; j < this.mPeople.Count(); j++)
                     //    {
-                    //        if (mPeople[j].mGroups.Contains(grp))
+                    //        if (mPeople[j].mGroups.Contains(isInGroup))
                     //        {
                     //            cCol++;
                     //            workSheet.Cells[cRow, cCol.ToString()] = this.mPeople[j].mName;
@@ -1044,7 +1039,7 @@ namespace Duty_Schedule
                     //            int dutyCount = 0;
                     //            foreach (string groupCt in this.mPeople[j].mDutyDays.mGroups)
                     //            {
-                    //                if (groupCt == grp)
+                    //                if (groupCt == isInGroup)
                     //                    dutyCount++;
                     //            }
                     //            workSheet.Cells[cRow, cCol.ToString()] = dutyCount;

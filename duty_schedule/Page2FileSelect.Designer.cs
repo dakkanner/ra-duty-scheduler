@@ -270,9 +270,9 @@ namespace Duty_Schedule
             this.checkBoxWeekdaysSamePeople.AutoSize = true;
             this.checkBoxWeekdaysSamePeople.Location = new System.Drawing.Point(14, 47);
             this.checkBoxWeekdaysSamePeople.Name = "checkBoxWeekdaysSamePeople";
-            this.checkBoxWeekdaysSamePeople.Size = new System.Drawing.Size(233, 17);
+            this.checkBoxWeekdaysSamePeople.Size = new System.Drawing.Size(232, 17);
             this.checkBoxWeekdaysSamePeople.TabIndex = 7;
-            this.checkBoxWeekdaysSamePeople.Text = "Weekends have the same people each day";
+            this.checkBoxWeekdaysSamePeople.Text = "Weekdays have the same people each day";
             this.checkBoxWeekdaysSamePeople.UseVisualStyleBackColor = true;
             this.checkBoxWeekdaysSamePeople.CheckedChanged += new System.EventHandler(this.checkBoxWeekdaysSamePeople_CheckedChanged);
             // 

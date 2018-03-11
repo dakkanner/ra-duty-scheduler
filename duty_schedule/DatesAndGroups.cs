@@ -1,4 +1,4 @@
-﻿//Copyright (C) 2014-2015  Dakota Kanner
+﻿//Copyright (C) 2014-2018 Dakota Kanner
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -7,11 +7,11 @@
 //
 //    This program is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//    along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
@@ -22,13 +22,14 @@ using System.Threading.Tasks;
 namespace Duty_Schedule
 {
     /// <summary>
-    /// A list of dates and groups. Used in Person to create a list of the 
+    /// A list of dates and groups. Used in Person to create a list of the
     /// days they have scheduled and for which group.
     /// </summary>
     public class DatesAndGroups
     {
-        // Public members because I'm lazy. 
+        // Public members because I'm lazy.
         public List<DateTime> mDates;
+
         public List<string> mGroups;
 
         /// <summary>
@@ -85,14 +86,13 @@ namespace Duty_Schedule
             if (dates.Count != groups.Count)
                 throw new Exception("Date list and group list are not of equal lengths");
 
-            for(int i = 0; i < dates.Count; i++)
+            for (int i = 0; i < dates.Count; i++)
             {
                 if (mDates.Contains(dates[i]))
                     throw new Exception(dates[i].ToShortDateString() + " already exists in list.");
 
                 mDates.Add(dates[i]);
                 mGroups.Add(groups[i]);
-
             }
         }
 
@@ -104,7 +104,7 @@ namespace Duty_Schedule
         {
             int index = mDates.IndexOf(date);
 
-            if(index >= 0)
+            if (index >= 0)
             {
                 mDates.RemoveAt(index);
                 mGroups.RemoveAt(index);

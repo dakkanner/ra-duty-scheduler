@@ -94,14 +94,15 @@ namespace Duty_Schedule
         private void buttonP1Next_Click(object sender, EventArgs e)
         {
             List<DayOfWeek> weekdaysList = new List<DayOfWeek>();
-            weekdaysList.Add(DayOfWeek.Monday);
-            weekdaysList.Add(DayOfWeek.Tuesday);
-            weekdaysList.Add(DayOfWeek.Wednesday);
-            weekdaysList.Add(DayOfWeek.Thursday);
 
             List<DayOfWeek> weekendsList = new List<DayOfWeek>();
             if (this.weekendRadioButton1.Checked)
             {
+                weekdaysList.Add(DayOfWeek.Monday);
+                weekdaysList.Add(DayOfWeek.Tuesday);
+                weekdaysList.Add(DayOfWeek.Wednesday);
+                weekdaysList.Add(DayOfWeek.Thursday);
+
                 weekendsList.Add(DayOfWeek.Friday);
                 weekendsList.Add(DayOfWeek.Saturday);
                 weekendsList.Add(DayOfWeek.Sunday);
@@ -109,12 +110,20 @@ namespace Duty_Schedule
             else if (this.weekendRadioButton2.Checked)
             {
                 weekdaysList.Add(DayOfWeek.Sunday);
+                weekdaysList.Add(DayOfWeek.Monday);
+                weekdaysList.Add(DayOfWeek.Tuesday);
+                weekdaysList.Add(DayOfWeek.Wednesday);
+                weekdaysList.Add(DayOfWeek.Thursday);
 
                 weekendsList.Add(DayOfWeek.Friday);
                 weekendsList.Add(DayOfWeek.Saturday);
             }
             else
             {
+                weekdaysList.Add(DayOfWeek.Monday);
+                weekdaysList.Add(DayOfWeek.Tuesday);
+                weekdaysList.Add(DayOfWeek.Wednesday);
+                weekdaysList.Add(DayOfWeek.Thursday);
                 weekdaysList.Add(DayOfWeek.Friday);
 
                 weekendsList.Add(DayOfWeek.Saturday);
@@ -122,8 +131,8 @@ namespace Duty_Schedule
             }
 
             mCalendarMaker = new CalendarMaker(dateTextBox.Text, groupTextBox.Text,
-                checkBoxWeekdaysSamePeople.Checked, checkBoxWeekdaysShuffle.Checked,
-                checkBoxWeekendsSamePeople.Checked, checkBoxWeekendsShuffle.Checked,
+                checkBoxWeekdaysEnableScheduling.Checked, checkBoxWeekdaysSamePeople.Checked, checkBoxWeekdaysShuffle.Checked,
+                checkBoxWeekendsEnableScheduling.Checked, checkBoxWeekendsSamePeople.Checked, checkBoxWeekendsShuffle.Checked,
                 weekdaysList, weekendsList);
             mGroupFilePath = this.groupTextBox.Text;
             mDateFilePath = this.dateTextBox.Text;
