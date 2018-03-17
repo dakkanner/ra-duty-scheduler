@@ -1176,7 +1176,14 @@ namespace Duty_Schedule
         /// <param name="startMin">The minute of the day to start the events</param>
         /// <param name="ccEmailList">A list of people to CC for all events</param>
         /// <param name="senderEmail">An optional email address of the sender (if it doesn't work without it)</param>
-        public void MakeOutlookEvents(int startHour, int startMin, List<string> ccEmailList, string senderEmail = "")
+        public void MakeOutlookEvents(int startHour, int startMin,
+            bool allDay,
+            bool enableReminder,
+            bool mergeDays,
+            bool autoSendEmails,
+            String subject,
+            List<string> ccEmailList,
+            string senderEmail = "")
         {
             const int delayBetweenEmails = 3;
             const int delayAfterSending = 10;
@@ -1202,15 +1209,47 @@ namespace Duty_Schedule
                             (Microsoft.Office.Interop.Outlook.AppointmentItem)
                             outlookApp.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
 
-                    appt.Subject = "Duty: " + this.mCalendar.mDateList[i].ToShortDateString();
+                    appt.Subject = subject + " " + this.mCalendar.mDateList[i].ToShortDateString();
                     appt.MeetingStatus = Microsoft.Office.Interop.Outlook.OlMeetingStatus.olMeeting;
 
-                    appt.Start = this.mCalendar.mDateList[i].AddHours(startHour);
-                    appt.Start = appt.Start.AddMinutes(startMin);
-                    appt.End = appt.Start.AddHours(1);
+                    if (allDay)
+                    {
+                        appt.AllDayEvent = true;
+                        appt.Start = this.mCalendar.mDateList[i];
+                        appt.End = this.mCalendar.mDateList[i].AddDays(1);
+                    }
+                    else
+                    {
+                        appt.Start = this.mCalendar.mDateList[i].AddHours(startHour);
+                        appt.Start = appt.Start.AddMinutes(startMin);
+                        appt.End = appt.Start.AddHours(1);
+                    }
+
+                    // If the user wants to merge days, attempt
+                    while (mergeDays
+                        && i + 1 < this.mCalendar.mDateList.Count
+                        && this.mCalendar.AreDaysAtIndexIdentical(i, i + 1))
+                    {
+                        i++;
+                        appt.End = appt.End.AddDays(1);
+                    }
+
+                    if (enableReminder)
+                    {
+                        appt.ReminderOverrideDefault = true;
+                        appt.ReminderPlaySound = false;
+                        appt.ReminderSet = false;
+                    }
+                    else
+                    {
+                        appt.ReminderOverrideDefault = true;
+                        appt.ReminderPlaySound = true;
+                        appt.ReminderSet = true;
+                        appt.ReminderMinutesBeforeStart = 60;
+                    }
 
                     //Create the string for the body of the event and add each person to the email list
-                    string bodyStr = "Duty: " + this.mCalendar.mDateList[i].ToShortDateString() + "\n";
+                    string bodyStr = subject + " " + this.mCalendar.mDateList[i].ToShortDateString() + "\n";
                     for (int j = 0; j < this.mCalendar.mPeopleList[i].Count; j++)
                     {
                         bodyStr += this.mCalendar.mPeopleList[i][j].group
@@ -1229,7 +1268,7 @@ namespace Duty_Schedule
                     }
                     appt.Body = bodyStr;
 
-                    //Add all CC people
+                    // Add all CC people
                     foreach (string ccEmail in ccEmailList)
                     {
                         if (!string.IsNullOrEmpty(ccEmail))
@@ -1264,8 +1303,10 @@ namespace Duty_Schedule
                     appt.Save();
 
                     // My computer seems to not like this. Also gives the chance to edit the days before sending.
-                    // TODO: Make this a checkmark in the UI
-                    appt.Send();
+                    if (autoSendEmails)
+                    {
+                        appt.Send();
+                    }
 
                     // My system can't seem to handle a few hundred Outlook emails in one go.
                     // Wait four seconds between each invite creation.

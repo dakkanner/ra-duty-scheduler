@@ -85,5 +85,14 @@ namespace Duty_Schedule
                     mPeopleList[index].Add(pg);
             }
         }
+
+        public bool AreDaysAtIndexIdentical(int i, int j)
+        {
+            if (!this.mPeopleList[i].SequenceEqual(this.mPeopleList[j]))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

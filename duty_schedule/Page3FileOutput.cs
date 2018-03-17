@@ -37,7 +37,6 @@ namespace Duty_Schedule
             mCcEmail = new List<string>();
             InitializeComponent();
 
-
             this.label1.Text = cmIn.mGroups.Count + " groups";
             this.label2.Text = cmIn.mPeople.Count.ToString() + " people";
             this.label3.Text = cmIn.mCalendar.mDateList.Count.ToString() + " days";
@@ -87,6 +86,7 @@ namespace Duty_Schedule
                     MessageBoxDefaultButton.Button1);
             }
         }
+
         private void iCalOutputBtn_Click(object sender, EventArgs e)
         {
             Page4GetEventInfo p4 = new Page4GetEventInfo(mCalendarMaker, mCcEmail, mSenderEmail);
@@ -100,7 +100,13 @@ namespace Duty_Schedule
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    mCalendarMaker.MakeOutlookEvents(p4.mStartHour, p4.mStartMinute, p4.mCcEmailList);
+                    mCalendarMaker.MakeOutlookEvents(p4.mStartHour, p4.mStartMinute,
+                        p4.mAllDayEvents,
+                        p4.mReminderEnable,
+                        p4.mMergeDays,
+                        p4.mSendEmails,
+                        p4.mSubject,
+                        p4.mCcEmailList);
                     Cursor.Current = Cursors.Default;
                     MessageBox.Show("It looks like all invitations were created.");
                 }
@@ -156,6 +162,5 @@ namespace Duty_Schedule
                     MessageBoxDefaultButton.Button1);
             }
         }
-
     }
 }

@@ -15,8 +15,13 @@ namespace Duty_Schedule
         public CalendarMaker mCalendar { get; set; }
         public List<string> mCcEmailList { get; set; }
         public string mSenderEmail { get; set; }
+        public string mSubject { get; set; }
         public int mStartHour { get; set; }
         public int mStartMinute { get; set; }
+        public bool mAllDayEvents { get; set; }
+        public bool mReminderEnable { get; set; }
+        public bool mMergeDays { get; set; }
+        public bool mSendEmails { get; set; }
 
         public Page4GetEventInfo(CalendarMaker cmIn, List<string> ccEmailListIn = null, string senderEmailIn = "")
         {
@@ -24,9 +29,9 @@ namespace Duty_Schedule
 
             this.mCalendar = cmIn;
             if (ccEmailListIn != null)
-                mCcEmailList = ccEmailListIn;
+                this.mCcEmailList = ccEmailListIn;
             if (!string.IsNullOrEmpty(senderEmailIn))
-                mSenderEmail = senderEmailIn;
+                this.mSenderEmail = senderEmailIn;
 
             var peopleList = mCalendar.mPeople;
             foreach (Person per in peopleList)
@@ -42,7 +47,6 @@ namespace Duty_Schedule
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-
             List<Person> people = this.mCalendar.mPeople;
             foreach (DataGridViewRow row in this.dataGridView1.Rows)
             {
@@ -60,13 +64,12 @@ namespace Duty_Schedule
                     {
                         people[index].mEmailAddress = row.Cells[1].Value.ToString();
                     }
-                    catch 
+                    catch
                     {
                         people[index].mEmailAddress = "";
                     }
                 }
             }
-
 
             DialogResult rslt = DialogResult.No;
 
@@ -86,18 +89,36 @@ namespace Duty_Schedule
 
             if (rslt == DialogResult.No)
             {
-                mStartHour = dateTimePicker1.Value.Hour;
-                mStartMinute = dateTimePicker1.Value.Minute;
+                this.mSubject = this.textBoxEventTitle.Text;
+                this.mStartHour = this.dateTimePicker1.Value.Hour;
+                this.mStartMinute = this.dateTimePicker1.Value.Minute;
+                this.mAllDayEvents = this.checkBoxAllDay.Checked;
+                this.mReminderEnable = this.checkBoxEnableReminder.Checked;
+                this.mMergeDays = this.checkBoxMergeDays.Checked;
+                this.mSendEmails = !this.checkBoxDontSendEmails.Checked;
 
-                char[] charSeparators = new char[] {' ', ','};
-                string[] ccEmailStrings = textBoxCcList.Text.Split(charSeparators);
+                char[] charSeparators = new char[] { ' ', ',' };
+                string[] ccEmailStrings = this.textBoxCcList.Text.Split(charSeparators);
                 foreach (string ccEml in ccEmailStrings)
                     mCcEmailList.Add(ccEml);
-                mSenderEmail = textBoxSenderEmail.Text;
+                mSenderEmail = this.textBoxSenderEmail.Text;
 
                 this.DialogResult = System.Windows.Forms.DialogResult.OK;
                 this.Close();
             }
+        }
+
+        private void checkBoxWeekdaysEnableScheduling_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void checkBoxAllDay_CheckedChanged(object sender, EventArgs e)
+        {
+            this.dateTimePicker1.Enabled = !this.checkBoxAllDay.Checked;
+        }
+
+        private void checkBoxEnableReminder_CheckedChanged(object sender, EventArgs e)
+        {
         }
     }
 }

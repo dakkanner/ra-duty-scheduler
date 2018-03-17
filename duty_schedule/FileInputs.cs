@@ -15,10 +15,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 using System.Windows.Forms;
 
 namespace Duty_Schedule
@@ -36,7 +36,7 @@ namespace Duty_Schedule
         /// <summary>
         /// The default ctor. Gets the directory of the .exe
         /// </summary>
-        public FileInputs() 
+        public FileInputs()
         {
             mDirectory = Directory.GetCurrentDirectory();
         }
@@ -92,7 +92,7 @@ namespace Duty_Schedule
                                     MessageBox.Show("Unable to parse date in 'Start' section of date file: " + lnStr, "Calendar Input",
                                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 }
-                        }
+                            }
                         }
                         // End date = 'e'
                         else if (lnStr.ToLower()[0] == 'e')
@@ -132,7 +132,7 @@ namespace Duty_Schedule
                                     {
                                         try
                                         {
-                                        holidayList.Add(DateTime.Parse(tempDateStr));
+                                            holidayList.Add(DateTime.Parse(tempDateStr));
                                         }
                                         catch
                                         {
@@ -268,16 +268,7 @@ namespace Duty_Schedule
                         // This should be a person so remove leading/ending whitespace and find where the name ends
                         string personName = lnStr.Trim();
 
-
-
-
-
                         //TODO: Add optional email address in here
-
-
-
-
-
 
                         int sepIndex = personName.IndexOf('-');
 
@@ -320,7 +311,7 @@ namespace Duty_Schedule
 
                                         if ((slashCt == 4 && dashCt == 1))// || (slashCt == 0 && dashCt == 5))
                                         {
-                                            // Date is probably a range in form of "mm/dd/yy[yy] - mm/dd/yy[yy]" 
+                                            // Date is probably a range in form of "mm/dd/yy[yy] - mm/dd/yy[yy]"
                                             // TODO: Either remove xx-xx[-xxxx] format from being valid or add it to the range capability
 
                                             int dashIndex = tempDateStr.IndexOf('-');
@@ -358,7 +349,7 @@ namespace Duty_Schedule
 
                                             // Add the range to a temp list
                                             List<DateTime> tempDateList = new List<DateTime>();
-                                            for(DateTime d = dStart; d <= dEnd; d = d.AddDays(1))
+                                            for (DateTime d = dStart; d <= dEnd; d = d.AddDays(1))
                                             {
                                                 tempDateList.Add(d);
                                             }
@@ -371,7 +362,7 @@ namespace Duty_Schedule
                                         }
                                         else if (slashCt == 2 && dashCt == 1)
                                         {
-                                            // Date is probably a range in form of "mm/dd - mm/dd" 
+                                            // Date is probably a range in form of "mm/dd - mm/dd"
                                             // TODO: Either remove xx-xx[-xxxx] format from being valid or add it to the range capability
 
                                             int dashIndex = tempDateStr.IndexOf('-');
@@ -555,7 +546,6 @@ namespace Duty_Schedule
                                 }
                                 if (!foundPerson)
                                     pplLst.Add(new Person(personName, currGroup, dateList));
-
                             }
                             else
                             {
@@ -584,22 +574,20 @@ namespace Duty_Schedule
                 strRead.Close();
             }
 
-
             if (pplLst.Count <= 0)
             {
                 MessageBox.Show("No people in file " + groupsFileName, "Calendar Input",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-
             return pplLst;
         }   // End GetGroups(string groupsFileName = "Groups.txt")
 
         /// <summary>
-        /// This 
+        /// This
         /// </summary>
         /// <param name="csvFileName">The name of the file to be imported from.</param>
-        /// <returns>A tuple. The first part is a DatesStruct filled with the start and 
+        /// <returns>A tuple. The first part is a DatesStruct filled with the start and
         /// end dates. The second is a list of people and their associated duty days.</returns>
         public Tuple<DatesStruct, List<Person>> GetImportFromCsv(string csvFileName)
         {
@@ -609,12 +597,12 @@ namespace Duty_Schedule
             // The list of people. Filled as more people are found. Will be returned.
             List<Person> pplLst = new List<Person>();
 
-            // The dates of duty. Will be returned. 
+            // The dates of duty. Will be returned.
             DatesStruct dates = new DatesStruct();
-
+            dates.holidayList = new List<DateTime>();
+            dates.breakList = new List<DateTime>();
 
             //string fullFileLoc = mDirectory + "\\" + groupsFileName;
-
 
             if (File.Exists(csvFileName))
             {
@@ -623,7 +611,7 @@ namespace Duty_Schedule
                 string lnStr = "";
 
                 //The first line should be the list of groups
-                if((lnStr = strRead.ReadLine()) != null)
+                if ((lnStr = strRead.ReadLine()) != null)
                 {
                     // Remove outside whitespace just in case
                     lnStr = lnStr.Trim();
@@ -639,7 +627,7 @@ namespace Duty_Schedule
                         if (commaIndex > -1)
                         {
                             // Get the name of the group
-                            tempGroupName = lnStr.Substring(0,commaIndex);
+                            tempGroupName = lnStr.Substring(0, commaIndex);
                             tempGroupName = tempGroupName.Trim();
                             tempGroupName = tempGroupName.Trim(',');
 
@@ -663,11 +651,9 @@ namespace Duty_Schedule
                             lnStr = "";
                         }
                     }
-
-
                 }
 
-                // The date to be used 
+                // The date to be used
                 string currentDateStr = "";
                 DateTime currentDate = new DateTime();
 
@@ -676,7 +662,7 @@ namespace Duty_Schedule
                     lnStr = lnStr.Trim();
                     if (lnStr.Length > 0)
                     {
-                        // A list of each person scheduled for this day. 
+                        // A list of each person scheduled for this day.
                         // Must equal the number of groups at the top of the page.
                         List<string> personNames = new List<string>();
 
@@ -696,18 +682,17 @@ namespace Duty_Schedule
                                 {
                                     try
                                     {
-
                                         // TODO: Test this part more
-                                        // 
+                                        //
                                         DateTime tempDate = DateTime.Parse(currentDateStr);
-                                        // I really hope that this isn't used for too far in the past because 
+                                        // I really hope that this isn't used for too far in the past because
                                         // this is how I'm going to check if this is the first line of the file
                                         if (dates.startDate.Year < 1000)
                                         {
                                             dates.startDate = tempDate;
                                         }
                                         // This part checks if there are any non-scheduled days (breaks)
-                                        else if(tempDate != currentDate.AddDays(1))
+                                        else if (tempDate != currentDate.AddDays(1))
                                         {
                                             DateTime breakDate = currentDate.AddDays(1);
                                             while (breakDate != tempDate)
@@ -716,16 +701,15 @@ namespace Duty_Schedule
                                                 breakDate = breakDate.AddDays(1);
                                             }
                                         }
-                                        
+
                                         // Actually set the current line's date
                                         currentDate = tempDate;
 
                                         // Also set the end date to the farthest date found
                                         if (currentDate > dates.endDate)
                                             dates.endDate = currentDate;
-
                                     }
-                                    catch(Exception e)
+                                    catch (Exception e)
                                     {
                                         DialogResult result = MessageBox.Show(e.Message, "Error reading date: " + currentDateStr,
                                             MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -771,12 +755,12 @@ namespace Duty_Schedule
                             }
                         }
 
-                        for(int i = 0; i < personNames.Count; i++)
+                        for (int i = 0; i < personNames.Count; i++)
                         {
                             bool wasFound = false;
-                            foreach(Person per in pplLst)
+                            foreach (Person per in pplLst)
                             {
-                                if(per.mName == personNames[i])
+                                if (per.mName == personNames[i])
                                 {
                                     //Add the group if they don't already belong in that group
                                     if (!per.mGroups.Contains(groupsLst[i]))
@@ -799,27 +783,19 @@ namespace Duty_Schedule
 
                                 pplLst.Add(newPerson);
                             }
-
                         }
 
                         //TODO: Add optional email address reading
-                
-                
-                
-                
-                
                     }
                 }
                 strRead.Close();
             }
-
 
             if (pplLst.Count <= 0)
             {
                 MessageBox.Show("No people in file " + csvFileName, "Calendar Input",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
 
             return new Tuple<DatesStruct, List<Person>>(dates, pplLst);
         }   // End GetImportFromCsv(string csvFileName)
@@ -831,7 +807,7 @@ namespace Duty_Schedule
         /// <param name="endDate">The day to end the list of days (inclusive)</param>
         /// <param name="dayToMatch">The day-of-the-week to find</param>
         /// <returns>A list of all days that are dayToMatch (e.g. all Mondays)</returns>
-        List<DateTime> GetDatesForDayOfWeek(DateTime startDate, DateTime endDate, DayOfWeek dayToMatch)
+        private List<DateTime> GetDatesForDayOfWeek(DateTime startDate, DateTime endDate, DayOfWeek dayToMatch)
         {
             List<DateTime> returnList = new List<DateTime>();
             DateTime selectedDay = new DateTime(startDate.Year, startDate.Month, startDate.Day);
