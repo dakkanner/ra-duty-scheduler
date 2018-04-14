@@ -56,13 +56,16 @@ namespace Duty_Schedule
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.csvExportBtn = new System.Windows.Forms.Button();
+            this.labelFairness = new System.Windows.Forms.Label();
+            this.textBoxFairness = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelHeader
             // 
             this.labelHeader.AutoSize = true;
             this.labelHeader.Font = new System.Drawing.Font("Verdana", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelHeader.Location = new System.Drawing.Point(182, 32);
+            this.labelHeader.Location = new System.Drawing.Point(182, 13);
             this.labelHeader.Name = "labelHeader";
             this.labelHeader.Size = new System.Drawing.Size(436, 35);
             this.labelHeader.TabIndex = 1;
@@ -73,7 +76,7 @@ namespace Duty_Schedule
             // 
             this.labelSubHeader.AutoSize = true;
             this.labelSubHeader.Font = new System.Drawing.Font("Verdana", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSubHeader.Location = new System.Drawing.Point(170, 99);
+            this.labelSubHeader.Location = new System.Drawing.Point(170, 53);
             this.labelSubHeader.Name = "labelSubHeader";
             this.labelSubHeader.Size = new System.Drawing.Size(460, 25);
             this.labelSubHeader.TabIndex = 2;
@@ -81,7 +84,7 @@ namespace Duty_Schedule
             // 
             // excelOutputBtn
             // 
-            this.excelOutputBtn.Location = new System.Drawing.Point(344, 269);
+            this.excelOutputBtn.Location = new System.Drawing.Point(344, 179);
             this.excelOutputBtn.Name = "excelOutputBtn";
             this.excelOutputBtn.Size = new System.Drawing.Size(100, 22);
             this.excelOutputBtn.TabIndex = 8;
@@ -91,7 +94,7 @@ namespace Duty_Schedule
             // 
             // csvOutputBtn
             // 
-            this.csvOutputBtn.Location = new System.Drawing.Point(344, 299);
+            this.csvOutputBtn.Location = new System.Drawing.Point(344, 209);
             this.csvOutputBtn.Name = "csvOutputBtn";
             this.csvOutputBtn.Size = new System.Drawing.Size(100, 22);
             this.csvOutputBtn.TabIndex = 11;
@@ -101,7 +104,7 @@ namespace Duty_Schedule
             // 
             // iCalOutputBtn
             // 
-            this.iCalOutputBtn.Location = new System.Drawing.Point(270, 329);
+            this.iCalOutputBtn.Location = new System.Drawing.Point(269, 239);
             this.iCalOutputBtn.Name = "iCalOutputBtn";
             this.iCalOutputBtn.Size = new System.Drawing.Size(250, 22);
             this.iCalOutputBtn.TabIndex = 11;
@@ -111,7 +114,7 @@ namespace Duty_Schedule
             // 
             // rerunBtn
             // 
-            this.rerunBtn.Location = new System.Drawing.Point(295, 415);
+            this.rerunBtn.Location = new System.Drawing.Point(295, 367);
             this.rerunBtn.Name = "rerunBtn";
             this.rerunBtn.Size = new System.Drawing.Size(200, 22);
             this.rerunBtn.TabIndex = 8;
@@ -123,7 +126,7 @@ namespace Duty_Schedule
             // 
             this.foundLabel.AutoSize = true;
             this.foundLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.foundLabel.Location = new System.Drawing.Point(358, 155);
+            this.foundLabel.Location = new System.Drawing.Point(358, 89);
             this.foundLabel.Name = "foundLabel";
             this.foundLabel.Size = new System.Drawing.Size(68, 16);
             this.foundLabel.TabIndex = 12;
@@ -133,7 +136,7 @@ namespace Duty_Schedule
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(358, 182);
+            this.label1.Location = new System.Drawing.Point(358, 116);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(89, 16);
             this.label1.TabIndex = 13;
@@ -144,7 +147,7 @@ namespace Duty_Schedule
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(358, 200);
+            this.label2.Location = new System.Drawing.Point(358, 134);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(90, 16);
             this.label2.TabIndex = 14;
@@ -155,7 +158,7 @@ namespace Duty_Schedule
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(358, 216);
+            this.label3.Location = new System.Drawing.Point(358, 150);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 16);
             this.label3.TabIndex = 15;
@@ -164,7 +167,7 @@ namespace Duty_Schedule
             // 
             // csvExportBtn
             // 
-            this.csvExportBtn.Location = new System.Drawing.Point(285, 372);
+            this.csvExportBtn.Location = new System.Drawing.Point(284, 282);
             this.csvExportBtn.Name = "csvExportBtn";
             this.csvExportBtn.Size = new System.Drawing.Size(220, 22);
             this.csvExportBtn.TabIndex = 16;
@@ -172,12 +175,43 @@ namespace Duty_Schedule
             this.csvExportBtn.UseVisualStyleBackColor = true;
             this.csvExportBtn.Click += new System.EventHandler(this.csvExportBtn_Click);
             // 
+            // labelFairness
+            // 
+            this.labelFairness.AutoSize = true;
+            this.labelFairness.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFairness.Location = new System.Drawing.Point(12, 88);
+            this.labelFairness.Name = "labelFairness";
+            this.labelFairness.Size = new System.Drawing.Size(175, 16);
+            this.labelFairness.TabIndex = 17;
+            this.labelFairness.Text = "Uneven day count by group:";
+            // 
+            // textBoxFairness
+            // 
+            this.textBoxFairness.Location = new System.Drawing.Point(344, 413);
+            this.textBoxFairness.Name = "textBoxFairness";
+            this.textBoxFairness.Size = new System.Drawing.Size(100, 20);
+            this.textBoxFairness.TabIndex = 18;
+            this.textBoxFairness.TextChanged += new System.EventHandler(this.textBoxFairness_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(306, 394);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(178, 16);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Max number of uneven days:";
+            // 
             // Page3FileOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(784, 462);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.textBoxFairness);
+            this.Controls.Add(this.labelFairness);
             this.Controls.Add(this.csvExportBtn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -214,6 +248,9 @@ namespace Duty_Schedule
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button csvExportBtn;
+        private System.Windows.Forms.Label labelFairness;
+        private System.Windows.Forms.TextBox textBoxFairness;
+        private System.Windows.Forms.Label label4;
         
     }
 }

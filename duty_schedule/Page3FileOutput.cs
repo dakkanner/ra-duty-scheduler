@@ -41,6 +41,10 @@ namespace Duty_Schedule
             this.label2.Text = cmIn.mPeople.Count.ToString() + " people";
             this.label3.Text = cmIn.mCalendar.mDateList.Count.ToString() + " days";
 
+            updateFairnessLabel(cmIn);
+
+            this.textBoxFairness.Text = "7";
+
             // TODO: Make re-run work even if the schedule has been imported.
             // Or not. This one's pretty low priority.
             rerunBtn.Enabled = !cmIn.isFromImport;
@@ -127,14 +131,36 @@ namespace Duty_Schedule
         {
             try
             {
-                mCalendarMaker.ClearCalendar();
-                mCalendarMaker.FirstScheduleRun();
-                mCalendarMaker.FillCalendar();
+                int realFairnessDayCount = 0;
+                int targetFairnessDayCount = this.GetValidFairnessNumber();
 
-                MessageBox.Show("The schedule has been remade.",
-                    "Done rescheduling",
+                int runCount;
+                for (runCount = 1; runCount <= 10000; runCount++)
+                {
+                    mCalendarMaker.ClearCalendar();
+                    mCalendarMaker.FirstScheduleRun();
+                    mCalendarMaker.FillCalendar();
+
+                    realFairnessDayCount = mCalendarMaker.CalculateGroupFairnessValues().Values.Max();
+                    if (realFairnessDayCount <= targetFairnessDayCount)
+                    {
+                        updateFairnessLabel(mCalendarMaker);
+
+                        MessageBox.Show("The schedule has been remade after " + runCount + " attempts.\n"
+                            + realFairnessDayCount + " uneven days is <= targeted number of uneven days.",
+                            "Done rescheduling",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information,
+                            MessageBoxDefaultButton.Button1);
+
+                        return;
+                    }
+                }
+                MessageBox.Show("The scheduler failed to achieve " + targetFairnessDayCount
+                    + " fairness days after " + runCount + " attempts.",
+                    "Error while rescheduling",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information,
+                    MessageBoxIcon.Exclamation,
                     MessageBoxDefaultButton.Button1);
             }
             catch (Exception exc)
@@ -161,6 +187,41 @@ namespace Duty_Schedule
                     MessageBoxIcon.Exclamation,
                     MessageBoxDefaultButton.Button1);
             }
+        }
+
+        private void updateFairnessLabel(CalendarMaker cmIn)
+        {
+            StringBuilder fairness = new StringBuilder("Uneven day count by group:\n(Lower is better)\n");
+            foreach (KeyValuePair<string, int> groupFairness in cmIn.CalculateGroupFairnessValues())
+            {
+                fairness.Append("\n\t");
+                fairness.Append(groupFairness.Key);
+                fairness.Append(": ");
+                fairness.Append(groupFairness.Value);
+                fairness.Append(" days");
+            }
+            this.labelFairness.Text = fairness.ToString();
+        }
+
+        private void textBoxFairness_TextChanged(object sender, EventArgs e)
+        {
+            if (!IsValidFairnessNumber(this.textBoxFairness.Text))
+            {
+                this.textBoxFairness.Text = "7";
+            }
+        }
+
+        private static bool IsValidFairnessNumber(string str)
+        {
+            int i;
+            return int.TryParse(str, out i) && i >= 0 && i <= 9999;
+        }
+
+        private int GetValidFairnessNumber()
+        {
+            int i = 9999;
+            int.TryParse(this.textBoxFairness.Text, out i);
+            return i;
         }
     }
 }

@@ -47,13 +47,13 @@ namespace Duty_Schedule
         /// </summary>
         public Person()
         {
-            mName = "";
-            mEmailAddress = "";
-            mGroups = new List<string>();
-            mWeekendCount = 0;
-            mWeekdayCount = 0;
-            mDaysOffRequested = new List<DateTime>();
-            mDutyDays = new DatesAndGroups();
+            this.mName = "";
+            this.mEmailAddress = "";
+            this.mGroups = new List<string>();
+            this.mWeekendCount = 0;
+            this.mWeekdayCount = 0;
+            this.mDaysOffRequested = new List<DateTime>();
+            this.mDutyDays = new DatesAndGroups();
         }   //End Person()
 
         /// <summary>
@@ -64,14 +64,14 @@ namespace Duty_Schedule
         /// <param name="daysOff">The requested days off from the person</param>
         public Person(string name, string group, List<DateTime> daysOff)
         {
-            mName = name;
-            mEmailAddress = "";
-            mGroups = new List<string>();
-            mGroups.Add(group);
-            mWeekendCount = 0;
-            mWeekdayCount = 0;
-            mDaysOffRequested = new List<DateTime>(daysOff);
-            mDutyDays = new DatesAndGroups();
+            this.mName = name;
+            this.mEmailAddress = "";
+            this.mGroups = new List<string>();
+            this.mGroups.Add(group);
+            this.mWeekendCount = 0;
+            this.mWeekdayCount = 0;
+            this.mDaysOffRequested = new List<DateTime>(daysOff);
+            this.mDutyDays = new DatesAndGroups();
         }   //End Person(string name, string group, List<DateTime> daysOff)
 
         /// <summary>
@@ -82,13 +82,13 @@ namespace Duty_Schedule
         /// <param name="daysOff">The requested days off from the person</param>
         public Person(string name, List<string> groups, List<DateTime> daysOff)
         {
-            mName = name;
-            mEmailAddress = "";
-            mGroups = new List<string>(groups);
-            mWeekendCount = 0;
-            mWeekdayCount = 0;
-            mDaysOffRequested = new List<DateTime>(daysOff);
-            mDutyDays = new DatesAndGroups();
+            this.mName = name;
+            this.mEmailAddress = "";
+            this.mGroups = new List<string>(groups);
+            this.mWeekendCount = 0;
+            this.mWeekdayCount = 0;
+            this.mDaysOffRequested = new List<DateTime>(daysOff);
+            this.mDutyDays = new DatesAndGroups();
         }   //End Person(string name, string group, List<DateTime> daysOff)
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Duty_Schedule
         /// <param name="group"></param>
         public void AddGroup(string group)
         {
-            mGroups.Add(group);
+            this.mGroups.Add(group);
         }   //End AddGroup(string group)
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Duty_Schedule
         /// <param name="DayOff">A DateTime that this person would like off. Time does not matter, just the day.</param>
         public void AddDayOffRequested(DateTime DayOff)
         {
-            mDaysOffRequested.Add(DayOff);
+            this.mDaysOffRequested.Add(DayOff);
         }   //End AddDayOffRequested(DateTime DayOff)
 
         /// <summary>
@@ -116,17 +116,19 @@ namespace Duty_Schedule
         /// <param name="group">The group/location that this person will be for that day</param>
         public void AddDutyDay(DateTime newDutyDay, string group)
         {
-            if (mDutyDays.mDates.Contains(newDutyDay))
+            if (this.mDutyDays.mDates.Contains(newDutyDay))
+            {
                 throw new Exception("Error: " + this.mName + "Is already scheduled for (day) " + newDutyDay.ToShortDateString());
+            }
 
             try
             {
-                mDutyDays.AddDate(newDutyDay, group);
-                mWeekdayCount++;
+                this.mDutyDays.AddDate(newDutyDay, group);
+                this.mWeekdayCount++;
             }
-            catch (Exception E)
+            catch (Exception e)
             {
-                throw new Exception("Error: " + this.mName + ": " + E.ToString());
+                throw new Exception("Error: " + this.mName + ": " + e.ToString());
             }
         }   //End AddDutyDay(DateTime newDutyDay)
 
@@ -146,12 +148,12 @@ namespace Duty_Schedule
                     groupList.Add(group);
                 }
 
-                mDutyDays.AddDates(newDutyDays, groupList);
-                mWeekendCount++;    //Doesn't increment if exception thrown
+                this.mDutyDays.AddDates(newDutyDays, groupList);
+                this.mWeekendCount++;    //Doesn't increment if exception thrown
             }
-            catch (Exception E)
+            catch (Exception e)
             {
-                throw new Exception("Error: " + this.mName + ": " + E.ToString());
+                throw new Exception("Error: " + this.mName + ": " + e.ToString());
             }
         }   //End AddDutyDays(List<DateTime> newDutyDay)
 
@@ -161,10 +163,10 @@ namespace Duty_Schedule
         /// <param name="dutyDay">DateTime to remove</param>
         public void RemoveDutyDay(DateTime dutyDay)
         {
-            if (mDutyDays.mDates.Contains(dutyDay))
+            if (this.mDutyDays.mDates.Contains(dutyDay))
             {
-                mDutyDays.RemoveDate(dutyDay);
-                mWeekdayCount--;
+                this.mDutyDays.RemoveDate(dutyDay);
+                this.mWeekdayCount--;
             }
         }   //End RemoveDutyDay(DateTime dutyDay)
 
@@ -178,14 +180,16 @@ namespace Duty_Schedule
 
             foreach (DateTime dt in dutyDays)
             {
-                if (mDutyDays.mDates.Contains(dt))
+                if (this.mDutyDays.mDates.Contains(dt))
                 {
-                    mDutyDays.RemoveDate(dt);
+                    this.mDutyDays.RemoveDate(dt);
                     weekendFound = true;
                 }
             }
             if (weekendFound)
-                mWeekendCount--;
+            {
+                this.mWeekendCount--;
+            }
         }   //End RemoveDutyDays(List<DateTime> dutyDays)
 
         /// <summary>
@@ -195,12 +199,7 @@ namespace Duty_Schedule
         /// <returns></returns>
         public bool IsScheduledForDate(DateTime dutyDay)
         {
-            int index = mDutyDays.mDates.IndexOf(dutyDay);
-
-            if (index >= 0)
-                return true;
-
-            return false;
+            return this.mDutyDays.mDates.IndexOf(dutyDay) >= 0;
         }   //End IsScheduledForDate(DateTime dutyDay)
 
         /// <summary>
@@ -212,7 +211,7 @@ namespace Duty_Schedule
         {
             foreach (DateTime d in dutyWeekend)
             {
-                if (mDaysOffRequested.IndexOf(d) >= 0)
+                if (this.mDaysOffRequested.IndexOf(d) >= 0)
                     return true;
             }
 
@@ -226,7 +225,7 @@ namespace Duty_Schedule
         /// <returns></returns>
         public bool IsDateRequestedOff(DateTime dutyDay)
         {
-            int index = mDaysOffRequested.IndexOf(dutyDay);
+            int index = this.mDaysOffRequested.IndexOf(dutyDay);
 
             if (index >= 0)
                 return true;
@@ -243,11 +242,21 @@ namespace Duty_Schedule
         {
             foreach (DateTime d in dutyWeekend)
             {
-                if (mDaysOffRequested.IndexOf(d) >= 0)
+                if (this.mDaysOffRequested.IndexOf(d) >= 0)
                     return true;
             }
 
             return false;
         }   //End AreDatesRequestedOff(List<DateTime> dutyDays)
+
+        public int calculateTrueWeekendDaysScheduledCount(List<DayOfWeek> weekendDaysOfWeek)
+        {
+            return this.mDutyDays.mDates.Count(x => weekendDaysOfWeek.Contains(x.DayOfWeek));
+        }
+
+        public int calculateTrueTotalDaysScheduledCount()
+        {
+            return this.mDutyDays.mDates.Count();
+        }
     }
 }

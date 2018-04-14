@@ -581,7 +581,9 @@ namespace Duty_Schedule
 
             // If we are making the calendar from scratch and the settings are correct, rotate Saturdays.
             if (!isFromImport && this.mWeekendsSamePeople && this.mShuffleWeekendPeople)
+            {
                 RotateWeekends();
+            }
         }   // End FillCalendar()
 
         /// <summary>
@@ -843,17 +845,16 @@ namespace Duty_Schedule
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    var excelApp = new Microsoft.Office.Interop.Excel.Application();
+                    Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
 
                     // Create a new, empty workbook and add it to the collection returned
                     // by property Workbooks. The new workbook becomes the active workbook.
                     // Add has an optional parameter for specifying a particular template.
                     // Because no argument is sent in this example, Add creates a new workbook.
-                    excelApp.Workbooks.Add();
+                    Microsoft.Office.Interop.Excel.Workbook workbook = excelApp.Workbooks.Add();
 
                     // This project uses a single workSheet
-                    Microsoft.Office.Interop.Excel._Worksheet workSheet
-                        = (Microsoft.Office.Interop.Excel.Worksheet)excelApp.ActiveSheet;
+                    Microsoft.Office.Interop.Excel._Worksheet workSheet = workbook.ActiveSheet;
 
                     System.Globalization.DateTimeFormatInfo mfi = new System.Globalization.DateTimeFormatInfo();
 
@@ -1067,18 +1068,21 @@ namespace Duty_Schedule
                     cRow++;
                     cCol = 'A';
 
-                    foreach (Person per in this.mPeople)
+                    List<Person> sortedPeople = new List<Person>(this.mPeople);
+                    sortedPeople.Sort((x, y) => x.mName.CompareTo(y.mName));
+                    foreach (Person per in sortedPeople)
                     {
-                        int weekendCount = per.mDutyDays.mDates.Count(x => this.mWeekendDaysOfWeek.Contains(x.DayOfWeek));
+                        int weekendDaysCount = per.calculateTrueWeekendDaysScheduledCount(this.mWeekendDaysOfWeek);
+                        int totalDaysCount = per.calculateTrueTotalDaysScheduledCount();
 
                         cCol++;
                         workSheet.Cells[cRow, cCol.ToString()] = per.mName;
                         cCol++;
-                        workSheet.Cells[cRow, cCol.ToString()] = per.mDutyDays.mDates.Count.ToString();
+                        workSheet.Cells[cRow, cCol.ToString()] = totalDaysCount.ToString();
                         cCol++;
-                        workSheet.Cells[cRow, cCol.ToString()] = weekendCount.ToString();
+                        workSheet.Cells[cRow, cCol.ToString()] = weekendDaysCount.ToString();
                         cCol++;
-                        workSheet.Cells[cRow, cCol.ToString()] = (per.mDutyDays.mDates.Count - weekendCount).ToString();
+                        workSheet.Cells[cRow, cCol.ToString()] = (totalDaysCount - weekendDaysCount).ToString();
 
                         cCol = 'A';
                         cRow++;
@@ -1105,7 +1109,7 @@ namespace Duty_Schedule
 
                     foreach (String groupName in this.mGroups)
                     {
-                        foreach (Person per in this.mPeople)
+                        foreach (Person per in sortedPeople)
                         {
                             if (per.mGroups.Contains(groupName))
                             {
@@ -1139,7 +1143,7 @@ namespace Duty_Schedule
             }
             catch (System.Exception e)
             {
-                MessageBox.Show(e.Message, "Error in Excel Calendar",
+                MessageBox.Show(e.ToString(), "Error in Excel Calendar",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }   // End MakeExcelFile()
@@ -1209,7 +1213,8 @@ namespace Duty_Schedule
                             (Microsoft.Office.Interop.Outlook.AppointmentItem)
                             outlookApp.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
 
-                    appt.Subject = subject + " " + this.mCalendar.mDateList[i].ToShortDateString();
+                    String startDateString = this.mCalendar.mDateList[i].ToShortDateString();
+                    String endDateString = "";
                     appt.MeetingStatus = Microsoft.Office.Interop.Outlook.OlMeetingStatus.olMeeting;
 
                     if (allDay)
@@ -1232,6 +1237,7 @@ namespace Duty_Schedule
                     {
                         i++;
                         appt.End = appt.End.AddDays(1);
+                        endDateString = " through " + this.mCalendar.mDateList[i].ToShortDateString();
                     }
 
                     if (enableReminder)
@@ -1248,8 +1254,12 @@ namespace Duty_Schedule
                         appt.ReminderMinutesBeforeStart = 60;
                     }
 
-                    //Create the string for the body of the event and add each person to the email list
-                    string bodyStr = subject + " " + this.mCalendar.mDateList[i].ToShortDateString() + "\n";
+                    // Set the subject of the event
+                    String mainSubject = subject.Trim() + " " + startDateString + endDateString;
+                    appt.Subject = mainSubject;
+
+                    // Create the string for the body of the event and add each person to the email list
+                    string bodyStr = mainSubject + "\n";
                     for (int j = 0; j < this.mCalendar.mPeopleList[i].Count; j++)
                     {
                         bodyStr += this.mCalendar.mPeopleList[i][j].group
@@ -1297,7 +1307,6 @@ namespace Duty_Schedule
                         appt.Recipients.Add(myEmailAddress);
                     recipOrganizer.Type =
                         (int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olOrganizer;
-                    //(int)Microsoft.Office.Interop.Outlook.OlMeetingRecipientType.olRequired;
 
                     appt.Recipients.ResolveAll();
                     appt.Save();
@@ -1512,5 +1521,41 @@ namespace Duty_Schedule
             }
             return fixThings;
         }   // End CheckDaysOff()
+
+        public Dictionary<String, int> CalculateGroupFairnessValues()
+        {
+            Dictionary<String, int> minGroupDayCount = new Dictionary<string, int>();
+            Dictionary<String, int> maxGroupDayCount = new Dictionary<string, int>();
+
+            // Add all the groups right off the bat so we don't have to deal with possible missing values later
+            foreach (String group in this.mGroups)
+            {
+                minGroupDayCount.Add(group, int.MaxValue);
+                maxGroupDayCount.Add(group, 0);
+            }
+
+            foreach (Person per in this.mPeople)
+            {
+                foreach (String perGroup in per.mGroups)
+                {
+                    int totalDayCount = per.calculateTrueTotalDaysScheduledCount();
+                    if (minGroupDayCount[perGroup] > totalDayCount)
+                    {
+                        minGroupDayCount[perGroup] = totalDayCount;
+                    }
+                    if (maxGroupDayCount[perGroup] < totalDayCount)
+                    {
+                        maxGroupDayCount[perGroup] = totalDayCount;
+                    }
+                }
+            }
+
+            Dictionary<String, int> diffGroupDayCount = new Dictionary<string, int>();
+            foreach (String group in this.mGroups)
+            {
+                diffGroupDayCount.Add(group, maxGroupDayCount[group] - minGroupDayCount[group]);
+            }
+            return diffGroupDayCount;
+        }
     }   // End class
 }
